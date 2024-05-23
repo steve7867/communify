@@ -7,6 +7,8 @@ import com.communify.domain.post.dto.PostUploadRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class PostController {
 
     private final PostService postService;
+    private final PostUploadRequestValidator postUploadRequestValidator;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(CREATED)
@@ -29,5 +32,10 @@ public class PostController {
                        @CurrentMemberId Long memberId) {
 
         postService.uploadPost(request, memberId);
+    }
+
+    @InitBinder("PostUploadRequest")
+    public void addPostUploadRequestValidator(WebDataBinder dataBinder) {
+        dataBinder.addValidators(postUploadRequestValidator);
     }
 }
