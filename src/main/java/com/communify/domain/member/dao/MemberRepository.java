@@ -14,4 +14,6 @@ public interface MemberRepository {
     int insert(MemberSignUpRequest request);
 
     Optional<MemberInfo> findByEmail(String email);
+
+    Optional<MemberInfo> findById(Long memberId);
 }
