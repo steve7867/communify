@@ -35,4 +35,10 @@ public class AuthService {
     public boolean isLoggedIn() {
         return sessionService.isLoggedIn();
     }
+
+    public boolean certify(String password, Long memberId) {
+        MemberInfo memberInfo = memberService.findMemberInfoById(memberId);
+        String hashed = memberInfo.getHashed();
+        return PassEncryptor.isMatch(password, hashed);
+    }
 }
