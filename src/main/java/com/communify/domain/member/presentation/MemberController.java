@@ -30,6 +30,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberSignUpService memberSignUpService;
     private final MemberFindService memberFindService;
+    private final MemberWithdrawService memberWithdrawService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,6 +52,6 @@ public class MemberController {
     public void withdraw(@RequestBody @Valid MemberWithdrawRequest request,
                          @CurrentMemberId Long memberId) {
 
-        memberService.withdraw(request, memberId);
+        memberWithdrawService.withdraw(request, memberId);
     }
 }
