@@ -22,4 +22,10 @@
         FROM member
         WHERE email = #{email}
     </select>
+
+    <select id="findById" resultMap="memberInfoResultMap">
+        SELECT id, email, hashed, name, created_timestamp
+        FROM member
+        WHERE id = #{memberId}
+    </select>
 </mapper>

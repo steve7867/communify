@@ -25,4 +25,9 @@ public class MemberService {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException()); //todo: 예외 전환 처리
     }
+
+    public MemberInfo findMemberInfoById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException()); //tooo: 예외 처리
+    }
 }
