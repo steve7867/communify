@@ -2,6 +2,7 @@ package com.communify.global.error;
 
 import com.communify.global.ErrorResponse;
 import com.communify.global.error.exception.BusinessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,5 +41,10 @@ public class GlobalExceptionController {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ErrorResponse handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         return new ErrorResponse(e.getLocalizedMessage());
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public void handleDataIntegrityViolationException() {
     }
 }
