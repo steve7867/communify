@@ -10,4 +10,8 @@ public final class PassEncryptor {
     public static String encrypt(String plain) {
         return BCrypt.hashpw(plain, BCrypt.gensalt());
     }
+
+    public static boolean isMatch(String plain, String hashed) {
+        return BCrypt.checkpw(plain, hashed);
+    }
 }
