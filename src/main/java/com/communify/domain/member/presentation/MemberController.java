@@ -27,20 +27,22 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberSignUpService memberSignUpService;
+    private final MemberFindService memberFindService;
+    private final MemberWithdrawService memberWithdrawService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @NotLoginCheck
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
-        memberService.signUp(request);
+        memberSignUpService.signUp(request);
     }
 
     @GetMapping("/{memberId}")
     @ResponseStatus(OK)
     @LoginCheck
     public MemberInfo getMemberInfo(@PathVariable @NotNull @Positive Long memberId) {
-        return memberService.findMemberInfoById(memberId);
+        return memberFindService.findMemberInfoById(memberId);
     }
 
     @DeleteMapping("/me")
@@ -49,6 +51,6 @@ public class MemberController {
     public void withdraw(@RequestBody @Valid MemberWithdrawRequest request,
                          @CurrentMemberId Long memberId) {
 
-        memberService.withdraw(request, memberId);
+        memberWithdrawService.withdraw(request, memberId);
     }
 }
