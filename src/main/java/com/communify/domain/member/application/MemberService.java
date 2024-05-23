@@ -5,6 +5,7 @@ import com.communify.domain.member.dao.MemberRepository;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
+import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class MemberService {
         try {
             memberRepository.insert(request);
         } catch (DuplicateKeyException e) {
-            throw e; //todo: 예외 전환할 것
+            throw new EmailAlreadyUsedException(request.getEmail(), e);
         }
     }
 
