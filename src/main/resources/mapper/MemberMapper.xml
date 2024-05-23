@@ -3,6 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.member.dao.MemberRepository">
+    <resultMap id="memberInfoResultMap" type="MemberInfo">
+        <result property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="name" column="name"/>
+        <result property="hashed" column="hashed"/>
+        <result property="createdDateTime" column="created_timestamp"/>
+        <result property="modifiedDateTime" column="modified_timestamp"/>
+    </resultMap>
+
     <insert id="insert" useGeneratedKeys="true">
         INSERT INTO member(email, hashed, name)
         VALUES(#{email}, #{hashed}, #{name})
