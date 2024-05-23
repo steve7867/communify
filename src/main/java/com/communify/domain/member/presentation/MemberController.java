@@ -29,6 +29,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberSignUpService memberSignUpService;
+    private final MemberFindService memberFindService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,7 +42,7 @@ public class MemberController {
     @ResponseStatus(OK)
     @LoginCheck
     public MemberInfo getMemberInfo(@PathVariable @NotNull @Positive Long memberId) {
-        return memberService.findMemberInfoById(memberId);
+        return memberFindService.findMemberInfoById(memberId);
     }
 
     @DeleteMapping("/me")
