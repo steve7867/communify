@@ -14,12 +14,18 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestController
 public class GlobalExceptionController {
 
+    /*
+    메서드 인자 유효성 검증 실패 시에 발생하는 MethodArgumentNotValidException를 처리.
+     */
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return new ErrorResponse(e.getMessage());
     }
 
+    /*
+    BusinessException과 그 하위 예외를 모두 처리.
+     */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
         HttpStatus status = e.getStatus();
