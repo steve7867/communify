@@ -7,4 +7,6 @@ public interface SessionService {
     void login(MemberInfo memberInfo);
 
     void logout();
+
+    boolean isLoggedIn();
 }
