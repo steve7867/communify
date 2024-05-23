@@ -9,4 +9,6 @@ public interface SessionService {
     void logout();
 
     boolean isLoggedIn();
+
+    Object getValue(String sessionKey);
 }
