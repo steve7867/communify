@@ -1,5 +1,6 @@
 package com.communify.domain.member.controller;
 
+import com.communify.domain.member.application.MemberService;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final MemberService memberService;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
-
+        memberService.signUp(request);
     }
 }
