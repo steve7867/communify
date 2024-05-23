@@ -6,4 +6,8 @@ public final class PassEncryptor {
 
     private PassEncryptor() {
     }
+
+    public static String encrypt(String plain) {
+        return BCrypt.hashpw(plain, BCrypt.gensalt());
+    }
 }
