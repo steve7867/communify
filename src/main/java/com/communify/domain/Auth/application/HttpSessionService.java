@@ -27,4 +27,9 @@ public class HttpSessionService implements SessionService{
     public boolean isLoggedIn() {
         return httpSession.getAttribute(SessionKey.MEMBER_ID) != null;
     }
+
+    @Override
+    public Object getValue(String sessionKey) {
+        return httpSession.getAttribute(sessionKey);
+    }
 }
