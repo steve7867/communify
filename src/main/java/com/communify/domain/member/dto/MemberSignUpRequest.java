@@ -1,5 +1,6 @@
 package com.communify.domain.member.dto;
 
+import com.communify.global.util.PassEncryptor;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,6 +35,6 @@ public class MemberSignUpRequest {
         this.password = password;
         this.name = name;
 
-        this.hashed = password;
+        this.hashed = PassEncryptor.encrypt(password);
     }
 }
