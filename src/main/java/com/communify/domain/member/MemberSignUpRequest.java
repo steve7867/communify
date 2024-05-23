@@ -1,5 +1,6 @@
 package com.communify.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,4 +27,13 @@ public class MemberSignUpRequest {
     @NotBlank(message = "공백은 허용되지 않습니다.")
     @Size(max = 10, message = "최대 {0}자까지 허용됩니다.")
     private final String name;
+
+    @JsonCreator
+    public MemberSignUpRequest(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+
+        this.hashed = password;
+    }
 }
