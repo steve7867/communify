@@ -1,8 +1,8 @@
 package com.communify.global.resolver;
 
-import com.communify.domain.Auth.annotation.CurrentMemberName;
-import com.communify.domain.Auth.annotation.LoginCheck;
-import com.communify.domain.Auth.application.SessionService;
+import com.communify.domain.auth.annotation.CurrentMemberName;
+import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.application.SessionService;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

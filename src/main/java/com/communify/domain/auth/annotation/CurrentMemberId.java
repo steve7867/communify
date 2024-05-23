@@ -1,4 +1,4 @@
-package com.communify.domain.Auth.annotation;
+package com.communify.domain.auth.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

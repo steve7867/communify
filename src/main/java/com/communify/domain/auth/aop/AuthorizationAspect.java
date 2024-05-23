@@ -1,8 +1,8 @@
-package com.communify.domain.Auth.aop;
+package com.communify.domain.auth.aop;
 
-import com.communify.domain.Auth.application.AuthService;
-import com.communify.domain.Auth.error.exception.AlreadyLoggedInException;
-import com.communify.domain.Auth.error.exception.NotLoggedInException;
+import com.communify.domain.auth.application.AuthService;
+import com.communify.domain.auth.error.exception.AlreadyLoggedInException;
+import com.communify.domain.auth.error.exception.NotLoggedInException;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -15,7 +15,7 @@ public class AuthorizationAspect {
 
     private final AuthService authService;
 
-    @Before("@annotation(com.communify.domain.Auth.annotation.NotLoginCheck)")
+    @Before("@annotation(com.communify.domain.auth.annotation.NotLoginCheck)")
     public void checkNotLoggedIn() {
         boolean loggedIn = authService.isLoggedIn();
 
@@ -24,7 +24,7 @@ public class AuthorizationAspect {
         }
     }
 
-    @Before("@annotation(com.communify.domain.Auth.annotation.LoginCheck)")
+    @Before("@annotation(com.communify.domain.auth.annotation.LoginCheck)")
     public void checkLoggedIn() {
         boolean loggedIn = authService.isLoggedIn();
 

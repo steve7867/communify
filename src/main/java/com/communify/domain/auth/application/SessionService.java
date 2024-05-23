@@ -1,4 +1,4 @@
-package com.communify.domain.Auth.application;
+package com.communify.domain.auth.application;
 
 import com.communify.domain.member.dto.MemberInfo;
 

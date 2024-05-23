@@ -1,4 +1,4 @@
-package com.communify.domain.Auth.error.exception;
+package com.communify.domain.auth.error.exception;
 
 import com.communify.global.error.exception.InvalidAccessException;
 import org.springframework.http.HttpStatus;

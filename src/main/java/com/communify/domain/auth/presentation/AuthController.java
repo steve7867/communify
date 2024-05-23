@@ -1,7 +1,7 @@
-package com.communify.domain.Auth.presentation;
+package com.communify.domain.auth.presentation;
 
-import com.communify.domain.Auth.application.AuthService;
-import com.communify.domain.Auth.dto.LoginRequest;
+import com.communify.domain.auth.application.AuthService;
+import com.communify.domain.auth.dto.LoginRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

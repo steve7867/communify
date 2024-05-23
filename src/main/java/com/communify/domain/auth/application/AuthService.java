@@ -1,8 +1,8 @@
-package com.communify.domain.Auth.application;
+package com.communify.domain.auth.application;
 
-import com.communify.domain.Auth.dto.LoginRequest;
-import com.communify.domain.Auth.error.exception.InvalidPasswordException;
-import com.communify.domain.member.application.MemberService;
+import com.communify.domain.auth.dto.LoginRequest;
+import com.communify.domain.auth.error.exception.InvalidPasswordException;
+import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.global.util.PassEncryptor;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final MemberService memberService;
+    private final MemberFindService memberFindService;
     private final SessionService sessionService;
 
     public void login(LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
-        MemberInfo memberInfo = memberService.findMemberInfoByEmail(email);
+        MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email);
 
         String hashed = memberInfo.getHashed();
         if (!PassEncryptor.isMatch(password, hashed)) {
@@ -38,7 +38,7 @@ public class AuthService {
     }
 
     public void certify(String password, Long memberId) {
-        MemberInfo memberInfo = memberService.findMemberInfoById(memberId);
+        MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId);
         String hashed = memberInfo.getHashed();
 
         boolean isMatched = PassEncryptor.isMatch(password, hashed);
