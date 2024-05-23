@@ -27,7 +27,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
     private final MemberSignUpService memberSignUpService;
     private final MemberFindService memberFindService;
     private final MemberWithdrawService memberWithdrawService;
