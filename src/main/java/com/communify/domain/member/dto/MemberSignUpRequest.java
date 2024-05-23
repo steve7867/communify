@@ -1,4 +1,4 @@
-package com.communify.domain.member;
+package com.communify.domain.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.Email;
