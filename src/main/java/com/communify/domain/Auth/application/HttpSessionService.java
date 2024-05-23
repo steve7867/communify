@@ -17,4 +17,9 @@ public class HttpSessionService implements SessionService{
         httpSession.setAttribute(SessionKey.MEMBER_ID, memberInfo.getId());
         httpSession.setAttribute(SessionKey.MEMBER_NAME, memberInfo.getName());
     }
+
+    @Override
+    public void logout() {
+        httpSession.invalidate();
+    }
 }
