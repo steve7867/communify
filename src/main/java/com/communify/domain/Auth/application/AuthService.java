@@ -31,4 +31,8 @@ public class AuthService {
     public void logout() {
         sessionService.logout();
     }
+
+    public boolean isLoggedIn() {
+        return sessionService.isLoggedIn();
+    }
 }

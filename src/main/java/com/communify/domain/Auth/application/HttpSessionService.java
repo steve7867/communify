@@ -22,4 +22,9 @@ public class HttpSessionService implements SessionService{
     public void logout() {
         httpSession.invalidate();
     }
+
+    @Override
+    public boolean isLoggedIn() {
+        return httpSession.getAttribute(SessionKey.MEMBER_ID) != null;
+    }
 }

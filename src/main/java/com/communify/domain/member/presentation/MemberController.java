@@ -1,5 +1,7 @@
 package com.communify.domain.member.presentation;
 
+import com.communify.domain.Auth.annotation.LoginCheck;
+import com.communify.domain.Auth.annotation.NotLoginCheck;
 import com.communify.domain.member.application.MemberService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
@@ -27,12 +29,14 @@ public class MemberController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @NotLoginCheck
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
         memberService.signUp(request);
     }
 
     @GetMapping("/{memberId}")
     @ResponseStatus(OK)
+    @LoginCheck
     public MemberInfo getMemberInfo(@PathVariable @NotNull @Positive Long memberId) {
         return memberService.findMemberInfoById(memberId);
     }
