@@ -16,4 +16,10 @@
         INSERT INTO member(email, hashed, name)
         VALUES(#{email}, #{hashed}, #{name})
     </insert>
+
+    <select id="findByEmail" resultMap="memberInfoResultMap">
+        SELECT id, email, hashed, name, created_timestamp
+        FROM member
+        WHERE email = #{email}
+    </select>
 </mapper>
