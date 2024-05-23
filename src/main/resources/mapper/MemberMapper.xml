@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.example.practice3.domain.member.dao.MemberRepository">
+<mapper namespace="com.communify.domain.member.dao.MemberRepository">
     <insert id="insert" useGeneratedKeys="true">
         INSERT INTO member(email, hashed, name)
         VALUES(#{email}, #{hashed}, #{name})
