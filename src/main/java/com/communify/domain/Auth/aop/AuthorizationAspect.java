@@ -1,6 +1,8 @@
 package com.communify.domain.Auth.aop;
 
 import com.communify.domain.Auth.application.AuthService;
+import com.communify.domain.Auth.error.exception.AlreadyLoggedInException;
+import com.communify.domain.Auth.error.exception.NotLoggedInException;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -18,7 +20,7 @@ public class AuthorizationAspect {
         boolean loggedIn = authService.isLoggedIn();
 
         if (loggedIn) {
-            throw new RuntimeException();  //todo: 예외 처리
+            throw new AlreadyLoggedInException();
         }
     }
 
@@ -27,7 +29,7 @@ public class AuthorizationAspect {
         boolean loggedIn = authService.isLoggedIn();
 
         if (!loggedIn) {
-            throw new RuntimeException(); //todo: 예외 처리
+            throw new NotLoggedInException();
         }
     }
 }
