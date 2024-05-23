@@ -1,5 +1,7 @@
 package com.communify.domain.member.dto;
 
+import java.time.LocalDateTime;
+
 public class MemberInfo {
 
     private final Long id;
