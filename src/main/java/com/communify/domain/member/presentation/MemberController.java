@@ -1,9 +1,8 @@
 package com.communify.domain.member.presentation;
 
-import com.communify.domain.Auth.annotation.CurrentMemberId;
-import com.communify.domain.Auth.annotation.LoginCheck;
-import com.communify.domain.Auth.annotation.NotLoginCheck;
-import com.communify.domain.member.application.MemberService;
+import com.communify.domain.auth.annotation.CurrentMemberId;
+import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
@@ -29,12 +28,13 @@ import static org.springframework.http.HttpStatus.OK;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberSignUpService memberSignUpService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @NotLoginCheck
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
-        memberService.signUp(request);
+        memberSignUpService.signUp(request);
     }
 
     @GetMapping("/{memberId}")
