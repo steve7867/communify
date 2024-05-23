@@ -1,15 +1,18 @@
 package com.communify.domain.member.presentation;
 
+import com.communify.domain.Auth.annotation.CurrentMemberId;
 import com.communify.domain.Auth.annotation.LoginCheck;
 import com.communify.domain.Auth.annotation.NotLoginCheck;
 import com.communify.domain.member.application.MemberService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
+import com.communify.domain.member.dto.MemberWithdrawRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,5 +42,14 @@ public class MemberController {
     @LoginCheck
     public MemberInfo getMemberInfo(@PathVariable @NotNull @Positive Long memberId) {
         return memberService.findMemberInfoById(memberId);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void withdraw(@RequestBody @Valid MemberWithdrawRequest request,
+                         @CurrentMemberId Long memberId) {
+
+        memberService.withdraw(request, memberId);
     }
 }
