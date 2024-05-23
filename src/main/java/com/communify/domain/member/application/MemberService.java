@@ -1,6 +1,7 @@
 package com.communify.domain.member.application;
 
 import com.communify.domain.member.dao.MemberRepository;
+import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -18,5 +19,10 @@ public class MemberService {
         } catch (DuplicateKeyException e) {
             throw e; //todo: 예외 전환할 것
         }
+    }
+
+    public MemberInfo findMemberInfoByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException()); //todo: 예외 전환 처리
     }
 }
