@@ -1,6 +1,7 @@
 package com.communify.domain.Auth.application;
 
 import com.communify.domain.Auth.dto.LoginRequest;
+import com.communify.domain.Auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.application.MemberService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.global.util.PassEncryptor;
@@ -22,7 +23,7 @@ public class AuthService {
 
         String hashed = memberInfo.getHashed();
         if (!PassEncryptor.isMatch(password, hashed)) {
-            throw new IllegalArgumentException(); //todo: 예외 처리
+            throw new InvalidPasswordException(password);
         }
 
         sessionService.login(memberInfo);
