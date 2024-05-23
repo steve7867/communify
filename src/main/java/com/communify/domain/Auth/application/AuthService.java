@@ -27,4 +27,8 @@ public class AuthService {
 
         sessionService.login(memberInfo);
     }
+
+    public void logout() {
+        sessionService.logout();
+    }
 }
