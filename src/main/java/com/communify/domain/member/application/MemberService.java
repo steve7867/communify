@@ -6,6 +6,7 @@ import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
 import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
+import com.communify.domain.member.error.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,12 @@ public class MemberService {
 
     public MemberInfo findMemberInfoByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException()); //todo: 예외 전환 처리
+                .orElseThrow(() -> new MemberNotFoundException(email));
     }
 
     public MemberInfo findMemberInfoById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException()); //tooo: 예외 처리
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
     public void withdraw(MemberWithdrawRequest request, Long memberId) {
