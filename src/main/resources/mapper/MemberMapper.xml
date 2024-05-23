@@ -28,4 +28,10 @@
         FROM member
         WHERE id = #{memberId}
     </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM member
+        WHERE id = #{memberId}
+    </delete>
 </mapper>
