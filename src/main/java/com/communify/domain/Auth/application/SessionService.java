@@ -4,4 +4,5 @@ import com.communify.domain.member.dto.MemberInfo;
 
 public interface SessionService {
 
+    void login(MemberInfo memberInfo);
 }
