@@ -14,7 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-public class CurrentMemberNameResolver implements HandlerMethodArgumentResolver {
+public class CurrentMemberNameArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final SessionService sessionService;
 
