@@ -39,10 +39,7 @@ public class MemberService {
     public void withdraw(MemberWithdrawRequest request, Long memberId) {
         String password = request.getPassword();
 
-        boolean isCertified = authService.certify(password, memberId);
-        if (!isCertified) {
-            throw new RuntimeException(); // 예외 처리
-        }
+        authService.certify(password, memberId);
 
         memberRepository.deleteById(memberId);
         authService.logout();

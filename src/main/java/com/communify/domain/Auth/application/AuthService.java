@@ -37,9 +37,14 @@ public class AuthService {
         return sessionService.isLoggedIn();
     }
 
-    public boolean certify(String password, Long memberId) {
+    public void certify(String password, Long memberId) {
         MemberInfo memberInfo = memberService.findMemberInfoById(memberId);
         String hashed = memberInfo.getHashed();
-        return PassEncryptor.isMatch(password, hashed);
+
+        boolean isMatched = PassEncryptor.isMatch(password, hashed);
+
+        if (!isMatched) {
+            throw new InvalidPasswordException(password);
+        }
     }
 }
