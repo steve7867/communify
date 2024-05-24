@@ -1,5 +1,6 @@
 package com.communify.domain.post.application;
 
+import com.communify.domain.file.application.FileService;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
@@ -8,8 +9,6 @@ import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
 import com.communify.domain.post.error.exception.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +21,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final FileService fileService;
 
     @Transactional
     public void uploadPost(PostUploadRequest request,
@@ -31,7 +31,7 @@ public class PostService {
 
         List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
         Long postId = request.getId();
-        fileService.uploadFile(multipartFileList, postId); //todo: import문 추가
+        fileService.uploadFile(multipartFileList, postId);
     }
 
     @Transactional(readOnly = true) //todo:캐싱 적용
