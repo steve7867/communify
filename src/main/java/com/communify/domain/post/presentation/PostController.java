@@ -3,11 +3,14 @@ package com.communify.domain.post.presentation;
 import com.communify.domain.auth.annotation.CurrentMemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.post.application.PostService;
+import com.communify.domain.post.dto.PostOutline;
+import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/posts")
@@ -44,5 +50,12 @@ public class PostController {
     @InitBinder("PostUploadRequest")
     public void addPostUploadRequestValidator(WebDataBinder dataBinder) {
         dataBinder.addValidators(postUploadRequestValidator);
+    }
+
+    @GetMapping
+    @ResponseStatus(OK)
+    @LoginCheck
+    public List<PostOutline> getPosts(@ModelAttribute @Valid PostSearchCondition searchCond) {
+        return postService.getPostOutlineList(searchCond);
     }
 }

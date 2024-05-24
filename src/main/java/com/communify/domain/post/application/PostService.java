@@ -1,6 +1,8 @@
 package com.communify.domain.post.application;
 
 import com.communify.domain.post.dao.PostRepository;
+import com.communify.domain.post.dto.PostOutline;
+import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,5 +27,10 @@ public class PostService {
         List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
         Long postId = request.getId();
         fileService.uploadFile(multipartFileList, postId); //todo: import문 추가
+    }
+
+    @Transactional(readOnly = true) //todo:캐싱 적용
+    public List<PostOutline> getPostOutlineList(PostSearchCondition searchCond) {
+        return postRepository.findAllPostOutlineBySearchCond(searchCond);
     }
 }
