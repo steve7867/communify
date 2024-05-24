@@ -3,6 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.comment.dao.CommentRepository">
+    <resultMap id="commentInfoResultMap" type="CommentInfo">
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="memberId" column="member_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="createdDateTime"  column="created_timestamp"/>
+        <result property="modifiedDateTime" column="modified_timestamp"/>
+    </resultMap>
+
     <insert id="insert" useGeneratedKeys="true">
         INSERT INTO comment(content, post_id, member_id)
             VALUE (#{request.content}, #{request.postId}, #{request.memberId})
