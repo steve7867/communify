@@ -1,0 +1,6 @@
+<mapper namespace="org.example.practice3.domain.follow.dao.FollowRepository">
+    <insert id="insertFollow">
+        INSERT INTO follow(member_id, follow_id)
+        VALUES(#{memberId}, #{followId})
+    </insert>
+</mapper>
