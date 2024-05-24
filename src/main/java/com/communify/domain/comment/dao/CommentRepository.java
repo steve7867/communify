@@ -12,4 +12,6 @@ public interface CommentRepository {
     void insert(CommentUploadRequest request);
 
     List<CommentInfo> findAllCommentsByPostId(Long postId);
+
+    void editComment(Long commentId, String content, Long memberId);
 }
