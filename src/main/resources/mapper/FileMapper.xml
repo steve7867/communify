@@ -9,4 +9,10 @@
             (#{fileInfo.storedFilename}, #{fileInfo.originalFilename}, #{fileInfo.extension}, #{fileInfo.postId}, #{fileInfo.sequence})
         </foreach>
     </insert>
+
+    <select id="findByStoredFilename" resultType="FileInfo">
+        SELECT *
+        FROM file
+        WHERE stored_filename = #{storedFilename}
+    </select>
 </mapper>
