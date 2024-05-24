@@ -1,10 +1,13 @@
 package com.communify.domain.post.application;
 
 import com.communify.domain.post.dao.PostRepository;
+import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.error.exception.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,5 +35,11 @@ public class PostService {
     @Transactional(readOnly = true) //todo:캐싱 적용
     public List<PostOutline> getPostOutlineList(PostSearchCondition searchCond) {
         return postRepository.findAllPostOutlineBySearchCond(searchCond);
+    }
+
+    @Transactional //todo: 캐싱 적용
+    public PostDetail getPostDetail(Long postId) {
+        return postRepository.findPostDetail(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId));
     }
 }
