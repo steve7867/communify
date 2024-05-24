@@ -10,6 +10,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileStorageRequest {
 
-    Long postId;
-    List<MultipartFile> multipartFileList;
+    private final Long postId;
+    private final List<MultipartFile> multipartFileList;
 }
