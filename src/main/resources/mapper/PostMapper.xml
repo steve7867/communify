@@ -13,6 +13,17 @@
         <result property="likes" column="likes"/>
     </resultMap>
 
+    <resultMap id="postDetailResultMap" type="PostDetail">
+        <result property="content" column="content"/>
+        <collection property="fileInfoList" ofType="FileInfo">
+            <id property="storedFilename" column="stored_filename"/>
+            <result property="originalFilename" column="original_filename"/>
+            <result property="extension" column="extension"/>
+            <result property="postId" column="post_id"/>
+            <result property="sequence" column="sequence"/>
+        </collection>
+    </resultMap>
+
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
         INSERT INTO post(title, content, member_id, category_id)
         VALUES (#{request.title}, #{request.content}, #{memberId}, #{request.categoryId});
@@ -32,4 +43,9 @@
         LIMIT 20
     </select>
 
+    <select id="findPostDetail" resultMap="postDetailResultMap">
+        SELECT p.content, f.stored_filename, f.original_filename, f.extension, f.post_id, f.sequence
+        FROM post AS p
+                 LEFT OUTER JOIN file AS f ON p.id = f.post_id
+    </select>
 </mapper>
