@@ -3,6 +3,7 @@ package com.communify.domain.post.presentation;
 import com.communify.domain.auth.annotation.CurrentMemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.post.application.PostService;
+import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadRequest;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -57,5 +59,16 @@ public class PostController {
     @LoginCheck
     public List<PostOutline> getPosts(@ModelAttribute @Valid PostSearchCondition searchCond) {
         return postService.getPostOutlineList(searchCond);
+    }
+
+    @GetMapping("/{postId}")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public PostDetail getPostDetail(@PathVariable Long postId,
+                                    @CurrentMemberId Long memberId) {
+
+        PostDetail postDetail = postService.getPostDetail(postId);
+//        postService.incrementView(postId, memberId); //todo: 조회 수 카운트 추가
+        return postDetail;
     }
 }
