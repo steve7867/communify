@@ -13,4 +13,6 @@ public interface FollowRepository {
     void deleteFollow(Long memberId, Long followId);
 
     List<MemberInfo> findFollowers(Long memberId);
+
+    List<MemberInfo> findFollowings(Long memberId);
 }
