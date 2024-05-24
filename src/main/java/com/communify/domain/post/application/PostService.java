@@ -5,8 +5,10 @@ import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.error.exception.InvalidPostAccessException;
 import com.communify.domain.post.error.exception.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,5 +43,19 @@ public class PostService {
     public PostDetail getPostDetail(Long postId) {
         return postRepository.findPostDetail(postId)
                 .orElseThrow(() -> new PostNotFoundException(postId));
+    }
+
+    @Transactional //todo: 캐싱 적용
+    public void editPost(Long postId,
+                         PostUploadRequest request,
+                         Long memberId) {
+
+        boolean isEdited = postRepository.editPost(postId, request, memberId);
+        if (!isEdited) {
+            throw new InvalidPostAccessException(postId, memberId);
+        }
+
+        List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
+        fileService.updateFiles(multipartFileList, postId);
     }
 }
