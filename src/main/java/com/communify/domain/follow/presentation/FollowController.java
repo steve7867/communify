@@ -8,6 +8,7 @@ import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.error.exception.SelfFollowException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,5 +39,14 @@ public class FollowController {
 
         FollowRequest followRequest = new FollowRequest(memberId, memberName, followId);
         followService.follow(followRequest);
+    }
+
+    @DeleteMapping("/{followId}/follow")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void unfollow(@CurrentMemberId Long memberId,
+                         @PathVariable @NotNull Long followId) {
+
+        followService.unfollow(memberId, followId);
     }
 }

@@ -19,4 +19,8 @@ public class FollowService {
 
 //        eventPublisher.publishEvent(new FollowEvent(request)); //todo: 이벤트 처리
     }
+
+    public void unfollow(Long memberId, Long followId) {
+        followRepository.deleteFollow(memberId, followId);
+    }
 }
