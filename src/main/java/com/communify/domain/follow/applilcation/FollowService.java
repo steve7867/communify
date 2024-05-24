@@ -34,4 +34,10 @@ public class FollowService {
         List<MemberInfo> followerList = followRepository.findFollowers(memberId);
         return Collections.unmodifiableList(followerList);
     }
+
+    @Transactional(readOnly = true)
+    public List<MemberInfo> getFollowings(Long memberId) {
+        List<MemberInfo> followingList = followRepository.findFollowings(memberId);
+        return Collections.unmodifiableList(followingList);
+    }
 }
