@@ -26,4 +26,8 @@ public class CommentService {
         List<CommentInfo> commentInfoList = commentRepository.findAllCommentsByPostId(postId);
         return Collections.unmodifiableList(commentInfoList);
     }
+
+    public void editComment(Long commentId, String content, Long memberId) {
+        commentRepository.editComment(commentId, content, memberId);
+    }
 }
