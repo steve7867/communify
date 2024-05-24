@@ -10,6 +10,7 @@ import com.communify.domain.comment.dto.CommentUploadRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,5 +46,15 @@ public class CommentController {
     @ResponseStatus(OK)
     public List<CommentInfo> getComments(@PathVariable Long postId) {
         return commentService.getComments(postId);
+    }
+
+    @PatchMapping("/comments/{commentId}")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void editComment(@PathVariable Long commentId,
+                            @RequestBody CommentContainer request,
+                            @CurrentMemberId Long memberId) {
+
+        commentService.editComment(commentId, request.getContent(), memberId);
     }
 }

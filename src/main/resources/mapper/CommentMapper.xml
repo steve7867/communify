@@ -15,4 +15,10 @@
         WHERE post_id = #{postId}
         ORDER BY c.created_timestamp;
     </select>
+
+    <update id="editComment">
+        UPDATE comment
+        SET content = #{content}
+        WHERE id = #{commentId} AND member_id = #{memberId}
+    </update>
 </mapper>
