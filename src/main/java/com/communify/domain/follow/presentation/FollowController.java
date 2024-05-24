@@ -59,4 +59,11 @@ public class FollowController {
     public List<MemberInfo> getFollowers(@PathVariable Long memberId) {
         return followService.getFollowers(memberId);
     }
+
+    @GetMapping("/{memberId}/followings")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public List<MemberInfo> getFollowings(@PathVariable Long memberId) {
+        return followService.getFollowings(memberId);
+    }
 }
