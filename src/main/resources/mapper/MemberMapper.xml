@@ -18,9 +18,11 @@
     </insert>
 
     <select id="findByEmail" resultMap="memberInfoResultMap">
-        SELECT id, email, hashed, name, created_timestamp
-        FROM member
-        WHERE email = #{email}
+        SELECT m.id, m.email, m.hashed, m.name, m.created_timestamp, count(f.follow_id) AS followed, count(f.member_id) AS following
+        FROM member AS m LEFT OUTER JOIN follow AS f
+            ON m.id = f.follow_id OR m.id = f.member_id
+        WHERE m.email = #{email}
+        GROUP BY m.id
     </select>
 
     <select id="findById" resultMap="memberInfoResultMap">
