@@ -58,4 +58,12 @@ public class PostService {
         List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
         fileService.updateFiles(multipartFileList, postId);
     }
+
+    @Transactional //todo: 캐시 에빅트 적용
+    public void deletePost(Long postId, Long memberId) {
+        boolean isDeleted = postRepository.deletePost(postId, memberId);
+        if (!isDeleted) {
+            throw new InvalidPostAccessException(postId, memberId);
+        }
+    }
 }
