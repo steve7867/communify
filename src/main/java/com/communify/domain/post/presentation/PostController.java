@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -81,5 +82,14 @@ public class PostController {
                      @CurrentMemberId Long memberId) {
 
         postService.editPost(postId, request, memberId);
+    }
+
+    @DeleteMapping("/{postId}")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void delete(@PathVariable Long postId,
+                       @CurrentMemberId Long memberId) {
+
+        postService.deletePost(postId, memberId);
     }
 }
