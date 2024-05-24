@@ -10,4 +10,6 @@ public interface FileService {
     void uploadFile(List<MultipartFile> fileList, Long postId);
 
     FileInfoAndResource getFileInfoAndResource(String storedFilename);
+
+    void updateFiles(List<MultipartFile> fileList, Long postId);
 }
