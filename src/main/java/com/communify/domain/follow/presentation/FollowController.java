@@ -6,15 +6,18 @@ import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.error.exception.SelfFollowException;
+import com.communify.domain.member.dto.MemberInfo;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -48,5 +51,12 @@ public class FollowController {
                          @PathVariable @NotNull Long followId) {
 
         followService.unfollow(memberId, followId);
+    }
+
+    @GetMapping("/{memberId}/followers")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public List<MemberInfo> getFollowers(@PathVariable Long memberId) {
+        return followService.getFollowers(memberId);
     }
 }
