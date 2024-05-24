@@ -25,4 +25,6 @@ public interface PostRepository {
     boolean editPost(@Param("postId") Long postId,
                      @Param("request") PostUploadRequest request,
                      @Param("memberId") Long memberId);
+
+    boolean deletePost(Long postId, Long memberId);
 }

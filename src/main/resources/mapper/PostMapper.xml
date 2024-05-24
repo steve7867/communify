@@ -54,4 +54,10 @@
         SET title = #{request.title}, content = #{request.content}, category_id = #{request.categoryId}
         WHERE id = #{postId} AND member_id = #{memberId}
     </update>
+
+    <delete id="deletePost">
+        DELETE
+        FROM post
+        WHERE id = #{postId} AND member_id = #{memberId}
+    </delete>
 </mapper>
