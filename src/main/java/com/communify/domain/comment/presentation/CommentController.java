@@ -5,15 +5,19 @@ import com.communify.domain.auth.annotation.CurrentMemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.comment.application.CommentService;
 import com.communify.domain.comment.dto.CommentContainer;
+import com.communify.domain.comment.dto.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -35,5 +39,11 @@ public class CommentController {
         String content = commentContainer.getContent();
         CommentUploadRequest request = new CommentUploadRequest(content, postId, memberId, memberName);
         commentService.addComment(request);
+    }
+
+    @GetMapping("/{postId}/comments")
+    @ResponseStatus(OK)
+    public List<CommentInfo> getComments(@PathVariable Long postId) {
+        return commentService.getComments(postId);
     }
 }
