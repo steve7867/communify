@@ -9,6 +9,7 @@ import com.communify.domain.comment.dto.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,5 +57,14 @@ public class CommentController {
                             @CurrentMemberId Long memberId) {
 
         commentService.editComment(commentId, request.getContent(), memberId);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void deleteComment(@PathVariable Long commentId,
+                              @CurrentMemberId Long memberId) {
+
+        commentService.deleteComment(commentId, memberId);
     }
 }

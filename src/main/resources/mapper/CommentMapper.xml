@@ -21,4 +21,9 @@
         SET content = #{content}
         WHERE id = #{commentId} AND member_id = #{memberId}
     </update>
+
+    <delete id="deleteComment">
+        DELETE from comment
+        WHERE id = #{commentId} AND member_id = #{memberId};
+    </delete>
 </mapper>

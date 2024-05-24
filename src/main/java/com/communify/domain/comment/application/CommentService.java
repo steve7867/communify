@@ -30,4 +30,8 @@ public class CommentService {
     public void editComment(Long commentId, String content, Long memberId) {
         commentRepository.editComment(commentId, content, memberId);
     }
+
+    public void deleteComment(Long commentId, Long memberId) {
+        commentRepository.deleteComment(commentId, memberId);
+    }
 }
