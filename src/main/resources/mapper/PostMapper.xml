@@ -3,8 +3,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.post.dao.PostRepository">
+    <resultMap id="postOutlineResultMap" type="PostOutline">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberName" column="name"/>
+        <result property="createdDateTime" column="created_timestamp"/>
+        <result property="view" column="view"/>
+        <result property="likes" column="likes"/>
+    </resultMap>
+
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
         INSERT INTO post(title, content, member_id, category_id)
         VALUES (#{request.title}, #{request.content}, #{memberId}, #{request.categoryId});
     </insert>
+
+    <select id="findAllPostOutlineBySearchCond" parameterType="PostSearchCondition" resultMap="postOutlineResultMap">
+        SELECT p.ID, p.title, p.member_id, m.name, p.created_timestamp, p.view, count(l.post_id) AS likes
+        FROM post AS p
+        LEFT OUTER JOIN member m ON p.member_id = m.id
+        LEFT OUTER JOIN likes AS l ON p.id = l.post_id
+        WHERE p.category_id = #{categoryId}
+        <if test="lastPostId != null">
+            AND p.id &lt; #{lastPostId}
+        </if>
+        GROUP BY p.id
+        ORDER BY p.id DESC
+        LIMIT 20
+    </select>
+
 </mapper>
