@@ -48,4 +48,10 @@
         FROM post AS p
                  LEFT OUTER JOIN file AS f ON p.id = f.post_id
     </select>
+
+    <update id="editPost">
+        UPDATE post
+        SET title = #{request.title}, content = #{request.content}, category_id = #{request.categoryId}
+        WHERE id = #{postId} AND member_id = #{memberId}
+    </update>
 </mapper>

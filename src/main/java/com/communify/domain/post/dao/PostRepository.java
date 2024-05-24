@@ -21,4 +21,8 @@ public interface PostRepository {
     List<PostOutline> findAllPostOutlineBySearchCond(PostSearchCondition searchCond);
 
     Optional<PostDetail> findPostDetail(Long postId);
+
+    boolean editPost(@Param("postId") Long postId,
+                     @Param("request") PostUploadRequest request,
+                     @Param("memberId") Long memberId);
 }

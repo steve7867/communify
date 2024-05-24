@@ -14,6 +14,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,5 +71,15 @@ public class PostController {
         PostDetail postDetail = postService.getPostDetail(postId);
 //        postService.incrementView(postId, memberId); //todo: 조회 수 카운트 추가
         return postDetail;
+    }
+
+    @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void edit(@PathVariable Long postId,
+                     @ModelAttribute @Valid PostUploadRequest request,
+                     @CurrentMemberId Long memberId) {
+
+        postService.editPost(postId, request, memberId);
     }
 }
