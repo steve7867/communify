@@ -11,4 +11,6 @@ public interface StorageService {
     List<FileInfo> saveInFileSystem(FileStorageRequest request);
 
     Resource toResource(FileInfo fileInfo);
+
+    void deleteAllFiles(Long postId);
 }

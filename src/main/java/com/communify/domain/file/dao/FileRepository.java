@@ -14,4 +14,6 @@ public interface FileRepository {
     void insertFileInfoList(List<FileInfo> fileInfoList);
 
     Optional<FileInfo> findByStoredFilename(String storedFilename);
+
+    void deleteAll(Long postId);
 }
