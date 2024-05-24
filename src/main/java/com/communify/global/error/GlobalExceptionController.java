@@ -1,6 +1,5 @@
 package com.communify.global.error;
 
-import com.communify.global.ErrorResponse;
 import com.communify.global.error.exception.BusinessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

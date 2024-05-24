@@ -1,4 +1,4 @@
-package com.communify.global;
+package com.communify.global.error;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
