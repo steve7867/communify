@@ -15,4 +15,10 @@
         FROM file
         WHERE stored_filename = #{storedFilename}
     </select>
+
+    <delete id="deleteAll">
+        DELETE
+        FROM file
+        WHERE post_id = #{postId}
+    </delete>
 </mapper>
