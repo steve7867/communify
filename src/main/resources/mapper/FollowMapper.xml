@@ -7,4 +7,9 @@
         INSERT INTO follow(member_id, follow_id)
         VALUES(#{memberId}, #{followId})
     </insert>
+
+    <delete id="deleteFollow">
+        DELETE FROM follow
+        WHERE member_id = #{memberId} AND follow_id = #{followId}
+    </delete>
 </mapper>
