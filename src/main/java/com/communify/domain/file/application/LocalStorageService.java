@@ -68,6 +68,13 @@ public class LocalStorageService implements StorageService {
         return resourceLoader.getResource(fileUri);
     }
 
+    @Override
+    public void deleteAllFiles(Long postId) {
+        String dirPath = resolveDirPath(postId);
+        File dir = new File(dirPath);
+        deleteDir(dir);
+    }
+
     private File makeDir(Long postId) {
         String dirPath = resolveDirPath(postId);
         File dir = new File(dirPath);
