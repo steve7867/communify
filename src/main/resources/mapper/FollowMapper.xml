@@ -12,4 +12,11 @@
         DELETE FROM follow
         WHERE member_id = #{memberId} AND follow_id = #{followId}
     </delete>
+
+    <select id="findFollowers" resultType="MemberInfo">
+        SELECT m.id, m.name
+        FROM follow f
+                 INNER JOIN member m ON f.member_id = m.id
+        WHERE f.follow_id = #{memberId}
+    </select>
 </mapper>
