@@ -54,12 +54,14 @@ public class RedisConfig {
         RedisCacheConfiguration categoriesConfig = defaultCacheConfig.entryTtl(Duration.ofDays(Long.MAX_VALUE));
         RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(5));
         RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1));
+        RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
                 .withCacheConfiguration(CacheNames.CATEGORIES, categoriesConfig)
                 .withCacheConfiguration(CacheNames.POST_OUTLINES, postOutlinesConfig)
                 .withCacheConfiguration(CacheNames.POST_DETAIL, postDetailConfig)
+                .withCacheConfiguration(CacheNames.COMMENTS, commentsConfig)
                 .build();
     }
 
