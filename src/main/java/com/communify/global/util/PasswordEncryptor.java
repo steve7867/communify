@@ -2,9 +2,9 @@ package com.communify.global.util;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public final class PassEncryptor {
+public final class PasswordEncryptor {
 
-    private PassEncryptor() {
+    private PasswordEncryptor() {
     }
 
     public static String encrypt(String plain) {

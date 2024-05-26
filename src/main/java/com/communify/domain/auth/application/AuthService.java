@@ -4,7 +4,7 @@ import com.communify.domain.auth.dto.LoginRequest;
 import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
-import com.communify.global.util.PassEncryptor;
+import com.communify.global.util.PasswordEncryptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class AuthService {
         MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email);
 
         String hashed = memberInfo.getHashed();
-        if (!PassEncryptor.isMatch(password, hashed)) {
+        if (!PasswordEncryptor.isMatch(password, hashed)) {
             throw new InvalidPasswordException(password);
         }
 
@@ -41,7 +41,7 @@ public class AuthService {
         MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId);
         String hashed = memberInfo.getHashed();
 
-        boolean isMatched = PassEncryptor.isMatch(password, hashed);
+        boolean isMatched = PasswordEncryptor.isMatch(password, hashed);
 
         if (!isMatched) {
             throw new InvalidPasswordException(password);
