@@ -12,6 +12,7 @@ import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,9 @@ public class PostService {
         fileService.uploadFile(multipartFileList, postId);
     }
 
-    @Transactional(readOnly = true) //todo:캐싱 적용
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
+            key = "#searchCond.categoryId + '_' + #searchCond.lastPostId")
     public List<PostOutline> getPostOutlineList(PostSearchCondition searchCond) {
         return postRepository.findAllPostOutlineBySearchCond(searchCond);
     }
