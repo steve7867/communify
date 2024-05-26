@@ -12,6 +12,7 @@ import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,8 @@ public class PostService {
         return postRepository.findAllPostOutlineBySearchCond(searchCond);
     }
 
-    @Transactional //todo: 캐싱 적용
+    @Transactional
+    @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public PostDetail getPostDetail(Long postId) {
         return postRepository.findPostDetail(postId)
                 .orElseThrow(() -> new PostNotFoundException(postId));
@@ -57,7 +59,8 @@ public class PostService {
         cacheService.addToSet(key, memberId);
     }
 
-    @Transactional //todo: 캐싱 적용
+    @Transactional
+    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public void editPost(Long postId,
                          PostUploadRequest request,
                          Long memberId) {
@@ -71,7 +74,8 @@ public class PostService {
         fileService.updateFiles(multipartFileList, postId);
     }
 
-    @Transactional //todo: 캐시 에빅트 적용
+    @Transactional
+    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public void deletePost(Long postId, Long memberId) {
         boolean isDeleted = postRepository.deletePost(postId, memberId);
         if (!isDeleted) {
