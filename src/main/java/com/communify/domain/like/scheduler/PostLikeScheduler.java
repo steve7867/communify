@@ -6,6 +6,7 @@ import com.communify.global.util.BulkInsertUtil;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,6 +27,7 @@ public class PostLikeScheduler {
     private final LikeRepository likeRepository;
 
     @Scheduled(cron = "*/5 * * * * *")
+    @SchedulerLock(name = "PostLikeScheduler_applyPostLikeToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
     public void applyPostLikeToDB() {
         List<LikeRequest> totalLikeRequestList = new ArrayList<>();
 
