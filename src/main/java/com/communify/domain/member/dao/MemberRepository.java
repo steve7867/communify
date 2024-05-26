@@ -20,4 +20,6 @@ public interface MemberRepository {
     void deleteById(Long memberId);
 
     void setFcmToken(String fcmToken, Long memberId);
+
+    Optional<String> findFcmTokenById(Long memberId);
 }
