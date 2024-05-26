@@ -15,4 +15,10 @@
             (#{request.postId}, #{request.memberId})
         </foreach>
     </insert>
+
+    <delete id="deleteLike">
+        DELETE
+        FROM likes
+        WHERE post_id = #{postId} AND member_id = #{memberId}
+    </delete>
 </mapper>
