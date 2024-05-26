@@ -8,6 +8,9 @@ import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
 import com.communify.domain.post.error.exception.PostNotFoundException;
+import com.communify.global.application.CacheService;
+import com.communify.global.util.CacheKeyUtil;
+import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileService fileService;
+    private final CacheService cacheService;
 
     @Transactional
     public void uploadPost(PostUploadRequest request,
@@ -43,6 +47,11 @@ public class PostService {
     public PostDetail getPostDetail(Long postId) {
         return postRepository.findPostDetail(postId)
                 .orElseThrow(() -> new PostNotFoundException(postId));
+    }
+
+    public void incrementView(Long postId, Long memberId) {
+        String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
+        cacheService.addToSet(key, memberId);
     }
 
     @Transactional //todo: 캐싱 적용

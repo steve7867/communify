@@ -22,6 +22,9 @@ public interface PostRepository {
 
     Optional<PostDetail> findPostDetail(Long postId);
 
+    void incrementView(@Param("postId") Long postId,
+                       @Param("view") Long view);
+
     boolean editPost(@Param("postId") Long postId,
                      @Param("request") PostUploadRequest request,
                      @Param("memberId") Long memberId);

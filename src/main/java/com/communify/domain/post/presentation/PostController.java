@@ -70,7 +70,7 @@ public class PostController {
                                     @CurrentMemberId Long memberId) {
 
         PostDetail postDetail = postService.getPostDetail(postId);
-//        postService.incrementView(postId, memberId); //todo: 조회 수 카운트 추가
+        postService.incrementView(postId, memberId);
         return postDetail;
     }
 

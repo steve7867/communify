@@ -49,6 +49,12 @@
                  LEFT OUTER JOIN file AS f ON p.id = f.post_id
     </select>
 
+    <update id="incrementView">
+        UPDATE post
+        SET view = view + #{view}
+        WHERE id = #{postId}
+    </update>
+
     <update id="editPost">
         UPDATE post
         SET title = #{request.title}, content = #{request.content}, category_id = #{request.categoryId}
