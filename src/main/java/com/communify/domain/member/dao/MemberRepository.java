@@ -18,4 +18,8 @@ public interface MemberRepository {
     Optional<MemberInfo> findById(Long memberId);
 
     void deleteById(Long memberId);
+
+    void setFcmToken(String fcmToken, Long memberId);
+
+    Optional<String> findFcmTokenById(Long memberId);
 }
