@@ -52,10 +52,12 @@ public class RedisConfig {
                 .disableCachingNullValues();
 
         RedisCacheConfiguration categoriesConfig = defaultCacheConfig.entryTtl(Duration.ofDays(Long.MAX_VALUE));
+        RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(5));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
                 .withCacheConfiguration(CacheNames.CATEGORIES, categoriesConfig)
+                .withCacheConfiguration(CacheNames.POST_OUTLINES, postOutlinesConfig)
                 .build();
     }
 
