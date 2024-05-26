@@ -4,6 +4,7 @@ import com.communify.global.util.CacheNames;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -23,22 +24,24 @@ import java.time.Duration;
 
 @Configuration
 @EnableCaching
-public class RedisConfig {
+public class CacheConfig {
 
-    @Value("${spring.data.redis.host}")
+    @Value("${spring.redis.cache.host}")
     private String host;
 
-    @Value("${spring.data.redis.port}")
+    @Value("${spring.redis.cache.port}")
     private Integer port;
 
-    @Bean
+    @Bean("cacheConnectionFactory")
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(host, port);
         return new LettuceConnectionFactory(standaloneConfiguration);
     }
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+    public CacheManager cacheManager(
+            @Qualifier("cacheConnectionFactory") RedisConnectionFactory redisConnectionFactory) {
+
         BasicPolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
                 .allowIfSubType(Object.class)
                 .build();
@@ -66,7 +69,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(
+            @Qualifier("cacheConnectionFactory") RedisConnectionFactory redisConnectionFactory) {
+
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
