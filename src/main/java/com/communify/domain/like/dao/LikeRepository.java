@@ -15,4 +15,7 @@ public interface LikeRepository extends BulkInsertable<LikeRequest> {
     void insert(@Param("request") LikeRequest request);
 
     void bulkInsert(Collection<LikeRequest> likeCollection);
+
+    void deleteLike(@Param("postId") Long postId,
+                    @Param("memberId") Long memberId);
 }
