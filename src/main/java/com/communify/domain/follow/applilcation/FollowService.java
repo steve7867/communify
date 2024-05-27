@@ -1,9 +1,11 @@
 package com.communify.domain.follow.applilcation;
 
 import com.communify.domain.follow.dao.FollowRepository;
+import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.member.dto.MemberInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import java.util.List;
 public class FollowService {
 
     private final FollowRepository followRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public void follow(FollowRequest request) {
         Long memberId = request.getMemberId();
@@ -22,7 +25,7 @@ public class FollowService {
 
         followRepository.insertFollow(memberId, followId);
 
-//        eventPublisher.publishEvent(new FollowEvent(request)); //todo: 이벤트 처리
+        eventPublisher.publishEvent(new FollowEvent(request));
     }
 
     public void unfollow(Long memberId, Long followId) {
