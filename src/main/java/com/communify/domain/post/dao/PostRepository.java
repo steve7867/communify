@@ -30,4 +30,6 @@ public interface PostRepository {
                      @Param("memberId") Long memberId);
 
     boolean deletePost(Long postId, Long memberId);
+
+    Optional<Long> findWriterId(Long postId);
 }
