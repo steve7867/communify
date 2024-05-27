@@ -32,7 +32,8 @@ public class PostService {
 
     @Transactional
     public void uploadPost(PostUploadRequest request,
-                           Long memberId) {
+                           Long memberId,
+                           String memberName) {
 
         postRepository.insertPost(request, memberId);
 
