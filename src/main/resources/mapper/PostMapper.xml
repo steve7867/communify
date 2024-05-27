@@ -66,4 +66,10 @@
         FROM post
         WHERE id = #{postId} AND member_id = #{memberId}
     </delete>
+
+    <select id="findWriterId">
+        SELECT member_id
+        FROM post
+        WHERE id = #{postId}
+    </select>
 </mapper>
