@@ -8,6 +8,7 @@ import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
 import com.communify.domain.post.error.exception.PostNotFoundException;
+import com.communify.domain.post.error.exception.PostWriterNotFoundException;
 import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
@@ -81,5 +82,11 @@ public class PostService {
         if (!isDeleted) {
             throw new InvalidPostAccessException(postId, memberId);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Long getWriterId(Long postId) {
+        return postRepository.findWriterId(postId)
+                .orElseThrow(() -> new PostWriterNotFoundException(postId));
     }
 }
