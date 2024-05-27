@@ -1,6 +1,7 @@
 package com.communify.domain.post.presentation;
 
 import com.communify.domain.auth.annotation.CurrentMemberId;
+import com.communify.domain.auth.annotation.CurrentMemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.post.application.PostService;
 import com.communify.domain.post.dto.PostDetail;
@@ -39,9 +40,10 @@ public class PostController {
     @ResponseStatus(CREATED)
     @LoginCheck
     public void upload(@ModelAttribute @Valid PostUploadRequest request,
-                       @CurrentMemberId Long memberId) {
+                       @CurrentMemberId Long memberId,
+                       @CurrentMemberName String memberName) {
 
-        postService.uploadPost(request, memberId);
+        postService.uploadPost(request, memberId, memberName);
     }
 
     /*

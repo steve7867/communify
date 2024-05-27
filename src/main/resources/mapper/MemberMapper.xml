@@ -38,4 +38,15 @@
         FROM member
         WHERE id = #{memberId}
     </delete>
+
+    <insert id="setFcmToken">
+        INSERT INTO fcm_token(member_id, fcm_token)
+        VALUES (#{memberId}, #{fcmToken})
+    </insert>
+
+    <select id="findFcmTokenById">
+        SELECT fcm_token
+        FROM fcm_token
+        WHERE member_id = #{memberId}
+    </select>
 </mapper>

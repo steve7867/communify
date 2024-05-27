@@ -14,9 +14,10 @@
     </delete>
 
     <select id="findFollowers" resultType="MemberInfo">
-        SELECT m.id, m.name
+        SELECT m.id, m.name, ft.fcm_token
         FROM follow f
-                 INNER JOIN member m ON f.member_id = m.id
+            INNER JOIN member m ON f.member_id = m.id
+            INNER JOIN fcm_token ft ON ft.member_id = m.id
         WHERE f.follow_id = #{memberId}
     </select>
 
