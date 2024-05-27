@@ -19,4 +19,7 @@ public class MemberInfo {
     private final String hashed;
     private final String name;
     private final LocalDateTime createdDateTime;
+
+    @JsonIgnore
+    private final String fcmToken;
 }
