@@ -8,6 +8,7 @@ import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class CommentEventListener {
     private final PushService pushService;
     private final MemberFindService memberFindService;
 
+    @Async
     @Transactional(readOnly = true)
     @EventListener
     public void pushCommentUploadNotification(CommentUploadEvent event) {
