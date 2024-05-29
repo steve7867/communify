@@ -4,6 +4,7 @@ import com.communify.domain.auth.dto.LoginRequest;
 import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
+import com.communify.domain.member.error.exception.MemberNotFoundException;
 import com.communify.global.util.PasswordEncryptor;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,8 @@ public class AuthService {
         String email = request.getEmail();
         String password = request.getPassword();
 
-        MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email);
+        MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(email));
 
         String hashed = memberInfo.getHashed();
         if (!PasswordEncryptor.isMatch(password, hashed)) {

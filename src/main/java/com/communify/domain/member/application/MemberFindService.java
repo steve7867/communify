@@ -7,15 +7,16 @@ import com.communify.domain.member.error.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberFindService {
 
     private final MemberRepository memberRepository;
 
-    public MemberInfo findMemberInfoByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException(email));
+    public Optional<MemberInfo> findMemberInfoByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 
     public MemberInfo findMemberInfoById(Long memberId) {
