@@ -4,8 +4,6 @@ public interface SessionService {
 
     void add(String key, Object value);
 
-    void remove(String key);
-
     void invalidate();
 
     boolean isLoggedIn();
