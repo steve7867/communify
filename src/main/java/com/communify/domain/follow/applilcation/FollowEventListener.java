@@ -3,6 +3,7 @@ package com.communify.domain.follow.applilcation;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.member.application.MemberFindService;
+import com.communify.domain.member.error.exception.FcmTokenNotSetException;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,8 @@ public class FollowEventListener {
         String memberName = request.getMemberName();
         Long followId = request.getFollowId();
 
-        String token = memberFindService.findFcmTokenById(followId);
+        String token = memberFindService.findFcmTokenById(followId)
+                .orElseThrow(() -> new FcmTokenNotSetException(followId));
 
         String title = String.format("%s님이 회원님을 팔로우했습니다.", memberName);
         MessageDto messageDto = MessageDto.builder()

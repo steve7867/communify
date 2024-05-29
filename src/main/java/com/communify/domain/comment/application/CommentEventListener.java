@@ -3,6 +3,7 @@ package com.communify.domain.comment.application;
 import com.communify.domain.comment.dto.CommentUploadEvent;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import com.communify.domain.member.application.MemberFindService;
+import com.communify.domain.member.error.exception.FcmTokenNotSetException;
 import com.communify.domain.post.application.PostService;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
@@ -38,7 +39,8 @@ public class CommentEventListener {
             return;
         }
 
-        String token = memberFindService.findFcmTokenById(writerId);
+        String token = memberFindService.findFcmTokenById(writerId)
+                .orElseThrow(() -> new FcmTokenNotSetException(writerId));
 
         MessageDto messageDto = MessageDto.builder()
                 .title(String.format("%s님이 회원님의 게시글에 댓글을 작성하였습니다.", requesterName))
