@@ -42,7 +42,9 @@ public class AuthService {
     }
 
     public void certify(String password, Long memberId) {
-        MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId);
+        MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
         String hashed = memberInfo.getHashed();
 
         boolean isMatched = PasswordEncryptor.isMatch(password, hashed);

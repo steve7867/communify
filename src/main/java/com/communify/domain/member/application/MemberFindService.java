@@ -3,7 +3,6 @@ package com.communify.domain.member.application;
 import com.communify.domain.member.dao.MemberRepository;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.error.exception.FcmTokenNotSetException;
-import com.communify.domain.member.error.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +18,8 @@ public class MemberFindService {
         return memberRepository.findByEmail(email);
     }
 
-    public MemberInfo findMemberInfoById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+    public Optional<MemberInfo> findMemberInfoById(Long memberId) {
+        return memberRepository.findById(memberId);
     }
 
     public String findFcmTokenById(Long memberId) {
