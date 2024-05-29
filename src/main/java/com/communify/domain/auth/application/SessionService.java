@@ -6,7 +6,5 @@ public interface SessionService {
 
     void invalidate();
 
-    boolean isLoggedIn();
-
-    Object getValue(String sessionKey);
+    Object get(String key);
 }

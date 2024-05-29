@@ -1,6 +1,5 @@
 package com.communify.domain.auth.application;
 
-import com.communify.global.util.SessionKey;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,12 +21,7 @@ public class HttpSessionService implements SessionService {
     }
 
     @Override
-    public boolean isLoggedIn() {
-        return httpSession.getAttribute(SessionKey.MEMBER_ID) != null;
-    }
-
-    @Override
-    public Object getValue(String sessionKey) {
-        return httpSession.getAttribute(sessionKey);
+    public Object get(String key) {
+        return httpSession.getAttribute(key);
     }
 }

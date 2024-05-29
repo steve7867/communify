@@ -36,7 +36,7 @@ public class AuthService {
     }
 
     public boolean isLoggedIn() {
-        return sessionService.isLoggedIn();
+        return sessionService.get(SessionKey.MEMBER_ID) != null;
     }
 
     public void certify(String password, Long memberId) {
