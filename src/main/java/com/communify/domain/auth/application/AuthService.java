@@ -91,4 +91,8 @@ public class AuthService {
         return System.currentTimeMillis() - publicationTime > expirationTime;
     }
 
+    public boolean isEmailVerified(String email) {
+        Boolean isEmailVerified = (Boolean) sessionService.get(SessionKey.EMAIL_VERIFIED);
+        return isEmailVerified == null ? false : isEmailVerified;
+    }
 }
