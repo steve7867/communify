@@ -17,6 +17,11 @@ public class HttpSessionService implements SessionService {
     }
 
     @Override
+    public void remove(String key) {
+        httpSession.removeAttribute(key);
+    }
+
+    @Override
     public void logout() {
         httpSession.invalidate();
     }
