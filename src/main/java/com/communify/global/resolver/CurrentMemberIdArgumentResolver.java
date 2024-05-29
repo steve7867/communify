@@ -30,6 +30,6 @@ public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentRes
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
 
-        return sessionService.getValue(SessionKey.MEMBER_ID);
+        return sessionService.get(SessionKey.MEMBER_ID);
     }
 }
