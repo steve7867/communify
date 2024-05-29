@@ -5,17 +5,20 @@ import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
+import com.communify.global.application.MailService;
 import com.communify.global.util.PasswordEncryptor;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final MemberFindService memberFindService;
     private final SessionService sessionService;
+    private final MailService mailService;
 
     public void login(LoginRequest request) {
         String email = request.getEmail();
@@ -52,5 +55,14 @@ public class AuthService {
         if (!isMatched) {
             throw new InvalidPasswordException(password);
         }
+    }
+
+    public void publishEmailVerificationCode(String email) {
+        String verificationCode = UUID.randomUUID().toString();
+
+        sessionService.add(SessionKey.VERIFICATION_CODE, verificationCode);
+        sessionService.add(SessionKey.PUBLICATION_TIME, System.currentTimeMillis());
+
+        mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
     }
 }
