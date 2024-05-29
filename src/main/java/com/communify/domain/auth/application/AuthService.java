@@ -9,9 +9,12 @@ import com.communify.global.application.MailService;
 import com.communify.global.util.PasswordEncryptor;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -19,6 +22,9 @@ public class AuthService {
     private final MemberFindService memberFindService;
     private final SessionService sessionService;
     private final MailService mailService;
+
+    @Value("${spring.mail.auth-code-expiration-millis}")
+    private Long expirationTime;
 
     public void login(LoginRequest request) {
         String email = request.getEmail();
@@ -65,4 +71,24 @@ public class AuthService {
 
         mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
     }
+
+    public boolean verify(String code) {
+        String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE);
+        Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME);
+
+        if (!Objects.equals(code, verificationCode) || isTimeOut(publicationTime)) {
+            return false;
+        }
+
+        sessionService.remove(SessionKey.VERIFICATION_CODE);
+        sessionService.remove(SessionKey.PUBLICATION_TIME);
+        sessionService.add(SessionKey.EMAIL_VERIFIED, true);
+
+        return true;
+    }
+
+    private boolean isTimeOut(Long publicationTime) {
+        return System.currentTimeMillis() - publicationTime > expirationTime;
+    }
+
 }
