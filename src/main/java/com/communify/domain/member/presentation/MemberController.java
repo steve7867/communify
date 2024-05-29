@@ -63,11 +63,10 @@ public class MemberController {
     }
 
     @PostMapping("/email/verify")
+    @ResponseStatus(OK)
     @NotLoginCheck
-    public ResponseEntity<Void> verifyEmail(@RequestBody @Email @NotBlank String code) {
-        boolean isVerified = authService.verify(code);
-
-        return !isVerified ? ResponseEntity.badRequest().build() : ResponseEntity.ok().build();
+    public void verifyEmail(@RequestBody @Email @NotBlank String code) {
+        authService.verify(code);
 
     }
 

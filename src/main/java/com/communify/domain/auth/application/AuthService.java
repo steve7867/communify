@@ -1,7 +1,9 @@
 package com.communify.domain.auth.application;
 
 import com.communify.domain.auth.error.exception.InvalidPasswordException;
+import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
 import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
+import com.communify.domain.auth.error.exception.VerificationTimeOutException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
@@ -49,20 +51,22 @@ public class AuthService {
         mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
     }
 
-    public boolean verify(String code) {
+    public void verify(String code) {
         String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
                 .orElseThrow(VerificationCodeNotPublishedException::new);
         Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME).get();
 
-        if (!Objects.equals(code, verificationCode) || isTimeOut(publicationTime)) {
-            return false;
+        if (isTimeOut(publicationTime)) {
+            throw new VerificationTimeOutException();
+        }
+
+        if (!Objects.equals(code, verificationCode)) {
+            throw new VerificationCodeNotEqualException();
         }
 
         sessionService.remove(SessionKey.VERIFICATION_CODE);
         sessionService.remove(SessionKey.PUBLICATION_TIME);
         sessionService.add(SessionKey.EMAIL_VERIFIED, true);
-
-        return true;
     }
 
     private boolean isTimeOut(Long publicationTime) {
