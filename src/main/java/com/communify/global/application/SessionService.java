@@ -1,4 +1,4 @@
-package com.communify.domain.auth.application;
+package com.communify.global.application;
 
 public interface SessionService {
 

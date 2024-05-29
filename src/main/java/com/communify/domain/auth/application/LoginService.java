@@ -5,6 +5,7 @@ import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
+import com.communify.global.application.SessionService;
 import com.communify.global.util.PasswordEncryptor;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
