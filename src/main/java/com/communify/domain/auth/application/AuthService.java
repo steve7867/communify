@@ -1,6 +1,7 @@
 package com.communify.domain.auth.application;
 
 import com.communify.domain.auth.error.exception.InvalidPasswordException;
+import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
@@ -49,8 +50,8 @@ public class AuthService {
     }
 
     public boolean verify(String code) {
-        String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE);
-        Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME);
+        String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
+                .orElseThrow(VerificationCodeNotPublishedException::new);
         Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME).get();
 
         if (!Objects.equals(code, verificationCode) || isTimeOut(publicationTime)) {
