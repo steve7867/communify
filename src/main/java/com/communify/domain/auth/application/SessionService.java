@@ -1,10 +1,8 @@
 package com.communify.domain.auth.application;
 
-import com.communify.domain.member.dto.MemberInfo;
-
 public interface SessionService {
 
-    void login(MemberInfo memberInfo);
+    void add(String key, Object value);
 
     void logout();
 

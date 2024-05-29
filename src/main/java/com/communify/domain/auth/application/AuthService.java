@@ -5,6 +5,7 @@ import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.global.util.PasswordEncryptor;
+import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,8 @@ public class AuthService {
             throw new InvalidPasswordException(password);
         }
 
-        sessionService.login(memberInfo);
+        sessionService.add(SessionKey.MEMBER_ID, memberInfo.getId());
+        sessionService.add(SessionKey.MEMBER_NAME, memberInfo.getName());
     }
 
     public void logout() {
