@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -71,7 +72,7 @@ public class MemberController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     @NotLoginCheck
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
         memberSignUpService.signUp(request);
