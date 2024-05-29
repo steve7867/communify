@@ -11,6 +11,7 @@ import com.communify.domain.member.application.MemberWithdrawService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
+import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -46,20 +45,16 @@ public class MemberController {
     private final AuthService authService;
 
     @PostMapping("/email/verification-request")
+    @ResponseStatus(OK)
     @NotLoginCheck
-    public ResponseEntity<Object> requestEmailVerification(@RequestBody @Email @NotBlank String email) {
+    public void requestEmailVerification(@RequestBody @Email @NotBlank String email) {
         Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
 
         if (memberInfoOpt.isPresent()) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "이미 사용 중인 email입니다.");
-
-            return ResponseEntity.badRequest().body(map);
+            throw new EmailAlreadyUsedException(email);
         }
 
         authService.publishEmailVerificationCode(email);
-
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/email/verify")
