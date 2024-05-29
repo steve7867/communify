@@ -8,7 +8,6 @@ import com.communify.domain.post.dto.PostSearchCondition;
 import com.communify.domain.post.dto.PostUploadEvent;
 import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
-import com.communify.domain.post.error.exception.PostNotFoundException;
 import com.communify.domain.post.error.exception.PostWriterNotFoundException;
 import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheKeyUtil;
@@ -23,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,9 +56,8 @@ public class PostService {
 
     @Transactional
     @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
-    public PostDetail getPostDetail(Long postId) {
-        return postRepository.findPostDetail(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId));
+    public Optional<PostDetail> getPostDetail(Long postId) {
+        return postRepository.findPostDetail(postId);
     }
 
     public void incrementView(Long postId, Long memberId) {

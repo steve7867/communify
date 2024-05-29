@@ -11,6 +11,7 @@ import com.communify.domain.post.dto.PostUploadRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -66,14 +68,18 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    @ResponseStatus(OK)
     @LoginCheck
-    public PostDetail getPostDetail(@PathVariable Long postId,
-                                    @CurrentMemberId Long memberId) {
+    public ResponseEntity<PostDetail> getPostDetail(@PathVariable Long postId,
+                                                    @CurrentMemberId Long memberId) {
 
-        PostDetail postDetail = postService.getPostDetail(postId);
+        Optional<PostDetail> postDetailOpt = postService.getPostDetail(postId);
+        if (postDetailOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         postService.incrementView(postId, memberId);
-        return postDetail;
+
+        return ResponseEntity.ok(postDetailOpt.get());
     }
 
     @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -3,6 +3,7 @@ package com.communify.domain.like.application;
 import com.communify.domain.like.dto.LikeEvent;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.domain.member.application.MemberFindService;
+import com.communify.domain.member.error.exception.FcmTokenNotSetException;
 import com.communify.domain.post.application.PostService;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
@@ -37,7 +38,8 @@ public class LikeEventListener {
             return;
         }
 
-        String token = memberFindService.findFcmTokenById(writerId);
+        String token = memberFindService.findFcmTokenById(writerId)
+                .orElseThrow(() -> new FcmTokenNotSetException(writerId));
 
         MessageDto messageDto = MessageDto.builder()
                 .title(String.format("%s님이 회원님의 게시글에 '좋아요'를 눌렀습니다.", memberName))
