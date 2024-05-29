@@ -32,7 +32,7 @@ public class AuthService {
     }
 
     public void logout() {
-        sessionService.logout();
+        sessionService.invalidate();
     }
 
     public boolean isLoggedIn() {

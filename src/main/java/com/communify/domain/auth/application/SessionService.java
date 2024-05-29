@@ -6,7 +6,7 @@ public interface SessionService {
 
     void remove(String key);
 
-    void logout();
+    void invalidate();
 
     boolean isLoggedIn();
 

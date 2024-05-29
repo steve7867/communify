@@ -22,7 +22,7 @@ public class HttpSessionService implements SessionService {
     }
 
     @Override
-    public void logout() {
+    public void invalidate() {
         httpSession.invalidate();
     }
 
