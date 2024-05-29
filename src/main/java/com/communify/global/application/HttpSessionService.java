@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class HttpSessionService implements SessionService {
@@ -16,8 +18,8 @@ public class HttpSessionService implements SessionService {
     }
 
     @Override
-    public Object get(String key) {
-        return httpSession.getAttribute(key);
+    public Optional<Object> get(String key) {
+        return Optional.ofNullable(httpSession.getAttribute(key));
     }
 
     @Override

@@ -39,6 +39,6 @@ public class LoginService {
     }
 
     public boolean isLoggedIn() {
-        return sessionService.get(SessionKey.MEMBER_ID) != null;
+        return sessionService.get(SessionKey.MEMBER_ID).isPresent();
     }
 }

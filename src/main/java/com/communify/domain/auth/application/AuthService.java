@@ -51,6 +51,7 @@ public class AuthService {
     public boolean verify(String code) {
         String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE);
         Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME);
+        Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME).get();
 
         if (!Objects.equals(code, verificationCode) || isTimeOut(publicationTime)) {
             return false;
@@ -68,7 +69,6 @@ public class AuthService {
     }
 
     public boolean isEmailVerified(String email) {
-        Boolean isEmailVerified = (Boolean) sessionService.get(SessionKey.EMAIL_VERIFIED);
-        return isEmailVerified == null ? false : isEmailVerified;
+        return sessionService.get(SessionKey.EMAIL_VERIFIED).isPresent();
     }
 }
