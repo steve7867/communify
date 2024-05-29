@@ -16,12 +16,12 @@ public class HttpSessionService implements SessionService {
     }
 
     @Override
-    public void invalidate() {
-        httpSession.invalidate();
+    public Object get(String key) {
+        return httpSession.getAttribute(key);
     }
 
     @Override
-    public Object get(String key) {
-        return httpSession.getAttribute(key);
+    public void invalidate() {
+        httpSession.invalidate();
     }
 }
