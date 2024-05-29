@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class AuthorizationAspect {
+public class LoginCheckAspect {
 
     private final LoginService loginService;
 
