@@ -6,5 +6,7 @@ public interface SessionService {
 
     Object get(String key);
 
+    void remove(String key);
+
     void invalidate();
 }
