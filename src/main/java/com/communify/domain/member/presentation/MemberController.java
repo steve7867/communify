@@ -4,6 +4,7 @@ import com.communify.domain.auth.annotation.CurrentMemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.auth.application.VerificationService;
+import com.communify.domain.auth.dto.VerificationConfirmRequest;
 import com.communify.domain.auth.error.exception.EmailNotVerifiedException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.application.MemberSignUpService;
@@ -47,7 +48,7 @@ public class MemberController {
     @ResponseStatus(CREATED)
     @NotLoginCheck
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
-        boolean isEmailVerified = verificationService.isVerified(request.getEmail());
+        boolean isEmailVerified = verificationService.isVerified(VerificationConfirmRequest.empty());
         if (!isEmailVerified) {
             throw new EmailNotVerifiedException(request.getEmail());
         }

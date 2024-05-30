@@ -1,6 +1,7 @@
 package com.communify.domain.auth.application;
 
 import com.communify.domain.auth.dto.CodeIssueRequest;
+import com.communify.domain.auth.dto.VerificationConfirmRequest;
 import com.communify.domain.auth.dto.VerificationRequest;
 import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
 import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
@@ -63,7 +64,7 @@ public class EmailBasedVerificationService implements VerificationService {
     }
 
     @Override
-    public boolean isVerified(String email) {
+    public boolean isVerified(VerificationConfirmRequest request) {
         return sessionService.get(SessionKey.EMAIL_VERIFIED).isPresent();
     }
 }
