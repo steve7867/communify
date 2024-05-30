@@ -1,7 +1,7 @@
-package com.communify.domain.catetory.application;
+package com.communify.domain.category.application;
 
-import com.communify.domain.catetory.dao.CategoryRepository;
-import com.communify.domain.catetory.dto.CategoryInfo;
+import com.communify.domain.category.dao.CategoryRepository;
+import com.communify.domain.category.dto.CategoryInfo;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

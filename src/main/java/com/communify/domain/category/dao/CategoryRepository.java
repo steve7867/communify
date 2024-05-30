@@ -1,6 +1,6 @@
-package com.communify.domain.catetory.dao;
+package com.communify.domain.category.dao;
 
-import com.communify.domain.catetory.dto.CategoryInfo;
+import com.communify.domain.category.dto.CategoryInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.communify.domain.catetory.dto;
+package com.communify.domain.category.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
