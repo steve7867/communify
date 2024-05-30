@@ -1,16 +1,13 @@
 package com.communify.domain.auth.application;
 
-import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
 import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
 import com.communify.domain.auth.error.exception.VerificationTimeOutException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
-import com.communify.domain.member.error.exception.MemberNotFoundException;
 import com.communify.global.application.MailService;
 import com.communify.global.application.SessionService;
-import com.communify.global.util.PasswordEncryptor;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,19 +27,6 @@ public class VerificationService {
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private Long expirationTime;
-
-    public void verifyPassword(String password, Long memberId) {
-        MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
-        String hashed = memberInfo.getHashed();
-
-        boolean isMatched = PasswordEncryptor.isMatch(password, hashed);
-
-        if (!isMatched) {
-            throw new InvalidPasswordException(password);
-        }
-    }
 
     public void issueEmailVerificationCode(String email) {
         Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
