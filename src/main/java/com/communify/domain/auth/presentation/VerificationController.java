@@ -1,7 +1,7 @@
 package com.communify.domain.auth.presentation;
 
 import com.communify.domain.auth.annotation.NotLoginCheck;
-import com.communify.domain.auth.application.AuthService;
+import com.communify.domain.auth.application.VerificationService;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -18,19 +18,19 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class VerificationController {
 
-    private final AuthService authService;
+    private final VerificationService verificationService;
 
     @PostMapping("/code-issue")
     @ResponseStatus(OK)
     @NotLoginCheck
     public void requestVerificationCodeIssue(@RequestBody @Email @NotBlank String email) {
-        authService.issueEmailVerificationCode(email);
+        verificationService.issueEmailVerificationCode(email);
     }
 
     @PostMapping("/code")
     @ResponseStatus(OK)
     @NotLoginCheck
     public void verifyCode(@RequestBody @Email @NotBlank String code) {
-        authService.verify(code);
+        verificationService.verifyCode(code);
     }
 }

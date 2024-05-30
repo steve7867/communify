@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class VerificationService {
 
     private final MemberFindService memberFindService;
     private final SessionService sessionService;
@@ -31,7 +31,7 @@ public class AuthService {
     @Value("${spring.mail.auth-code-expiration-millis}")
     private Long expirationTime;
 
-    public void certify(String password, Long memberId) {
+    public void verifyPassword(String password, Long memberId) {
         MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
@@ -58,7 +58,7 @@ public class AuthService {
         mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
     }
 
-    public void verify(String code) {
+    public void verifyCode(String code) {
         String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
                 .orElseThrow(VerificationCodeNotPublishedException::new);
         Long publicationTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
