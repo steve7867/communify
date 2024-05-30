@@ -3,9 +3,8 @@ package com.communify.domain.auth.presentation;
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.auth.application.VerificationService;
 import com.communify.domain.auth.dto.CodeIssueRequest;
+import com.communify.domain.auth.dto.VerificationRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +31,7 @@ public class VerificationController {
     @PostMapping("/code")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void verifyCode(@RequestBody @Email @NotBlank String code) {
-        verificationService.verifyCode(code);
+    public void verifyCode(@RequestBody @Valid VerificationRequest request) {
+        verificationService.verifyCode(request);
     }
 }

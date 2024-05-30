@@ -1,6 +1,7 @@
 package com.communify.domain.auth.application;
 
 import com.communify.domain.auth.dto.CodeIssueRequest;
+import com.communify.domain.auth.dto.VerificationRequest;
 import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
 import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
 import com.communify.domain.auth.error.exception.VerificationTimeOutException;
@@ -37,7 +38,9 @@ public class EmailBasedVerificationService implements VerificationService {
     }
 
     @Override
-    public void verifyCode(String code) {
+    public void verifyCode(VerificationRequest request) {
+        String code = request.getCode();
+
         String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
                 .orElseThrow(VerificationCodeNotPublishedException::new);
         Long publicationTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
