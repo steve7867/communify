@@ -2,6 +2,8 @@ package com.communify.domain.auth.presentation;
 
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.auth.application.VerificationService;
+import com.communify.domain.auth.dto.CodeIssueRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,8 @@ public class VerificationController {
     @PostMapping("/code-issue")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void requestVerificationCodeIssue(@RequestBody @Email @NotBlank String email) {
-        verificationService.issueVerificationCode(email);
+    public void requestVerificationCodeIssue(@RequestBody @Valid CodeIssueRequest request) {
+        verificationService.issueVerificationCode(request);
     }
 
     @PostMapping("/code")

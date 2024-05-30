@@ -1,11 +1,9 @@
 package com.communify.domain.auth.application;
 
+import com.communify.domain.auth.dto.CodeIssueRequest;
 import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
 import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
 import com.communify.domain.auth.error.exception.VerificationTimeOutException;
-import com.communify.domain.member.application.MemberFindService;
-import com.communify.domain.member.dto.MemberInfo;
-import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
 import com.communify.global.application.MailService;
 import com.communify.global.application.SessionService;
 import com.communify.global.util.SessionKey;
@@ -14,14 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class EmailBasedVerificationService implements VerificationService {
 
-    private final MemberFindService memberFindService;
     private final SessionService sessionService;
     private final MailService mailService;
 
@@ -29,18 +25,15 @@ public class EmailBasedVerificationService implements VerificationService {
     private Long expirationTime;
 
     @Override
-    public void issueVerificationCode(String email) {
-        Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
-        if (memberInfoOpt.isPresent()) {
-            throw new EmailAlreadyUsedException(email);
-        }
+    public void issueVerificationCode(CodeIssueRequest request) {
+        String email = request.getEmail();
 
         String verificationCode = UUID.randomUUID().toString().substring(0, 8);
 
+        mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
+
         sessionService.add(SessionKey.VERIFICATION_CODE, verificationCode);
         sessionService.add(SessionKey.ISSUE_TIME, System.currentTimeMillis());
-
-        mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
     }
 
     @Override
