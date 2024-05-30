@@ -45,12 +45,12 @@ public class AuthService {
     }
 
     public void publishEmailVerificationCode(String email) {
-        String verificationCode = UUID.randomUUID().toString();
         Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
         if (memberInfoOpt.isPresent()) {
             throw new EmailAlreadyUsedException(email);
         }
 
+        String verificationCode = UUID.randomUUID().toString().substring(0, 8);
 
         sessionService.add(SessionKey.VERIFICATION_CODE, verificationCode);
         sessionService.add(SessionKey.PUBLICATION_TIME, System.currentTimeMillis());
