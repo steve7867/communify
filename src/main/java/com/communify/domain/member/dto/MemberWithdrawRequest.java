@@ -1,10 +1,9 @@
 package com.communify.domain.member.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-
-import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor(force = true)
