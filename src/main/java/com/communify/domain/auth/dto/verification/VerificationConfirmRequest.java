@@ -1,4 +1,4 @@
-package com.communify.domain.auth.dto;
+package com.communify.domain.auth.dto.verification;
 
 public class VerificationConfirmRequest {
 

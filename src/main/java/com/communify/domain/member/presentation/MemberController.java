@@ -4,7 +4,7 @@ import com.communify.domain.auth.annotation.CurrentMemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.auth.application.VerificationService;
-import com.communify.domain.auth.dto.VerificationConfirmRequest;
+import com.communify.domain.auth.dto.verification.VerificationConfirmRequest;
 import com.communify.domain.auth.error.exception.EmailNotVerifiedException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.application.MemberSignUpService;

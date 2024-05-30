@@ -1,8 +1,8 @@
 package com.communify.domain.auth.application;
 
-import com.communify.domain.auth.dto.CodeIssueRequest;
-import com.communify.domain.auth.dto.VerificationConfirmRequest;
-import com.communify.domain.auth.dto.VerificationRequest;
+import com.communify.domain.auth.dto.verification.CodeIssueRequest;
+import com.communify.domain.auth.dto.verification.VerificationConfirmRequest;
+import com.communify.domain.auth.dto.verification.VerificationRequest;
 import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
 import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
 import com.communify.domain.auth.error.exception.VerificationTimeOutException;
