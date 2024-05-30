@@ -20,17 +20,17 @@ public class VerificationController {
 
     private final AuthService authService;
 
-    @PostMapping("/code-publish")
+    @PostMapping("/code-issue")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void requestEmailVerification(@RequestBody @Email @NotBlank String email) {
-        authService.publishEmailVerificationCode(email);
+    public void requestVerificationCodeIssue(@RequestBody @Email @NotBlank String email) {
+        authService.issueEmailVerificationCode(email);
     }
 
     @PostMapping("/code")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void verifyEmail(@RequestBody @Email @NotBlank String code) {
+    public void verifyCode(@RequestBody @Email @NotBlank String code) {
         authService.verify(code);
     }
 }

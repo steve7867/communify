@@ -44,7 +44,7 @@ public class AuthService {
         }
     }
 
-    public void publishEmailVerificationCode(String email) {
+    public void issueEmailVerificationCode(String email) {
         Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
         if (memberInfoOpt.isPresent()) {
             throw new EmailAlreadyUsedException(email);
@@ -53,7 +53,7 @@ public class AuthService {
         String verificationCode = UUID.randomUUID().toString().substring(0, 8);
 
         sessionService.add(SessionKey.VERIFICATION_CODE, verificationCode);
-        sessionService.add(SessionKey.PUBLICATION_TIME, System.currentTimeMillis());
+        sessionService.add(SessionKey.ISSUE_TIME, System.currentTimeMillis());
 
         mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
     }
@@ -61,7 +61,7 @@ public class AuthService {
     public void verify(String code) {
         String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
                 .orElseThrow(VerificationCodeNotPublishedException::new);
-        Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME).get();
+        Long publicationTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
 
         if (isTimeOut(publicationTime)) {
             throw new VerificationTimeOutException();
@@ -72,12 +72,12 @@ public class AuthService {
         }
 
         sessionService.remove(SessionKey.VERIFICATION_CODE);
-        sessionService.remove(SessionKey.PUBLICATION_TIME);
+        sessionService.remove(SessionKey.ISSUE_TIME);
         sessionService.add(SessionKey.EMAIL_VERIFIED, true);
     }
 
-    private boolean isTimeOut(Long publicationTime) {
-        return System.currentTimeMillis() - publicationTime > expirationTime;
+    private boolean isTimeOut(Long issueTime) {
+        return System.currentTimeMillis() - issueTime > expirationTime;
     }
 
     public boolean isEmailVerified(String email) {
