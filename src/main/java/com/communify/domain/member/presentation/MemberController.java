@@ -3,6 +3,8 @@ package com.communify.domain.member.presentation;
 import com.communify.domain.auth.annotation.CurrentMemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.NotLoginCheck;
+import com.communify.domain.auth.application.VerificationService;
+import com.communify.domain.auth.error.exception.EmailNotVerifiedException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.application.MemberSignUpService;
 import com.communify.domain.member.application.MemberUpdateService;
@@ -37,11 +39,17 @@ public class MemberController {
     private final MemberFindService memberFindService;
     private final MemberUpdateService memberUpdateService;
     private final MemberWithdrawService memberWithdrawService;
+    private final VerificationService verificationService;
 
     @PostMapping
     @ResponseStatus(CREATED)
     @NotLoginCheck
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
+        boolean isEmailVerified = verificationService.isEmailVerified(request.getEmail());
+        if (!isEmailVerified) {
+            throw new EmailNotVerifiedException(request.getEmail());
+        }
+
         memberSignUpService.signUp(request);
     }
 
