@@ -1,5 +1,6 @@
 package com.communify.domain.file.presentation;
 
+import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.file.application.FileService;
 import com.communify.domain.file.dto.FileInfo;
 import com.communify.domain.file.dto.FileInfoAndResource;
@@ -26,6 +27,7 @@ public class FileController {
      *  html 페이지에서 <img src="/posts/image/{storedFilename}"/> 태그가 src의 url로 get 요청을 보낸다.
      */
     @GetMapping(value = "/images/{storedFilename}")
+    @LoginCheck
     public Resource getFile(@PathVariable String storedFilename) {
         return fileService.getFileInfoAndResource(storedFilename).getResource();
     }
@@ -35,6 +37,7 @@ public class FileController {
         브라우저는 image.jpg라는 파일을 다운로드한다.
      */
     @GetMapping(value = "/images/{storedFilename}/download")
+    @LoginCheck
     public ResponseEntity<Resource> downloadFile(@PathVariable String storedFilename) {
         FileInfoAndResource fileInfoAndResource = fileService.getFileInfoAndResource(storedFilename);
 

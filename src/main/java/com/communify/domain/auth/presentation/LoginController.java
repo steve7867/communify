@@ -1,5 +1,7 @@
 package com.communify.domain.auth.presentation;
 
+import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.auth.application.LoginService;
 import com.communify.domain.auth.dto.login.LoginRequest;
 import jakarta.validation.Valid;
@@ -21,12 +23,14 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseStatus(OK)
+    @NotLoginCheck
     public void login(@RequestBody @Valid LoginRequest request) {
         loginService.login(request);
     }
 
     @PostMapping("/logout")
     @ResponseStatus(OK)
+    @LoginCheck
     public void logout() {
         loginService.logout();
     }

@@ -45,6 +45,7 @@ public class CommentController {
 
     @GetMapping("/{postId}/comments")
     @ResponseStatus(OK)
+    @LoginCheck
     public List<CommentInfo> getComments(@PathVariable Long postId) {
         return commentService.getComments(postId);
     }
