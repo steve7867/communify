@@ -1,9 +1,9 @@
-package com.communify.domain.auth.presentation;
+package com.communify.domain.verification.controller;
 
 import com.communify.domain.auth.annotation.NotLoginCheck;
-import com.communify.domain.auth.application.VerificationService;
-import com.communify.domain.auth.dto.verification.CodeIssueRequest;
-import com.communify.domain.auth.dto.verification.VerificationRequest;
+import com.communify.domain.verification.application.VerificationService;
+import com.communify.domain.verification.dto.CodeIssueRequest;
+import com.communify.domain.verification.dto.VerificationRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

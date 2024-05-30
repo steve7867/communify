@@ -1,11 +1,11 @@
-package com.communify.domain.auth.application;
+package com.communify.domain.verification.application;
 
-import com.communify.domain.auth.dto.verification.CodeIssueRequest;
-import com.communify.domain.auth.dto.verification.VerificationConfirmRequest;
-import com.communify.domain.auth.dto.verification.VerificationRequest;
-import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
-import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
-import com.communify.domain.auth.error.exception.VerificationTimeOutException;
+import com.communify.domain.verification.dto.CodeIssueRequest;
+import com.communify.domain.verification.dto.VerificationConfirmRequest;
+import com.communify.domain.verification.dto.VerificationRequest;
+import com.communify.domain.verification.error.exception.VerificationCodeNotEqualException;
+import com.communify.domain.verification.error.exception.VerificationCodeNotPublishedException;
+import com.communify.domain.verification.error.exception.VerificationTimeOutException;
 import com.communify.global.application.MailService;
 import com.communify.global.application.SessionService;
 import com.communify.global.util.SessionKey;

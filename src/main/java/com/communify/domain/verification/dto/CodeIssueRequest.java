@@ -1,4 +1,4 @@
-package com.communify.domain.auth.dto.verification;
+package com.communify.domain.verification.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
