@@ -1,12 +1,13 @@
 package com.communify.domain.verification.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @JsonCreator)
 public class VerificationRequest {
 
     @NotBlank(message = "공백은 허용되지 않습니다.")
