@@ -11,7 +11,6 @@ import com.communify.domain.member.application.MemberWithdrawService;
 import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
-import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -48,12 +45,6 @@ public class MemberController {
     @ResponseStatus(OK)
     @NotLoginCheck
     public void requestEmailVerification(@RequestBody @Email @NotBlank String email) {
-        Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
-
-        if (memberInfoOpt.isPresent()) {
-            throw new EmailAlreadyUsedException(email);
-        }
-
         authService.publishEmailVerificationCode(email);
     }
 

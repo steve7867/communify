@@ -6,6 +6,7 @@ import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedExc
 import com.communify.domain.auth.error.exception.VerificationTimeOutException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
+import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
 import com.communify.global.application.MailService;
 import com.communify.global.application.SessionService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -44,6 +46,11 @@ public class AuthService {
 
     public void publishEmailVerificationCode(String email) {
         String verificationCode = UUID.randomUUID().toString();
+        Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
+        if (memberInfoOpt.isPresent()) {
+            throw new EmailAlreadyUsedException(email);
+        }
+
 
         sessionService.add(SessionKey.VERIFICATION_CODE, verificationCode);
         sessionService.add(SessionKey.PUBLICATION_TIME, System.currentTimeMillis());
