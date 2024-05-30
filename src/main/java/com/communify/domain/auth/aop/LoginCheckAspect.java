@@ -1,6 +1,6 @@
 package com.communify.domain.auth.aop;
 
-import com.communify.domain.auth.application.AuthService;
+import com.communify.domain.auth.application.LoginService;
 import com.communify.domain.auth.error.exception.AlreadyLoggedInException;
 import com.communify.domain.auth.error.exception.NotLoggedInException;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class AuthorizationAspect {
+public class LoginCheckAspect {
 
-    private final AuthService authService;
+    private final LoginService loginService;
 
     @Before("@annotation(com.communify.domain.auth.annotation.NotLoginCheck)")
     public void checkNotLoggedIn() {
-        boolean loggedIn = authService.isLoggedIn();
+        boolean loggedIn = loginService.isLoggedIn();
 
         if (loggedIn) {
             throw new AlreadyLoggedInException();
@@ -26,7 +26,7 @@ public class AuthorizationAspect {
 
     @Before("@annotation(com.communify.domain.auth.annotation.LoginCheck)")
     public void checkLoggedIn() {
-        boolean loggedIn = authService.isLoggedIn();
+        boolean loggedIn = loginService.isLoggedIn();
 
         if (!loggedIn) {
             throw new NotLoggedInException();

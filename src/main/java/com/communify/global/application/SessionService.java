@@ -1,10 +1,12 @@
-package com.communify.domain.auth.application;
+package com.communify.global.application;
+
+import java.util.Optional;
 
 public interface SessionService {
 
     void add(String key, Object value);
 
-    Object get(String key);
+    Optional<Object> get(String key);
 
     void remove(String key);
 

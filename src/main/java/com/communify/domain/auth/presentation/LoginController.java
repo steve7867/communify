@@ -1,6 +1,6 @@
 package com.communify.domain.auth.presentation;
 
-import com.communify.domain.auth.application.AuthService;
+import com.communify.domain.auth.application.LoginService;
 import com.communify.domain.auth.dto.LoginRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,19 +15,19 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
-public class AuthController {
+public class LoginController {
 
-    private final AuthService authService;
+    private final LoginService loginService;
 
     @PostMapping("/login")
     @ResponseStatus(OK)
     public void login(@RequestBody @Valid LoginRequest request) {
-        authService.login(request);
+        loginService.login(request);
     }
 
     @PostMapping("/logout")
     @ResponseStatus(OK)
     public void logout() {
-        authService.logout();
+        loginService.logout();
     }
 }

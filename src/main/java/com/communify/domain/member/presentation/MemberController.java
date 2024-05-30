@@ -27,10 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -46,28 +42,17 @@ public class MemberController {
     private final AuthService authService;
 
     @PostMapping("/email/verification-request")
+    @ResponseStatus(OK)
     @NotLoginCheck
-    public ResponseEntity<Object> requestEmailVerification(@RequestBody @Email @NotBlank String email) {
-        Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
-
-        if (memberInfoOpt.isPresent()) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "이미 사용 중인 email입니다.");
-
-            return ResponseEntity.badRequest().body(map);
-        }
-
+    public void requestEmailVerification(@RequestBody @Email @NotBlank String email) {
         authService.publishEmailVerificationCode(email);
-
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/email/verify")
+    @ResponseStatus(OK)
     @NotLoginCheck
-    public ResponseEntity<Void> verifyEmail(@RequestBody @Email @NotBlank String code) {
-        boolean isVerified = authService.verify(code);
-
-        return !isVerified ? ResponseEntity.badRequest().build() : ResponseEntity.ok().build();
+    public void verifyEmail(@RequestBody @Email @NotBlank String code) {
+        authService.verify(code);
 
     }
 

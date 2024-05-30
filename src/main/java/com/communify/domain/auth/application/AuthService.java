@@ -1,11 +1,15 @@
 package com.communify.domain.auth.application;
 
-import com.communify.domain.auth.dto.LoginRequest;
 import com.communify.domain.auth.error.exception.InvalidPasswordException;
+import com.communify.domain.auth.error.exception.VerificationCodeNotEqualException;
+import com.communify.domain.auth.error.exception.VerificationCodeNotPublishedException;
+import com.communify.domain.auth.error.exception.VerificationTimeOutException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
+import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
 import com.communify.global.application.MailService;
+import com.communify.global.application.SessionService;
 import com.communify.global.util.PasswordEncryptor;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,30 +30,6 @@ public class AuthService {
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private Long expirationTime;
-
-    public void login(LoginRequest request) {
-        String email = request.getEmail();
-        String password = request.getPassword();
-
-        MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException(email));
-
-        String hashed = memberInfo.getHashed();
-        if (!PasswordEncryptor.isMatch(password, hashed)) {
-            throw new InvalidPasswordException(password);
-        }
-
-        sessionService.add(SessionKey.MEMBER_ID, memberInfo.getId());
-        sessionService.add(SessionKey.MEMBER_NAME, memberInfo.getName());
-    }
-
-    public void logout() {
-        sessionService.invalidate();
-    }
-
-    public boolean isLoggedIn() {
-        return sessionService.get(SessionKey.MEMBER_ID) != null;
-    }
 
     public void certify(String password, Long memberId) {
         MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId)
@@ -64,7 +45,12 @@ public class AuthService {
     }
 
     public void publishEmailVerificationCode(String email) {
-        String verificationCode = UUID.randomUUID().toString();
+        Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoByEmail(email);
+        if (memberInfoOpt.isPresent()) {
+            throw new EmailAlreadyUsedException(email);
+        }
+
+        String verificationCode = UUID.randomUUID().toString().substring(0, 8);
 
         sessionService.add(SessionKey.VERIFICATION_CODE, verificationCode);
         sessionService.add(SessionKey.PUBLICATION_TIME, System.currentTimeMillis());
@@ -72,19 +58,22 @@ public class AuthService {
         mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
     }
 
-    public boolean verify(String code) {
-        String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE);
-        Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME);
+    public void verify(String code) {
+        String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
+                .orElseThrow(VerificationCodeNotPublishedException::new);
+        Long publicationTime = (Long) sessionService.get(SessionKey.PUBLICATION_TIME).get();
 
-        if (!Objects.equals(code, verificationCode) || isTimeOut(publicationTime)) {
-            return false;
+        if (isTimeOut(publicationTime)) {
+            throw new VerificationTimeOutException();
+        }
+
+        if (!Objects.equals(code, verificationCode)) {
+            throw new VerificationCodeNotEqualException();
         }
 
         sessionService.remove(SessionKey.VERIFICATION_CODE);
         sessionService.remove(SessionKey.PUBLICATION_TIME);
         sessionService.add(SessionKey.EMAIL_VERIFIED, true);
-
-        return true;
     }
 
     private boolean isTimeOut(Long publicationTime) {
@@ -92,7 +81,6 @@ public class AuthService {
     }
 
     public boolean isEmailVerified(String email) {
-        Boolean isEmailVerified = (Boolean) sessionService.get(SessionKey.EMAIL_VERIFIED);
-        return isEmailVerified == null ? false : isEmailVerified;
+        return sessionService.get(SessionKey.EMAIL_VERIFIED).isPresent();
     }
 }

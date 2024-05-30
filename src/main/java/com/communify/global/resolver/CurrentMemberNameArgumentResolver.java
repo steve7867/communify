@@ -2,7 +2,7 @@ package com.communify.global.resolver;
 
 import com.communify.domain.auth.annotation.CurrentMemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
-import com.communify.domain.auth.application.SessionService;
+import com.communify.global.application.SessionService;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -30,6 +30,6 @@ public class CurrentMemberNameArgumentResolver implements HandlerMethodArgumentR
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
 
-        return sessionService.get(SessionKey.MEMBER_NAME);
+        return sessionService.get(SessionKey.MEMBER_NAME).get();
     }
 }
