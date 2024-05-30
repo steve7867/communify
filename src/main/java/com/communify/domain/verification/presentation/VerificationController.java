@@ -1,4 +1,4 @@
-package com.communify.domain.verification.controller;
+package com.communify.domain.verification.presentation;
 
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.verification.application.VerificationService;
