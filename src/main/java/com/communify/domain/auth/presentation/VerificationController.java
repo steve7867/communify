@@ -24,7 +24,7 @@ public class VerificationController {
     @ResponseStatus(OK)
     @NotLoginCheck
     public void requestVerificationCodeIssue(@RequestBody @Email @NotBlank String email) {
-        verificationService.issueEmailVerificationCode(email);
+        verificationService.issueVerificationCode(email);
     }
 
     @PostMapping("/code")

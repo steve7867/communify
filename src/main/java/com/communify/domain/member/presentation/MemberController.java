@@ -47,7 +47,7 @@ public class MemberController {
     @ResponseStatus(CREATED)
     @NotLoginCheck
     public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
-        boolean isEmailVerified = verificationService.isEmailVerified(request.getEmail());
+        boolean isEmailVerified = verificationService.isVerified(request.getEmail());
         if (!isEmailVerified) {
             throw new EmailNotVerifiedException(request.getEmail());
         }
