@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class InternalServerException extends BusinessException{
+public class InternalServerException extends BusinessException {
 
     private static final String MESSAGE = "서버 내부의 오류입니다.";
 

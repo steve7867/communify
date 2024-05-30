@@ -22,5 +22,5 @@ public class CategoryService {
     public List<CategoryInfo> getAllCategories() {
         List<CategoryInfo> categoryInfoList = categoryRepository.findAll();
         return Collections.unmodifiableList(categoryInfoList);
-    } 
+    }
 }

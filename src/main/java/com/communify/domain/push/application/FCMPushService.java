@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class FCMPushService implements PushService{
+public class FCMPushService implements PushService {
 
     private final FirebaseMessaging messaging;
 

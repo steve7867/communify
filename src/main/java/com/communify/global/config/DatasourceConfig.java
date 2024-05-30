@@ -62,10 +62,6 @@ public class DatasourceConfig {
         return routingDatasource;
     }
 
-    private enum DataSourceType {
-        SOURCE, REPLICA
-    }
-
     @Primary
     @Bean
     public DataSource proxyDataSource(@Qualifier("routingDataSource") DataSource routingDataSource) {
@@ -75,5 +71,9 @@ public class DatasourceConfig {
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    private enum DataSourceType {
+        SOURCE, REPLICA
     }
 }
