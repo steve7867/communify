@@ -3,7 +3,6 @@ package com.communify.domain.member.presentation;
 import com.communify.domain.auth.annotation.CurrentMemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.NotLoginCheck;
-import com.communify.domain.auth.application.AuthService;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.application.MemberSignUpService;
 import com.communify.domain.member.application.MemberUpdateService;
@@ -12,7 +11,6 @@ import com.communify.domain.member.dto.MemberInfo;
 import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -39,22 +37,6 @@ public class MemberController {
     private final MemberFindService memberFindService;
     private final MemberUpdateService memberUpdateService;
     private final MemberWithdrawService memberWithdrawService;
-    private final AuthService authService;
-
-    @PostMapping("/email/verification-request")
-    @ResponseStatus(OK)
-    @NotLoginCheck
-    public void requestEmailVerification(@RequestBody @Email @NotBlank String email) {
-        authService.publishEmailVerificationCode(email);
-    }
-
-    @PostMapping("/email/verify")
-    @ResponseStatus(OK)
-    @NotLoginCheck
-    public void verifyEmail(@RequestBody @Email @NotBlank String code) {
-        authService.verify(code);
-
-    }
 
     @PostMapping
     @ResponseStatus(CREATED)
