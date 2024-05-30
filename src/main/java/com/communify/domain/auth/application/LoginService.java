@@ -1,6 +1,6 @@
 package com.communify.domain.auth.application;
 
-import com.communify.domain.auth.dto.LoginRequest;
+import com.communify.domain.auth.dto.login.LoginRequest;
 import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.dto.MemberInfo;
