@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.communify.domain.member.dao.MemberRepository">
+    <resultMap id="memberInfoResultMap" type="MemberInfo">
+        <result property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="name" column="name"/>
+        <result property="hashed" column="hashed"/>
+        <result property="createdDateTime" column="created_timestamp"/>
+        <result property="modifiedDateTime" column="modified_timestamp"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true">
+        INSERT INTO member(email, hashed, name)
+        VALUES(#{email}, #{hashed}, #{name})
+    </insert>
+
+    <select id="findByEmail" resultMap="memberInfoResultMap">
+        SELECT m.id, m.email, m.hashed, m.name, m.created_timestamp, count(f.follow_id) AS followed, count(f.member_id) AS following
+        FROM member AS m LEFT OUTER JOIN follow AS f
+            ON m.id = f.follow_id OR m.id = f.member_id
+        WHERE m.email = #{email}
+        GROUP BY m.id
+    </select>
+
+    <select id="findById" resultMap="memberInfoResultMap">
+        SELECT m.id, m.email, m.hashed, m.name, m.created_timestamp, count(f.follow_id) AS followed, count(f.member_id) AS following
+        FROM member AS m LEFT OUTER JOIN follow AS f
+            ON m.id = f.follow_id OR m.id = f.member_id
+        WHERE m.id = #{memberId}
+        GROUP BY m.id
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM member
+        WHERE id = #{memberId}
+    </delete>
+
+    <insert id="setFcmToken">
+        INSERT INTO fcm_token(member_id, fcm_token)
+        VALUES (#{memberId}, #{fcmToken})
+    </insert>
+
+    <select id="findFcmTokenById">
+        SELECT fcm_token
+        FROM fcm_token
+        WHERE member_id = #{memberId}
+    </select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.communify.domain.comment.dao.CommentRepository">
+    <resultMap id="commentInfoResultMap" type="CommentInfo">
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberName" column="name"/>
+        <result property="createdDateTime"  column="created_timestamp"/>
+        <result property="modifiedDateTime" column="modified_timestamp"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true">
+        INSERT INTO comment(content, post_id, member_id)
+        VALUE (#{request.content}, #{request.postId}, #{request.memberId})
+    </insert>
+
+    <select id="findAllCommentsByPostId" resultMap="commentInfoResultMap">
+        SELECT c.id, c.content, c.member_id, m.name, c.created_timestamp
+        FROM comment AS c
+            LEFT OUTER JOIN member AS m ON c.member_id = m.id
+        WHERE post_id = #{postId}
+        ORDER BY c.created_timestamp;
+    </select>
+
+    <update id="editComment">
+        UPDATE comment
+        SET content = #{content}
+        WHERE id = #{commentId} AND member_id = #{memberId}
+    </update>
+
+    <delete id="deleteComment">
+        DELETE from comment
+        WHERE id = #{commentId} AND member_id = #{memberId};
+    </delete>
+</mapper>
