@@ -12,5 +12,5 @@ public interface StorageService {
 
     Resource toResource(FileInfo fileInfo);
 
-    void deleteAllFiles(Long postId);
+    void deleteAllFiles(List<FileInfo> fileInfoList);
 }
