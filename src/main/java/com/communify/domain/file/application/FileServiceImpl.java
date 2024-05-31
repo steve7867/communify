@@ -54,4 +54,9 @@ public class FileServiceImpl implements FileService {
         storageService.deleteAllFiles(postId);
         uploadFile(fileList, postId);
     }
+
+    @Override
+    public void deleteFiles(Long postId) {
+        storageService.deleteAllFiles(postId);
+    }
 }

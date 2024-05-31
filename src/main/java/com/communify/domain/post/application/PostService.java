@@ -87,6 +87,7 @@ public class PostService {
         if (!isDeleted) {
             throw new InvalidPostAccessException(postId, memberId);
         }
+        fileService.deleteFiles(postId);
     }
 
     @Transactional(readOnly = true)
