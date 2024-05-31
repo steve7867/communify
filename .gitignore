@@ -7,6 +7,7 @@ build/
 **/resources/sql/*.sql
 **/resources/**/*.json
 **/test/resources/http/
+**/test/resources/images/
 
 ### STS ###
 .apt_generated
