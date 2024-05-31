@@ -49,13 +49,6 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void updateFiles(List<MultipartFile> fileList, Long postId) {
-        fileRepository.deleteAll(postId);
-        storageService.deleteAllFiles(postId);
-        uploadFile(fileList, postId);
-    }
-
-    @Override
     public void deleteFiles(Long postId) {
         storageService.deleteAllFiles(postId);
     }
