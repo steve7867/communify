@@ -85,11 +85,14 @@ public class PostService {
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public void deletePost(Long postId, Long memberId) {
-        boolean isDeleted = postRepository.deletePost(postId, memberId);
-        if (!isDeleted) {
+        boolean canDelete = postRepository.isWrittenBy(postId, memberId);
+        if (!canDelete) {
             throw new InvalidPostAccessException(postId, memberId);
         }
+
         fileService.deleteFiles(postId);
+
+        postRepository.deletePost(postId, memberId);
     }
 
     @Transactional(readOnly = true)
