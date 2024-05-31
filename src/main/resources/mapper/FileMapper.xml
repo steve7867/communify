@@ -16,6 +16,12 @@
         WHERE stored_filename = #{storedFilename}
     </select>
 
+    <select id="findAllByPostId">
+        SELECT *
+        FROM file
+        WHERE post_id = #{postId}
+    </select>
+
     <delete id="deleteAll">
         DELETE
         FROM file
