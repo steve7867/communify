@@ -46,7 +46,7 @@
     <select id="findPostDetail" resultMap="postDetailResultMap">
         SELECT p.content, f.stored_filename, f.original_filename, f.extension, f.post_id, f.sequence
         FROM post AS p
-                 LEFT OUTER JOIN file AS f ON p.id = f.post_id
+            LEFT OUTER JOIN file AS f ON p.id = f.post_id
     </select>
 
     <update id="incrementView">

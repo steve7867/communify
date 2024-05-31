@@ -1,10 +1,11 @@
 package com.communify.domain.post.dto;
 
+import com.communify.domain.file.dto.FileInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.FileInfo;
+
 
 import java.util.List;
 

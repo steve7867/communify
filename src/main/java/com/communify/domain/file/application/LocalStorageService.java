@@ -79,7 +79,7 @@ public class LocalStorageService implements StorageService {
         String dirPath = resolveDirPath(postId);
         File dir = new File(dirPath);
 
-        if (dir.exists()) {
+        if (!dir.exists()) {
             dir.mkdir();
         }
 

@@ -7,20 +7,20 @@
         <result property="id" column="id"/>
         <result property="content" column="content"/>
         <result property="memberId" column="member_id"/>
-        <result property="postId" column="post_id"/>
+        <result property="memberName" column="name"/>
         <result property="createdDateTime"  column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true">
         INSERT INTO comment(content, post_id, member_id)
-            VALUE (#{request.content}, #{request.postId}, #{request.memberId})
+        VALUE (#{request.content}, #{request.postId}, #{request.memberId})
     </insert>
 
-    <select id="findAllCommentsByPostId">
+    <select id="findAllCommentsByPostId" resultMap="commentInfoResultMap">
         SELECT c.id, c.content, c.member_id, m.name, c.created_timestamp
         FROM comment AS c
-                 INNER JOIN member AS m ON c.member_id = m.id
+            LEFT OUTER JOIN member AS m ON c.member_id = m.id
         WHERE post_id = #{postId}
         ORDER BY c.created_timestamp;
     </select>

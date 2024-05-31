@@ -5,7 +5,7 @@
 <mapper namespace="com.communify.domain.like.dao.LikeRepository">
     <insert id="insert" parameterType="LikeRequest">
         INSERT INTO likes(post_id, member_id)
-            VALUE (#{request.postId}, #{request.memberId})
+        VALUE (#{request.postId}, #{request.memberId})
     </insert>
 
     <insert id="bulkInsert" parameterType="java.util.Collection">

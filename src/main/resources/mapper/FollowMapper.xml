@@ -17,14 +17,14 @@
         SELECT m.id, m.name, ft.fcm_token
         FROM follow f
             INNER JOIN member m ON f.member_id = m.id
-            INNER JOIN fcm_token ft ON ft.member_id = m.id
+            LEFT OUTER JOIN fcm_token ft ON ft.member_id = m.id
         WHERE f.follow_id = #{memberId}
     </select>
 
     <select id="findFollowings" resultType="MemberInfo">
         SELECT m.id, m.name
         FROM follow f
-                 INNER JOIN member m ON f.follow_id = m.id
+            INNER JOIN member m ON f.follow_id = m.id
         WHERE f.member_id = #{memberId}
     </select>
 </mapper>

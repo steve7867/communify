@@ -1,8 +1,8 @@
-package com.communify.domain.catetory.presentation;
+package com.communify.domain.category.presentation;
 
 import com.communify.domain.auth.annotation.LoginCheck;
-import com.communify.domain.catetory.application.CategoryService;
-import com.communify.domain.catetory.dto.CategoryInfo;
+import com.communify.domain.category.application.CategoryService;
+import com.communify.domain.category.dto.CategoryInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -12,4 +12,6 @@ public interface FileService {
     FileInfoAndResource getFileInfoAndResource(String storedFilename);
 
     void updateFiles(List<MultipartFile> fileList, Long postId);
+
+    void deleteFiles(Long postId);
 }
