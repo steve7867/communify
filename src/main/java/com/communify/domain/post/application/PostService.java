@@ -76,18 +76,23 @@ public class PostService {
             throw new InvalidPostAccessException(postId, memberId);
         }
 
+        fileService.deleteFiles(postId);
+
         List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
-        fileService.updateFiles(multipartFileList, postId);
+        fileService.uploadFile(multipartFileList, postId);
     }
 
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public void deletePost(Long postId, Long memberId) {
-        boolean isDeleted = postRepository.deletePost(postId, memberId);
-        if (!isDeleted) {
+        boolean canDelete = postRepository.isWrittenBy(postId, memberId);
+        if (!canDelete) {
             throw new InvalidPostAccessException(postId, memberId);
         }
+
         fileService.deleteFiles(postId);
+
+        postRepository.deletePost(postId, memberId);
     }
 
     @Transactional(readOnly = true)

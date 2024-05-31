@@ -36,20 +36,21 @@ public class LocalStorageService implements StorageService {
             return Collections.emptyList();
         }
 
-        File dir = makeDir(postId);
+        File dir = new File(localDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
 
         return IntStream.range(0, multipartFileList.size())
                 .boxed()
                 .map(i -> {
                     MultipartFile multipartFile = multipartFileList.get(i);
                     FileInfo fileInfo = FileInfo.of(multipartFile.getOriginalFilename(), postId, i);
-                    String storedFilename = fileInfo.getStoredFilename();
-                    String extension = fileInfo.getExtension();
+                    String filePath = resolveFilePath(fileInfo);
 
                     try {
-                        multipartFile.transferTo(new File(dir, storedFilename + "." + extension));
+                        multipartFile.transferTo(new File(filePath));
                     } catch (IOException e) {
-                        deleteDir(dir);
                         throw new FileUploadFailException(multipartFile, fileInfo, e);
                     }
 
@@ -59,42 +60,33 @@ public class LocalStorageService implements StorageService {
 
     @Override
     public Resource toResource(FileInfo fileInfo) {
-        Long postId = fileInfo.getPostId();
-        String storedFilename = fileInfo.getStoredFilename();
-        String extension = fileInfo.getExtension();
-        String dirPath = resolveDirPath(postId);
-
-        String fileUri = "file:///" + dirPath + storedFilename + "." + extension;
+        String filePath = resolveFilePath(fileInfo);
+        String fileUri = "file:///" + filePath;
         return resourceLoader.getResource(fileUri);
     }
 
     @Override
-    public void deleteAllFiles(Long postId) {
-        String dirPath = resolveDirPath(postId);
-        File dir = new File(dirPath);
-        deleteDir(dir);
+    public void deleteAllFiles(List<FileInfo> fileInfoList) {
+        fileInfoList.forEach(fileInfo -> {
+            String filePath = resolveFilePath(fileInfo);
+            File file = new File(filePath);
+
+            deleteFile(file);
+        });
     }
 
-    private File makeDir(Long postId) {
-        String dirPath = resolveDirPath(postId);
-        File dir = new File(dirPath);
-
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-
-        return dir;
-    }
-
-    private void deleteDir(File dir) {
+    private void deleteFile(File file) {
         try {
-            FileUtils.forceDelete(dir);
+            FileUtils.forceDelete(file);
         } catch (IOException e) {
-            throw new InternalServerException("디렉토리 삭제에 실패했습니다.", e);
+            throw new InternalServerException("파일 삭제에 실패했습니다.", e);
         }
     }
 
-    private String resolveDirPath(Long postId) {
-        return localDir + postId + File.separator;
+    private String resolveFilePath(FileInfo fileInfo) {
+        String storedFilename = fileInfo.getStoredFilename();
+        String extension = fileInfo.getExtension();
+
+        return localDir + File.separator + storedFilename + "." + extension;
     }
 }

@@ -66,6 +66,14 @@
         FROM post
         WHERE id = #{postId} AND member_id = #{memberId}
     </delete>
+    
+    <select id="isWrittenBy">
+        SELECT EXISTS(
+            SELECT *
+            FROM post
+            WHERE id = #{postId} and member_id = #{memberId}
+        )
+    </select>
 
     <select id="findWriterId">
         SELECT member_id
