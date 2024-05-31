@@ -56,8 +56,8 @@ public class CacheConfig {
 
         RedisCacheConfiguration categoriesConfig = defaultCacheConfig.entryTtl(Duration.ofDays(1L));
         RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(5L));
-        RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1L));
-        RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1L));
+        RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
+        RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
