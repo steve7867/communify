@@ -76,8 +76,10 @@ public class PostService {
             throw new InvalidPostAccessException(postId, memberId);
         }
 
+        fileService.deleteFiles(postId);
+
         List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
-        fileService.updateFiles(multipartFileList, postId);
+        fileService.uploadFile(multipartFileList, postId);
     }
 
     @Transactional
