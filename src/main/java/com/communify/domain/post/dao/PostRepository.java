@@ -31,5 +31,8 @@ public interface PostRepository {
 
     boolean deletePost(Long postId, Long memberId);
 
+    boolean isWrittenBy(Long postId, Long memberId);
+
     Optional<Long> findWriterId(Long postId);
+
 }
