@@ -20,7 +20,7 @@
     <select id="findAllCommentsByPostId">
         SELECT c.id, c.content, c.member_id, m.name, c.created_timestamp
         FROM comment AS c
-                 INNER JOIN member AS m ON c.member_id = m.id
+                 LEFT OUTER JOIN member AS m ON c.member_id = m.id
         WHERE post_id = #{postId}
         ORDER BY c.created_timestamp;
     </select>
