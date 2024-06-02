@@ -61,7 +61,7 @@ public class GlobalExceptionController {
     public ErrorResponse handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error(e.getMessage(), e);
 
-        return new ErrorResponse(e.getLocalizedMessage());
+        return new ErrorResponse(e.getMessage());
     }
 
     @ResponseStatus(BAD_REQUEST)
