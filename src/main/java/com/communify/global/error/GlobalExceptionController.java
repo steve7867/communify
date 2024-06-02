@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE;
 public class GlobalExceptionController {
 
     /*
-    메서드 인자 유효성 검증 실패 시에 발생하는 MethodArgumentNotValidException를 처리.
+     * @Valid 어노테이션이 붙은 메서드 인자의 유효성 검증 실패 시에 발생하는 MethodArgumentNotValidException를 처리.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -44,7 +44,7 @@ public class GlobalExceptionController {
     }
 
     /*
-    BusinessException과 그 하위 예외를 모두 처리.
+     * BusinessException과 그 하위 예외를 모두 처리.
      */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
