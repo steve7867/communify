@@ -1,4 +1,4 @@
-package com.communify.domain.post.dto;
+package com.communify.domain.post.dto.outgoing;
 
 import com.communify.domain.file.dto.FileInfo;
 import lombok.Builder;

@@ -5,26 +5,28 @@
 <mapper namespace="com.communify.domain.follow.dao.FollowRepository">
     <insert id="insertFollow">
         INSERT INTO follow(member_id, follow_id)
-        VALUES(#{memberId}, #{followId})
+        VALUES (#{memberId}, #{followId})
     </insert>
 
     <delete id="deleteFollow">
-        DELETE FROM follow
-        WHERE member_id = #{memberId} AND follow_id = #{followId}
+        DELETE
+        FROM follow
+        WHERE member_id = #{memberId}
+          AND follow_id = #{followId}
     </delete>
 
     <select id="findFollowers" resultType="MemberInfo">
         SELECT m.id, m.name, ft.fcm_token
         FROM follow f
-            INNER JOIN member m ON f.member_id = m.id
-            LEFT OUTER JOIN fcm_token ft ON ft.member_id = m.id
+                 INNER JOIN member m ON f.member_id = m.id
+                 LEFT OUTER JOIN fcm_token ft ON ft.member_id = m.id
         WHERE f.follow_id = #{memberId}
     </select>
 
     <select id="findFollowings" resultType="MemberInfo">
         SELECT m.id, m.name
         FROM follow f
-            INNER JOIN member m ON f.follow_id = m.id
+                 INNER JOIN member m ON f.follow_id = m.id
         WHERE f.member_id = #{memberId}
     </select>
 </mapper>

@@ -3,7 +3,7 @@ package com.communify.domain.file.application;
 import com.communify.domain.file.dao.FileRepository;
 import com.communify.domain.file.dto.FileInfo;
 import com.communify.domain.file.dto.FileInfoAndResource;
-import com.communify.domain.file.dto.FileStorageRequest;
+import com.communify.domain.file.dto.FileUploadRequest;
 import com.communify.domain.file.error.exception.FileNotFoundException;
 import com.communify.domain.file.error.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +23,13 @@ public class FileServiceImpl implements FileService {
     private final StorageService storageService;
 
     @Override
-    public void uploadFile(List<MultipartFile> multipartFileList, Long postId) {
+    public void uploadFile(FileUploadRequest request) {
+        List<MultipartFile> multipartFileList = request.getMultipartFileList();
         if (Objects.isNull(multipartFileList) || multipartFileList.isEmpty()) {
             return;
         }
 
-        FileStorageRequest fileStorageRequest = new FileStorageRequest(postId, multipartFileList);
-        List<FileInfo> fileInfoList = storageService.saveInFileSystem(fileStorageRequest);
+        List<FileInfo> fileInfoList = storageService.saveInFileSystem(request);
 
         fileRepository.insertFileInfoList(fileInfoList);
     }

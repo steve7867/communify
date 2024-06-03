@@ -1,6 +1,6 @@
 # 🌏 Communify
 
-- 커뮤니티 사이트를 개발하는 프로젝트
+- 다양한 주제에 대한 글을 공유하는 커뮤니티 사이트
 - 대용량 트래픽을 가정하여 성능에 초점을 두고 개발 진행
 
 ## 🎯 Technical Issue
@@ -21,7 +21,7 @@
 
 ## 🤔 TroubleShooting & 기술적 고민
 
-- [🔗링크](https://github.com/steve7867/Communify/wiki/TroubleShooting-&-%EA%B8%B0%EC%88%A0%EC%A0%81-%EA%B3%A0%EB%AF%BC)
+- [🔗링크](https://github.com/steve7867/Communify/wiki/%F0%9F%A4%94-TroubleShooting-&-%EA%B8%B0%EC%88%A0%EC%A0%81-%EA%B3%A0%EB%AF%BC)
 
 ## 🖼️ Application UI
 
@@ -33,7 +33,7 @@
 
 ## 📈 ERD
 
-![ERD](https://github-production-user-asset-6210df.s3.amazonaws.com/115217247/335965879-9954c9e9-1514-4090-94da-784c33587bbd.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240603%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240603T065236Z&X-Amz-Expires=300&X-Amz-Signature=ce66b80bc81e79526bc89fea9e36664e5ce2cea21ebc28c52551fb15dc94b897&X-Amz-SignedHeaders=host&actor_id=115217247&key_id=0&repo_id=809634469)
+![ERD](https://github-production-user-asset-6210df.s3.amazonaws.com/115217247/336070402-0a22c5b7-e3aa-401b-b7ca-440cb3a469a6.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240603%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240603T130744Z&X-Amz-Expires=300&X-Amz-Signature=75d22d5c4ee2fb04ea76e151a45625ace2a8daebf9794ef75800c70ef9cf4469&X-Amz-SignedHeaders=host&actor_id=115217247&key_id=0&repo_id=809634469)
 
 ## 🏛️ 프로젝트 구조도
 

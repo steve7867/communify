@@ -1,7 +1,7 @@
 package com.communify.domain.file.application;
 
 import com.communify.domain.file.dto.FileInfo;
-import com.communify.domain.file.dto.FileStorageRequest;
+import com.communify.domain.file.dto.FileUploadRequest;
 import com.communify.domain.file.error.exception.FileUploadFailException;
 import com.communify.global.error.exception.InternalServerException;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -28,13 +27,9 @@ public class LocalStorageService implements StorageService {
     private String localDir;
 
     @Override
-    public List<FileInfo> saveInFileSystem(FileStorageRequest request) {
-        List<MultipartFile> multipartFileList = request.getMultipartFileList();
+    public List<FileInfo> saveInFileSystem(FileUploadRequest request) {
         Long postId = request.getPostId();
-
-        if (multipartFileList.isEmpty()) {
-            return Collections.emptyList();
-        }
+        List<MultipartFile> multipartFileList = request.getMultipartFileList();
 
         File dir = new File(localDir);
         if (!dir.exists()) {

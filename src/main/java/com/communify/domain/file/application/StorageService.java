@@ -1,14 +1,14 @@
 package com.communify.domain.file.application;
 
 import com.communify.domain.file.dto.FileInfo;
-import com.communify.domain.file.dto.FileStorageRequest;
+import com.communify.domain.file.dto.FileUploadRequest;
 import org.springframework.core.io.Resource;
 
 import java.util.List;
 
 public interface StorageService {
 
-    List<FileInfo> saveInFileSystem(FileStorageRequest request);
+    List<FileInfo> saveInFileSystem(FileUploadRequest request);
 
     Resource toResource(FileInfo fileInfo);
 

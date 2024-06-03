@@ -1,6 +1,6 @@
 package com.communify.domain.post.presentation;
 
-import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.dto.incoming.PostUploadForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,16 +9,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Component
-public class PostUploadRequestValidator implements Validator {
+public class PostUploadFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return PostUploadRequest.class.isAssignableFrom(clazz);
+        return PostUploadForm.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        PostUploadRequest request = (PostUploadRequest) target;
+        PostUploadForm request = (PostUploadForm) target;
 
         verifyFileList(request.getFileList(), errors);
     }

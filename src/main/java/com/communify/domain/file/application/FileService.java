@@ -1,13 +1,11 @@
 package com.communify.domain.file.application;
 
 import com.communify.domain.file.dto.FileInfoAndResource;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import com.communify.domain.file.dto.FileUploadRequest;
 
 public interface FileService {
 
-    void uploadFile(List<MultipartFile> fileList, Long postId);
+    void uploadFile(FileUploadRequest request);
 
     FileInfoAndResource getFileInfoAndResource(String storedFilename);
 

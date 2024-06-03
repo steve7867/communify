@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class FileStorageRequest {
+public class FileUploadRequest {
 
     private final Long postId;
     private final List<MultipartFile> multipartFileList;

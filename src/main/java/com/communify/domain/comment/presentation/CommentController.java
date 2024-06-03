@@ -1,7 +1,7 @@
 package com.communify.domain.comment.presentation;
 
-import com.communify.domain.auth.annotation.CurrentMemberId;
-import com.communify.domain.auth.annotation.CurrentMemberName;
+import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.comment.application.CommentService;
 import com.communify.domain.comment.dto.incoming.CommentContainer;
@@ -37,8 +37,8 @@ public class CommentController {
     @LoginCheck
     public void addComment(@PathVariable Long postId,
                            @RequestBody @Valid CommentContainer commentContainer,
-                           @CurrentMemberId Long memberId,
-                           @CurrentMemberName String memberName) {
+                           @MemberId Long memberId,
+                           @MemberName String memberName) {
 
         String content = commentContainer.getContent();
         CommentUploadRequest request = new CommentUploadRequest(content, postId, memberId, memberName);
@@ -58,7 +58,7 @@ public class CommentController {
     public void editComment(@PathVariable Long postId,
                             @PathVariable Long commentId,
                             @RequestBody @Valid CommentContainer commentContainer,
-                            @CurrentMemberId Long memberId) {
+                            @MemberId Long memberId) {
 
         String content = commentContainer.getContent();
         CommentEditRequest request = new CommentEditRequest(postId, commentId, content, memberId);
@@ -71,7 +71,7 @@ public class CommentController {
     @LoginCheck
     public void deleteComment(@PathVariable Long postId,
                               @PathVariable Long commentId,
-                              @CurrentMemberId Long memberId) {
+                              @MemberId Long memberId) {
 
         CommentDeleteRequest request = new CommentDeleteRequest(postId, commentId, memberId);
 

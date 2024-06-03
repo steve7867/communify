@@ -1,9 +1,11 @@
 package com.communify.domain.post.dao;
 
-import com.communify.domain.post.dto.PostDetail;
-import com.communify.domain.post.dto.PostOutline;
-import com.communify.domain.post.dto.PostSearchCondition;
+import com.communify.domain.post.dto.PostDeleteRequest;
+import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.dto.incoming.PostOutlineSearchCondition;
+import com.communify.domain.post.dto.outgoing.PostDetail;
+import com.communify.domain.post.dto.outgoing.PostOutline;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -15,21 +17,18 @@ import java.util.Optional;
 @Repository
 public interface PostRepository {
 
-    void insertPost(@Param("request") PostUploadRequest request,
-                    @Param("memberId") Long memberId);
+    void insertPost(@Param("request") PostUploadRequest request);
 
-    List<PostOutline> findAllPostOutlineBySearchCond(PostSearchCondition searchCond);
+    List<PostOutline> findAllPostOutlineBySearchCond(PostOutlineSearchCondition searchCond);
 
     Optional<PostDetail> findPostDetail(Long postId);
 
     void incrementView(@Param("postId") Long postId,
                        @Param("view") Long view);
 
-    boolean editPost(@Param("postId") Long postId,
-                     @Param("request") PostUploadRequest request,
-                     @Param("memberId") Long memberId);
+    boolean editPost(@Param("request") PostEditRequest request);
 
-    boolean deletePost(Long postId, Long memberId);
+    boolean deletePost(@Param("request") PostDeleteRequest request);
 
     boolean isWrittenBy(Long postId, Long memberId);
 

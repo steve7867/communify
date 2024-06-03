@@ -1,6 +1,6 @@
 package com.communify.global.resolver;
 
-import com.communify.domain.auth.annotation.CurrentMemberId;
+import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.global.application.SessionService;
 import com.communify.global.util.SessionKey;
@@ -21,7 +21,7 @@ public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentRes
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasMethodAnnotation(LoginCheck.class)
-                && parameter.hasParameterAnnotation(CurrentMemberId.class);
+                && parameter.hasParameterAnnotation(MemberId.class);
     }
 
     @Override
