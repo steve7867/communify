@@ -27,12 +27,16 @@
 
     <update id="editComment">
         UPDATE comment
-        SET content = #{content}
-        WHERE id = #{commentId} AND member_id = #{memberId}
+        SET content = #{request.content}
+        WHERE id = #{request.commentId}
+          AND post_id = #{request.postId}
+          AND member_id = #{request.memberId}
     </update>
 
     <delete id="deleteComment">
         DELETE from comment
-        WHERE id = #{commentId} AND member_id = #{memberId};
+        WHERE id = #{request.commentId}
+          AND post_id = #{request.postId}
+          AND member_id = #{request.memberId}
     </delete>
 </mapper>
