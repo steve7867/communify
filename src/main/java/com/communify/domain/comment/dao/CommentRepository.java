@@ -2,7 +2,7 @@ package com.communify.domain.comment.dao;
 
 import com.communify.domain.comment.dto.CommentDeleteRequest;
 import com.communify.domain.comment.dto.CommentEditRequest;
-import com.communify.domain.comment.dto.CommentInfo;
+import com.communify.domain.comment.dto.outgoing.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

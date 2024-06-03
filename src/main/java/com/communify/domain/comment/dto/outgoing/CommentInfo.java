@@ -1,4 +1,4 @@
-package com.communify.domain.comment.dto;
+package com.communify.domain.comment.dto.outgoing;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
