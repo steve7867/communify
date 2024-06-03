@@ -1,5 +1,6 @@
 package com.communify.domain.comment.dao;
 
+import com.communify.domain.comment.dto.CommentDeleteRequest;
 import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
@@ -17,5 +18,5 @@ public interface CommentRepository {
 
     void editComment(@Param("request") CommentEditRequest request);
 
-    void deleteComment(Long commentId, Long memberId);
+    void deleteComment(@Param("request") CommentDeleteRequest request);
 }

@@ -5,6 +5,7 @@ import com.communify.domain.auth.annotation.CurrentMemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.comment.application.CommentService;
 import com.communify.domain.comment.dto.CommentContainer;
+import com.communify.domain.comment.dto.CommentDeleteRequest;
 import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
@@ -65,12 +66,15 @@ public class CommentController {
         commentService.editComment(request);
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void deleteComment(@PathVariable Long commentId,
+    public void deleteComment(@PathVariable Long postId,
+                              @PathVariable Long commentId,
                               @CurrentMemberId Long memberId) {
 
-        commentService.deleteComment(commentId, memberId);
+        CommentDeleteRequest request = new CommentDeleteRequest(postId, commentId, memberId);
+
+        commentService.deleteComment(request);
     }
 }

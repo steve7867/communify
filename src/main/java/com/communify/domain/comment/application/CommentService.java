@@ -1,6 +1,7 @@
 package com.communify.domain.comment.application;
 
 import com.communify.domain.comment.dao.CommentRepository;
+import com.communify.domain.comment.dto.CommentDeleteRequest;
 import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadEvent;
@@ -39,7 +40,7 @@ public class CommentService {
         commentRepository.editComment(request);
     }
 
-    public void deleteComment(Long commentId, Long memberId) {
-        commentRepository.deleteComment(commentId, memberId);
+    public void deleteComment(CommentDeleteRequest request) {
+        commentRepository.deleteComment(request);
     }
 }

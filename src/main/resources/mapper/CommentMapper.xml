@@ -35,6 +35,8 @@
 
     <delete id="deleteComment">
         DELETE from comment
-        WHERE id = #{commentId} AND member_id = #{memberId};
+        WHERE id = #{request.commentId}
+          AND post_id = #{request.postId}
+          AND member_id = #{request.memberId}
     </delete>
 </mapper>
