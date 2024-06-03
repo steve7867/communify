@@ -74,7 +74,7 @@ public class PostController {
     @GetMapping
     @ResponseStatus(OK)
     @LoginCheck
-    public List<PostOutline> getPosts(@ModelAttribute @Valid PostOutlineSearchCondition searchCond) {
+    public List<PostOutline> getPostOutlines(@ModelAttribute @Valid PostOutlineSearchCondition searchCond) {
         return postService.getPostOutlineList(searchCond);
     }
 
