@@ -54,7 +54,7 @@ public class CommentController {
     @ResponseStatus(OK)
     @LoginCheck
     public void editComment(@PathVariable Long commentId,
-                            @RequestBody CommentContainer request,
+                            @RequestBody @Valid CommentContainer request,
                             @CurrentMemberId Long memberId) {
 
         commentService.editComment(commentId, request.getContent(), memberId);
