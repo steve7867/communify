@@ -1,6 +1,7 @@
 package com.communify.domain.comment.application;
 
 import com.communify.domain.comment.dao.CommentRepository;
+import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadEvent;
 import com.communify.domain.comment.dto.CommentUploadRequest;
@@ -34,8 +35,8 @@ public class CommentService {
         return Collections.unmodifiableList(commentInfoList);
     }
 
-    public void editComment(Long commentId, String content, Long memberId) {
-        commentRepository.editComment(commentId, content, memberId);
+    public void editComment(CommentEditRequest request) {
+        commentRepository.editComment(request);
     }
 
     public void deleteComment(Long commentId, Long memberId) {

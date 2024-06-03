@@ -5,6 +5,7 @@ import com.communify.domain.auth.annotation.CurrentMemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.comment.application.CommentService;
 import com.communify.domain.comment.dto.CommentContainer;
+import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import jakarta.validation.Valid;
@@ -50,14 +51,18 @@ public class CommentController {
         return commentService.getComments(postId);
     }
 
-    @PatchMapping("/comments/{commentId}")
+    @PatchMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void editComment(@PathVariable Long commentId,
-                            @RequestBody @Valid CommentContainer request,
+    public void editComment(@PathVariable Long postId,
+                            @PathVariable Long commentId,
+                            @RequestBody @Valid CommentContainer commentContainer,
                             @CurrentMemberId Long memberId) {
 
-        commentService.editComment(commentId, request.getContent(), memberId);
+        String content = commentContainer.getContent();
+        CommentEditRequest request = new CommentEditRequest(postId, commentId, content, memberId);
+
+        commentService.editComment(request);
     }
 
     @DeleteMapping("/comments/{commentId}")
