@@ -1,7 +1,7 @@
 package com.communify.global.resolver;
 
 import com.communify.domain.auth.annotation.MemberName;
-import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.error.exception.NotLoggedInException;
 import com.communify.global.application.SessionService;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,7 @@ public class MemberNameArgumentResolver implements HandlerMethodArgumentResolver
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasMethodAnnotation(LoginCheck.class)
-                && parameter.hasParameterAnnotation(MemberName.class);
+        return parameter.hasParameterAnnotation(MemberName.class);
     }
 
     @Override
@@ -30,6 +29,7 @@ public class MemberNameArgumentResolver implements HandlerMethodArgumentResolver
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
 
-        return sessionService.get(SessionKey.MEMBER_NAME).get();
+        return sessionService.get(SessionKey.MEMBER_NAME)
+                .orElseThrow(NotLoggedInException::new);
     }
 }
