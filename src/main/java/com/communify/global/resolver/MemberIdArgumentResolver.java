@@ -1,7 +1,7 @@
 package com.communify.global.resolver;
 
 import com.communify.domain.auth.annotation.MemberId;
-import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.error.exception.NotLoggedInException;
 import com.communify.global.application.SessionService;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +14,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentResolver {
+public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final SessionService sessionService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasMethodAnnotation(LoginCheck.class)
-                && parameter.hasParameterAnnotation(MemberId.class);
+        return parameter.hasParameterAnnotation(MemberId.class);
     }
 
     @Override
@@ -30,6 +29,7 @@ public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentRes
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
 
-        return sessionService.get(SessionKey.MEMBER_ID).get();
+        return sessionService.get(SessionKey.MEMBER_ID)
+                .orElseThrow(NotLoggedInException::new);
     }
 }
