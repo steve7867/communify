@@ -48,6 +48,8 @@
         SELECT p.content, f.stored_filename, f.original_filename, f.extension, f.post_id, f.sequence
         FROM post AS p
                  LEFT OUTER JOIN file AS f ON p.id = f.post_id
+        WHERE p.id = #{postId}
+        ORDER BY f.sequence ASC
     </select>
 
     <update id="incrementView">
