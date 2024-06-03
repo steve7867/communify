@@ -6,10 +6,13 @@
     <resultMap id="memberInfoResultMap" type="MemberInfo">
         <result property="id" column="id"/>
         <result property="email" column="email"/>
-        <result property="name" column="name"/>
         <result property="hashed" column="hashed"/>
+        <result property="name" column="name"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
+        <result property="followed" column="followed"/>
+        <result property="following" column="following"/>
+        <result property="fcmToken" column="fcm_token"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true">
