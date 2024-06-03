@@ -2,7 +2,6 @@ package com.communify.domain.member.presentation;
 
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
-import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.application.MemberSignUpService;
