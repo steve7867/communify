@@ -1,15 +1,13 @@
-package com.communify.domain.member.dto;
+package com.communify.domain.member.dto.outgoing;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(force = true)
-@RequiredArgsConstructor
 public class MemberInfo {
 
     private final Long id;
@@ -19,6 +17,9 @@ public class MemberInfo {
     private final String hashed;
     private final String name;
     private final LocalDateTime createdDateTime;
+
+    private final Integer followed;
+    private final Integer following;
 
     @JsonIgnore
     private final String fcmToken;

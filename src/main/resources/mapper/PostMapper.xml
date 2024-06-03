@@ -31,7 +31,7 @@
 
     <select id="findAllPostOutlineBySearchCond" parameterType="PostOutlineSearchCondition"
             resultMap="postOutlineResultMap">
-        SELECT p.ID, p.title, p.member_id, m.name, p.created_timestamp, p.view, count(l.post_id) AS likes
+        SELECT p.id, p.title, p.member_id, m.name, p.created_timestamp, p.view, count(l.post_id) AS likes
         FROM post AS p
             LEFT OUTER JOIN member m ON p.member_id = m.id
             LEFT OUTER JOIN likes AS l ON p.id = l.post_id
@@ -48,6 +48,8 @@
         SELECT p.content, f.stored_filename, f.original_filename, f.extension, f.post_id, f.sequence
         FROM post AS p
                  LEFT OUTER JOIN file AS f ON p.id = f.post_id
+        WHERE p.id = #{postId}
+        ORDER BY f.sequence ASC
     </select>
 
     <update id="incrementView">

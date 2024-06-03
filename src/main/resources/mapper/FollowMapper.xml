@@ -3,6 +3,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.follow.dao.FollowRepository">
+    <resultMap id="memberInfoResultMap" type="MemberInfo">
+        <result property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="hashed" column="hashed"/>
+        <result property="name" column="name"/>
+        <result property="createdDateTime" column="created_timestamp"/>
+        <result property="modifiedDateTime" column="modified_timestamp"/>
+        <result property="followed" column="followed"/>
+        <result property="following" column="following"/>
+        <result property="fcmToken" column="fcm_token"/>
+    </resultMap>
+
     <insert id="insertFollow">
         INSERT INTO follow(member_id, follow_id)
         VALUES (#{memberId}, #{followId})
@@ -15,7 +27,7 @@
           AND follow_id = #{followId}
     </delete>
 
-    <select id="findFollowers" resultType="MemberInfo">
+    <select id="findFollowers" resultMap="memberInfoResultMap">
         SELECT m.id, m.name, ft.fcm_token
         FROM follow f
                  INNER JOIN member m ON f.member_id = m.id
@@ -23,7 +35,7 @@
         WHERE f.follow_id = #{memberId}
     </select>
 
-    <select id="findFollowings" resultType="MemberInfo">
+    <select id="findFollowings" resultMap="memberInfoResultMap">
         SELECT m.id, m.name
         FROM follow f
                  INNER JOIN member m ON f.follow_id = m.id

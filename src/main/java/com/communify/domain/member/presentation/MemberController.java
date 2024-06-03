@@ -1,15 +1,16 @@
 package com.communify.domain.member.presentation;
 
-import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.application.MemberSignUpService;
 import com.communify.domain.member.application.MemberUpdateService;
 import com.communify.domain.member.application.MemberWithdrawService;
-import com.communify.domain.member.dto.MemberInfo;
-import com.communify.domain.member.dto.MemberSignUpRequest;
+import com.communify.domain.member.dto.outgoing.MemberInfo;
+import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
+import com.communify.domain.member.dto.incoming.PasswordForm;
 import com.communify.domain.verification.application.VerificationService;
 import com.communify.domain.verification.dto.VerificationConfirmRequest;
 import com.communify.domain.verification.error.exception.EmailNotVerifiedException;
@@ -71,10 +72,12 @@ public class MemberController {
     @DeleteMapping("/me")
     @ResponseStatus(OK)
     @LoginCheck
-    public void withdraw(@RequestBody @Valid MemberWithdrawRequest request,
+    public void withdraw(@RequestBody @Valid PasswordForm form,
                          @MemberId Long memberId) {
 
-        memberWithdrawService.withdraw(request, memberId);
+        MemberWithdrawRequest request = new MemberWithdrawRequest(form.getPassword(), memberId);
+
+        memberWithdrawService.withdraw(request);
     }
 
     @PostMapping("/fcmToken")

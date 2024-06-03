@@ -6,7 +6,7 @@ import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.error.exception.SelfFollowException;
-import com.communify.domain.member.dto.MemberInfo;
+import com.communify.domain.member.dto.outgoing.MemberInfo;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
