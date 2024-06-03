@@ -1,6 +1,7 @@
 package com.communify.domain.post.application;
 
 import com.communify.domain.file.application.FileService;
+import com.communify.domain.file.dto.FileUploadRequest;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostDeleteRequest;
 import com.communify.domain.post.dto.PostEditRequest;
@@ -20,9 +21,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +39,8 @@ public class PostService {
     public void uploadPost(PostUploadRequest request) {
         postRepository.insertPost(request);
 
-        List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
         Long postId = request.getId();
-        fileService.uploadFile(multipartFileList, postId);
+        fileService.uploadFile(new FileUploadRequest(postId, request.getFileList()));
 
         Long memberId = request.getMemberId();
         String memberName = request.getMemberName();
@@ -81,8 +79,7 @@ public class PostService {
         Long postId = request.getPostId();
         fileService.deleteFiles(postId);
 
-        List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
-        fileService.uploadFile(multipartFileList, postId);
+        fileService.uploadFile(new FileUploadRequest(postId, request.getFileList()));
     }
 
     @Transactional

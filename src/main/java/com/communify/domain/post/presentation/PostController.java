@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +51,7 @@ public class PostController {
 
         PostUploadRequest request = new PostUploadRequest(form.getTitle(),
                 form.getContent(),
-                form.getFileList(),
+                Collections.unmodifiableList(form.getFileList()),
                 form.getCategoryId(),
                 memberId,
                 memberName);
@@ -101,7 +102,7 @@ public class PostController {
 
         PostEditRequest request = new PostEditRequest(postId, form.getTitle(),
                 form.getContent(),
-                form.getFileList(),
+                Collections.unmodifiableList(form.getFileList()),
                 form.getCategoryId(),
                 memberId);
 
