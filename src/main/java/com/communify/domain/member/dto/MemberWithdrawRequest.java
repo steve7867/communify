@@ -7,6 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberWithdrawRequest {
 
-    @NotBlank
     private final String password;
+    private final Long memberId;
 }
