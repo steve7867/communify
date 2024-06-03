@@ -67,7 +67,7 @@ public class PostService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
+    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#request.postId")
     public void editPost(PostEditRequest request) {
         boolean isEdited = postRepository.editPost(request);
         if (!isEdited) {
@@ -83,7 +83,7 @@ public class PostService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
+    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#request.postId")
     public void deletePost(PostDeleteRequest request) {
         Long postId = request.getPostId();
         Long memberId = request.getMemberId();

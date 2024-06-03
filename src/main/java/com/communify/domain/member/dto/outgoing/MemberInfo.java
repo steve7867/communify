@@ -18,6 +18,9 @@ public class MemberInfo {
     private final String name;
     private final LocalDateTime createdDateTime;
 
+    private final Integer followed;
+    private final Integer following;
+
     @JsonIgnore
     private final String fcmToken;
 }
