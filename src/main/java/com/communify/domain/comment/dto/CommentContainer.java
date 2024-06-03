@@ -12,6 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentContainer {
 
     @NotBlank
-    @Size(max = 200, message = "댓글은 최대 {0}자까지 가능합니다.")
+    @Size(min = 1, max = 200)
     private final String content;
 }

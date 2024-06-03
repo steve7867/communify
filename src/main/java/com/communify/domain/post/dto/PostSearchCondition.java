@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostSearchCondition {
 
-    @NotNull(message = "카테고리 id를 지정해주세요.")
-    @Positive(message = "양수만 허용됩니다.")
+    @NotNull
+    @Positive
     private final Long categoryId;
 
-    @Positive(message = "양수만 허용됩니다.")
+    @Positive
     private final Long lastPostId;
 }

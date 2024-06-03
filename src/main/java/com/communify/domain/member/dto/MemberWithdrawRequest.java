@@ -10,6 +10,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberWithdrawRequest {
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @NotBlank
     private final String password;
 }

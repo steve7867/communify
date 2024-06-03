@@ -16,19 +16,19 @@ public class PostUploadRequest {
 
     private Long id;
 
-    @NotBlank(message = "제목을 입력해주세요.")
-    @Size(max = 100, message = "제목은 최대 {0}자까지 허용됩니다.")
+    @NotBlank
+    @Size(min = 1, max = 100)
     private final String title;
 
-    @NotBlank(message = "본문을 입력해주세요.")
-    @Size(max = 20000, message = "본문은 최대 {0}자까지 허용됩니다.")
+    @NotBlank
+    @Size(max = 20000)
     private final String content;
 
-    @Size(max = 100)
     @NotNull
+    @Size(max = 100)
     private final List<MultipartFile> fileList;
 
-    @NotNull(message = "카테고리를 지정해주세요.")
-    @Positive(message = "카테고리 번호는 양수만 가능합니다.")
+    @NotNull
+    @Positive
     private final Long categoryId;
 }
