@@ -1,7 +1,7 @@
 package com.communify.domain.like.presentation;
 
-import com.communify.domain.auth.annotation.CurrentMemberId;
-import com.communify.domain.auth.annotation.CurrentMemberName;
+import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.like.application.LikeService;
 import com.communify.domain.like.dto.LikeRequest;
@@ -26,8 +26,8 @@ public class LikeController {
     @ResponseStatus(OK)
     @LoginCheck
     public void like(@PathVariable Long postId,
-                     @CurrentMemberId Long memberId,
-                     @CurrentMemberName String memberName) {
+                     @MemberId Long memberId,
+                     @MemberName String memberName) {
 
         LikeRequest request = LikeRequest.builder()
                 .postId(postId)
@@ -42,7 +42,7 @@ public class LikeController {
     @ResponseStatus(OK)
     @LoginCheck
     public void cancelLike(@PathVariable Long postId,
-                           @CurrentMemberId Long memberId) {
+                           @MemberId Long memberId) {
 
         likeService.cancelLike(postId, memberId);
     }

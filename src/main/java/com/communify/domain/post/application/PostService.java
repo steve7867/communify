@@ -2,11 +2,13 @@ package com.communify.domain.post.application;
 
 import com.communify.domain.file.application.FileService;
 import com.communify.domain.post.dao.PostRepository;
-import com.communify.domain.post.dto.PostDetail;
-import com.communify.domain.post.dto.PostOutline;
-import com.communify.domain.post.dto.PostSearchCondition;
-import com.communify.domain.post.dto.PostUploadEvent;
+import com.communify.domain.post.dto.PostDeleteRequest;
+import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.dto.event.PostUploadEvent;
+import com.communify.domain.post.dto.incoming.PostOutlineSearchCondition;
+import com.communify.domain.post.dto.outgoing.PostDetail;
+import com.communify.domain.post.dto.outgoing.PostOutline;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
 import com.communify.domain.post.error.exception.PostWriterNotFoundException;
 import com.communify.global.application.CacheService;
@@ -31,30 +33,31 @@ public class PostService {
     private final PostRepository postRepository;
     private final FileService fileService;
     private final CacheService cacheService;
+
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void uploadPost(PostUploadRequest request,
-                           Long memberId,
-                           String memberName) {
-
-        postRepository.insertPost(request, memberId);
+    public void uploadPost(PostUploadRequest request) {
+        postRepository.insertPost(request);
 
         List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
         Long postId = request.getId();
         fileService.uploadFile(multipartFileList, postId);
 
-        eventPublisher.publishEvent(new PostUploadEvent(memberId, memberName));
+        Long memberId = request.getMemberId();
+        String memberName = request.getMemberName();
+        PostUploadEvent event = new PostUploadEvent(memberId, memberName);
+        eventPublisher.publishEvent(event);
     }
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
             key = "#searchCond.categoryId + '_' + #searchCond.lastPostId")
-    public List<PostOutline> getPostOutlineList(PostSearchCondition searchCond) {
+    public List<PostOutline> getPostOutlineList(PostOutlineSearchCondition searchCond) {
         return postRepository.findAllPostOutlineBySearchCond(searchCond);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public Optional<PostDetail> getPostDetail(Long postId) {
         return postRepository.findPostDetail(postId);
@@ -67,15 +70,15 @@ public class PostService {
 
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
-    public void editPost(Long postId,
-                         PostUploadRequest request,
-                         Long memberId) {
-
-        boolean isEdited = postRepository.editPost(postId, request, memberId);
+    public void editPost(PostEditRequest request) {
+        boolean isEdited = postRepository.editPost(request);
         if (!isEdited) {
+            Long postId = request.getPostId();
+            Long memberId = request.getMemberId();
             throw new InvalidPostAccessException(postId, memberId);
         }
 
+        Long postId = request.getPostId();
         fileService.deleteFiles(postId);
 
         List<MultipartFile> multipartFileList = Collections.unmodifiableList(request.getFileList());
@@ -84,7 +87,10 @@ public class PostService {
 
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
-    public void deletePost(Long postId, Long memberId) {
+    public void deletePost(PostDeleteRequest request) {
+        Long postId = request.getPostId();
+        Long memberId = request.getMemberId();
+
         boolean canDelete = postRepository.isWrittenBy(postId, memberId);
         if (!canDelete) {
             throw new InvalidPostAccessException(postId, memberId);
@@ -92,7 +98,7 @@ public class PostService {
 
         fileService.deleteFiles(postId);
 
-        postRepository.deletePost(postId, memberId);
+        postRepository.deletePost(request);
     }
 
     @Transactional(readOnly = true)

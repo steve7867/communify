@@ -1,7 +1,7 @@
 package com.communify.domain.follow.presentation;
 
-import com.communify.domain.auth.annotation.CurrentMemberId;
-import com.communify.domain.auth.annotation.CurrentMemberName;
+import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.follow.dto.FollowRequest;
@@ -32,8 +32,8 @@ public class FollowController {
     @PostMapping("/{followId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void follow(@CurrentMemberId Long memberId,
-                       @CurrentMemberName String memberName,
+    public void follow(@MemberId Long memberId,
+                       @MemberName String memberName,
                        @PathVariable @NotNull Long followId) {
 
         if (Objects.equals(memberId, followId)) {
@@ -47,7 +47,7 @@ public class FollowController {
     @DeleteMapping("/{followId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void unfollow(@CurrentMemberId Long memberId,
+    public void unfollow(@MemberId Long memberId,
                          @PathVariable @NotNull Long followId) {
 
         followService.unfollow(memberId, followId);

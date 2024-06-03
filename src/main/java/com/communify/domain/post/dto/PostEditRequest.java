@@ -8,13 +8,13 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class PostUploadRequest {
+public class PostEditRequest {
 
-    private Long id;
+    private final Long postId;
     private final String title;
     private final String content;
     private final List<MultipartFile> fileList;
     private final Long categoryId;
+
     private final Long memberId;
-    private final String memberName;
 }

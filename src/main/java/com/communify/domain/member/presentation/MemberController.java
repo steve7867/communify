@@ -1,6 +1,6 @@
 package com.communify.domain.member.presentation;
 
-import com.communify.domain.auth.annotation.CurrentMemberId;
+import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.NotLoginCheck;
 import com.communify.domain.member.application.MemberFindService;
@@ -72,7 +72,7 @@ public class MemberController {
     @ResponseStatus(OK)
     @LoginCheck
     public void withdraw(@RequestBody @Valid MemberWithdrawRequest request,
-                         @CurrentMemberId Long memberId) {
+                         @MemberId Long memberId) {
 
         memberWithdrawService.withdraw(request, memberId);
     }
@@ -81,7 +81,7 @@ public class MemberController {
     @ResponseStatus(OK)
     @LoginCheck
     public void setFcmToken(@RequestBody @NotBlank String fcmToken,
-                            @CurrentMemberId Long memberId) {
+                            @MemberId Long memberId) {
 
         memberUpdateService.setFcmToken(fcmToken, memberId);
     }

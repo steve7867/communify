@@ -1,13 +1,16 @@
 package com.communify.domain.post.presentation;
 
-import com.communify.domain.auth.annotation.CurrentMemberId;
-import com.communify.domain.auth.annotation.CurrentMemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.post.application.PostService;
-import com.communify.domain.post.dto.PostDetail;
-import com.communify.domain.post.dto.PostOutline;
-import com.communify.domain.post.dto.PostSearchCondition;
+import com.communify.domain.post.dto.PostDeleteRequest;
+import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.dto.incoming.PostOutlineSearchCondition;
+import com.communify.domain.post.dto.incoming.PostUploadForm;
+import com.communify.domain.post.dto.outgoing.PostDetail;
+import com.communify.domain.post.dto.outgoing.PostOutline;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -36,16 +39,23 @@ import static org.springframework.http.HttpStatus.OK;
 public class PostController {
 
     private final PostService postService;
-    private final PostUploadRequestValidator postUploadRequestValidator;
+    private final PostUploadFormValidator postUploadFormValidator;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(CREATED)
     @LoginCheck
-    public void upload(@ModelAttribute @Valid PostUploadRequest request,
-                       @CurrentMemberId Long memberId,
-                       @CurrentMemberName String memberName) {
+    public void upload(@ModelAttribute @Valid PostUploadForm form,
+                       @MemberId Long memberId,
+                       @MemberName String memberName) {
 
-        postService.uploadPost(request, memberId, memberName);
+        PostUploadRequest request = new PostUploadRequest(form.getTitle(),
+                form.getContent(),
+                form.getFileList(),
+                form.getCategoryId(),
+                memberId,
+                memberName);
+
+        postService.uploadPost(request);
     }
 
     /*
@@ -57,20 +67,20 @@ public class PostController {
      */
     @InitBinder("PostUploadRequest")
     public void addPostUploadRequestValidator(WebDataBinder dataBinder) {
-        dataBinder.addValidators(postUploadRequestValidator);
+        dataBinder.addValidators(postUploadFormValidator);
     }
 
     @GetMapping
     @ResponseStatus(OK)
     @LoginCheck
-    public List<PostOutline> getPosts(@ModelAttribute @Valid PostSearchCondition searchCond) {
+    public List<PostOutline> getPosts(@ModelAttribute @Valid PostOutlineSearchCondition searchCond) {
         return postService.getPostOutlineList(searchCond);
     }
 
     @GetMapping("/{postId}")
     @LoginCheck
     public ResponseEntity<PostDetail> getPostDetail(@PathVariable Long postId,
-                                                    @CurrentMemberId Long memberId) {
+                                                    @MemberId Long memberId) {
 
         Optional<PostDetail> postDetailOpt = postService.getPostDetail(postId);
         if (postDetailOpt.isEmpty()) {
@@ -86,18 +96,26 @@ public class PostController {
     @ResponseStatus(OK)
     @LoginCheck
     public void edit(@PathVariable Long postId,
-                     @ModelAttribute @Valid PostUploadRequest request,
-                     @CurrentMemberId Long memberId) {
+                     @ModelAttribute @Valid PostUploadForm form,
+                     @MemberId Long memberId) {
 
-        postService.editPost(postId, request, memberId);
+        PostEditRequest request = new PostEditRequest(postId, form.getTitle(),
+                form.getContent(),
+                form.getFileList(),
+                form.getCategoryId(),
+                memberId);
+
+        postService.editPost(request);
     }
 
     @DeleteMapping("/{postId}")
     @ResponseStatus(OK)
     @LoginCheck
     public void delete(@PathVariable Long postId,
-                       @CurrentMemberId Long memberId) {
+                       @MemberId Long memberId) {
 
-        postService.deletePost(postId, memberId);
+        PostDeleteRequest request = new PostDeleteRequest(postId, memberId);
+
+        postService.deletePost(request);
     }
 }

@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PostUploadEvent {
+public class PostDeleteRequest {
 
+    private final Long postId;
     private final Long memberId;
-    private final String memberName;
 }
