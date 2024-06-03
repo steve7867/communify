@@ -19,7 +19,9 @@ public class PasswordBasedMemberWithdrawService implements MemberWithdrawService
     private final LoginService loginService;
 
     @Override
-    public void withdraw(MemberWithdrawRequest request, Long memberId) {
+    public void withdraw(MemberWithdrawRequest request) {
+        Long memberId = request.getMemberId();
+
         MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
