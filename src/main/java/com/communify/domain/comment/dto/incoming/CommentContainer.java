@@ -1,4 +1,4 @@
-package com.communify.domain.comment.dto;
+package com.communify.domain.comment.dto.incoming;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

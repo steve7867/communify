@@ -1,4 +1,4 @@
-package com.communify.domain.post.dto;
+package com.communify.domain.post.dto.incoming;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PostSearchCondition {
+public class PostOutlineSearchCondition {
 
     @NotNull
     @Positive

@@ -1,6 +1,6 @@
 # 🌏 Communify
 
-- 커뮤니티 사이트를 개발하는 프로젝트
+- 다양한 주제에 대한 글을 공유하는 커뮤니티 사이트
 - 대용량 트래픽을 가정하여 성능에 초점을 두고 개발 진행
 
 ## 🎯 Technical Issue
@@ -19,21 +19,25 @@
 - Nginx의 Reversed-Proxy를 이용하여 로드밸런싱
 - Jasypt를 이용해 설정 정보 암호화
 
+## 🤔 TroubleShooting & 기술적 고민
+
+- [🔗링크](https://github.com/steve7867/Communify/wiki/%F0%9F%A4%94-TroubleShooting-&-%EA%B8%B0%EC%88%A0%EC%A0%81-%EA%B3%A0%EB%AF%BC)
+
 ## 🖼️ Application UI
 
-![Application UI](img/Application_UI.png)
+![Application UI](https://github-production-user-asset-6210df.s3.amazonaws.com/115217247/335965817-935a8024-04d5-4c45-8f0d-79c8c6fc038f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240603%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240603T065219Z&X-Amz-Expires=300&X-Amz-Signature=3a27b21fa2cdf7ac8c1ded8a34f1fcd085d32dbd7ccfc2367b39b3e5ea305927&X-Amz-SignedHeaders=host&actor_id=115217247&key_id=0&repo_id=809634469)
 
 ## 🛠️ 사용한 기술 및 개발 환경
 
-![사용한 기술](img/Skills_Used.png)
+![사용한 기술](https://github-production-user-asset-6210df.s3.amazonaws.com/115217247/335965880-b7abcaee-0ac6-44e5-8ebf-836bc08ddc58.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240603%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240603T065244Z&X-Amz-Expires=300&X-Amz-Signature=3e2068cfb46d712f042b275f0b85d039b2d92a81738968ba851395dcb31a2fdd&X-Amz-SignedHeaders=host&actor_id=115217247&key_id=0&repo_id=809634469)
 
 ## 📈 ERD
 
-![ERD](img/Communify_ERD.png)
+![ERD](https://github-production-user-asset-6210df.s3.amazonaws.com/115217247/336070402-0a22c5b7-e3aa-401b-b7ca-440cb3a469a6.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240603%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240603T130744Z&X-Amz-Expires=300&X-Amz-Signature=75d22d5c4ee2fb04ea76e151a45625ace2a8daebf9794ef75800c70ef9cf4469&X-Amz-SignedHeaders=host&actor_id=115217247&key_id=0&repo_id=809634469)
 
 ## 🏛️ 프로젝트 구조도
 
-![프로젝트 구조](img/Architecture.png)
+![프로젝트 구조](https://github-production-user-asset-6210df.s3.amazonaws.com/115217247/335965869-dae47b03-cf5b-4911-9382-3c667b3d96db.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240603%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240603T065227Z&X-Amz-Expires=300&X-Amz-Signature=b19b43f58e08f99f400bb6a8fab34b9d29b6a4c0f04250c91ad302af24c13469&X-Amz-SignedHeaders=host&actor_id=115217247&key_id=0&repo_id=809634469)
 
 ## ⚙️ 주요 기능
 

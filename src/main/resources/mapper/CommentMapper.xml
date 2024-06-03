@@ -14,25 +14,30 @@
 
     <insert id="insert" useGeneratedKeys="true">
         INSERT INTO comment(content, post_id, member_id)
-        VALUE (#{request.content}, #{request.postId}, #{request.memberId})
+            VALUE (#{request.content}, #{request.postId}, #{request.memberId})
     </insert>
 
     <select id="findAllCommentsByPostId" resultMap="commentInfoResultMap">
         SELECT c.id, c.content, c.member_id, m.name, c.created_timestamp
         FROM comment AS c
-            LEFT OUTER JOIN member AS m ON c.member_id = m.id
+                 LEFT OUTER JOIN member AS m ON c.member_id = m.id
         WHERE post_id = #{postId}
         ORDER BY c.created_timestamp;
     </select>
 
     <update id="editComment">
         UPDATE comment
-        SET content = #{content}
-        WHERE id = #{commentId} AND member_id = #{memberId}
+        SET content = #{request.content}
+        WHERE id = #{request.commentId}
+          AND post_id = #{request.postId}
+          AND member_id = #{request.memberId}
     </update>
 
     <delete id="deleteComment">
-        DELETE from comment
-        WHERE id = #{commentId} AND member_id = #{memberId};
+        DELETE
+        FROM comment
+        WHERE id = #{request.commentId}
+          AND post_id = #{request.postId}
+          AND member_id = #{request.memberId}
     </delete>
 </mapper>

@@ -2,7 +2,7 @@ package com.communify.domain.post.application;
 
 import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.member.dto.MemberInfo;
-import com.communify.domain.post.dto.PostUploadEvent;
+import com.communify.domain.post.dto.event.PostUploadEvent;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
