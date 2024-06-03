@@ -1,4 +1,4 @@
-package com.communify.domain.member.dto;
+package com.communify.domain.member.dto.outgoing;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

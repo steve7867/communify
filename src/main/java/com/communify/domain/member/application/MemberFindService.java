@@ -1,7 +1,7 @@
 package com.communify.domain.member.application;
 
 import com.communify.domain.member.dao.MemberRepository;
-import com.communify.domain.member.dto.MemberInfo;
+import com.communify.domain.member.dto.outgoing.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
