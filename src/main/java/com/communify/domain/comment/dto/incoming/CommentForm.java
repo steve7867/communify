@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class CommentContainer {
+public class CommentForm {
 
     @NotBlank
     @Size(min = 1, max = 200)

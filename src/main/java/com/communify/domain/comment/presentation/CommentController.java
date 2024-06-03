@@ -4,7 +4,7 @@ import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.comment.application.CommentService;
-import com.communify.domain.comment.dto.incoming.CommentContainer;
+import com.communify.domain.comment.dto.incoming.CommentForm;
 import com.communify.domain.comment.dto.CommentDeleteRequest;
 import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.outgoing.CommentInfo;
@@ -36,11 +36,11 @@ public class CommentController {
     @ResponseStatus(OK)
     @LoginCheck
     public void addComment(@PathVariable Long postId,
-                           @RequestBody @Valid CommentContainer commentContainer,
+                           @RequestBody @Valid CommentForm form,
                            @MemberId Long memberId,
                            @MemberName String memberName) {
 
-        String content = commentContainer.getContent();
+        String content = form.getContent();
         CommentUploadRequest request = new CommentUploadRequest(content, postId, memberId, memberName);
         commentService.addComment(request);
     }
@@ -57,10 +57,10 @@ public class CommentController {
     @LoginCheck
     public void editComment(@PathVariable Long postId,
                             @PathVariable Long commentId,
-                            @RequestBody @Valid CommentContainer commentContainer,
+                            @RequestBody @Valid CommentForm form,
                             @MemberId Long memberId) {
 
-        String content = commentContainer.getContent();
+        String content = form.getContent();
         CommentEditRequest request = new CommentEditRequest(postId, commentId, content, memberId);
 
         commentService.editComment(request);
