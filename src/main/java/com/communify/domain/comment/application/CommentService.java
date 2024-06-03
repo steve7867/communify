@@ -8,6 +8,7 @@ import com.communify.domain.comment.dto.CommentUploadEvent;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+    @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
     public void addComment(CommentUploadRequest request) {
         commentRepository.insert(request);
 
@@ -36,10 +38,12 @@ public class CommentService {
         return Collections.unmodifiableList(commentInfoList);
     }
 
+    @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
     public void editComment(CommentEditRequest request) {
         commentRepository.editComment(request);
     }
 
+    @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
     public void deleteComment(CommentDeleteRequest request) {
         commentRepository.deleteComment(request);
     }
