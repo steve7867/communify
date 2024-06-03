@@ -3,7 +3,7 @@ package com.communify.domain.follow.applilcation;
 import com.communify.domain.follow.dao.FollowRepository;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
-import com.communify.domain.member.dto.MemberInfo;
+import com.communify.domain.member.dto.outgoing.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

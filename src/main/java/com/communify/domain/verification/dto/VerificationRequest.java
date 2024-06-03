@@ -1,13 +1,12 @@
 package com.communify.domain.verification.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor(onConstructor_ = @JsonCreator)
+@NoArgsConstructor(force = true)
 public class VerificationRequest {
 
     @NotBlank

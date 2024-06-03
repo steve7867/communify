@@ -1,15 +1,13 @@
-package com.communify.domain.member.dto;
+package com.communify.domain.member.dto.outgoing;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(force = true)
-@RequiredArgsConstructor
 public class MemberInfo {
 
     private final Long id;

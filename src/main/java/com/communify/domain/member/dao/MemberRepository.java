@@ -1,14 +1,12 @@
 package com.communify.domain.member.dao;
 
-import com.communify.domain.member.dto.MemberInfo;
-import com.communify.domain.member.dto.MemberSignUpRequest;
+import com.communify.domain.member.dto.outgoing.MemberInfo;
+import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Mapper
-@Repository
 public interface MemberRepository {
 
     int insert(MemberSignUpRequest request);

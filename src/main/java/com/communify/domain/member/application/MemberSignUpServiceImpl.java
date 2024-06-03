@@ -1,7 +1,7 @@
 package com.communify.domain.member.application;
 
 import com.communify.domain.member.dao.MemberRepository;
-import com.communify.domain.member.dto.MemberSignUpRequest;
+import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
 import com.communify.domain.member.error.exception.EmailAlreadyUsedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;

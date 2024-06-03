@@ -1,6 +1,5 @@
 package com.communify.domain.post.dto.outgoing;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class PostOutline {

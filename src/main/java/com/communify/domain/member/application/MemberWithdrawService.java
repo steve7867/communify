@@ -4,5 +4,5 @@ import com.communify.domain.member.dto.MemberWithdrawRequest;
 
 public interface MemberWithdrawService {
 
-    void withdraw(MemberWithdrawRequest request, Long memberId);
+    void withdraw(MemberWithdrawRequest request);
 }

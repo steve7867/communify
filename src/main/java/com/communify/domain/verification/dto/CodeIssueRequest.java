@@ -1,14 +1,13 @@
 package com.communify.domain.verification.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor(onConstructor_ = @JsonCreator)
+@NoArgsConstructor(force = true)
 public class CodeIssueRequest {
 
     @Email

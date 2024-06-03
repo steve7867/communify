@@ -1,4 +1,4 @@
-package com.communify.domain.member.dto;
+package com.communify.domain.member.dto.incoming;
 
 import com.communify.global.util.PasswordEncryptor;
 import com.fasterxml.jackson.annotation.JsonCreator;

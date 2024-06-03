@@ -8,13 +8,11 @@ import com.communify.domain.post.dto.outgoing.PostDetail;
 import com.communify.domain.post.dto.outgoing.PostOutline;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Mapper
-@Repository
 public interface PostRepository {
 
     void insertPost(@Param("request") PostUploadRequest request);
