@@ -4,7 +4,7 @@ import com.communify.domain.like.dto.LikeEvent;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.error.exception.FcmTokenNotSetException;
-import com.communify.domain.post.application.PostService;
+import com.communify.domain.post.application.PostSearchService;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class LikeEventListener {
 
-    private final PostService postService;
+    private final PostSearchService postSearchService;
     private final MemberFindService memberFindService;
     private final PushService pushService;
 
@@ -33,7 +33,7 @@ public class LikeEventListener {
         Long memberId = request.getMemberId();
         Long postId = request.getPostId();
 
-        Long writerId = postService.getWriterId(postId);
+        Long writerId = postSearchService.getWriterId(postId);
         if (Objects.equals(memberId, writerId)) {
             return;
         }
