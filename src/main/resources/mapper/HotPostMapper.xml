@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.communify.domain.hotpost.dao.HotPostRepository">
+    <resultMap id="postOutlineResultMap" type="PostOutline">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="memberId" column="member_id"/>
+        <result property="memberName" column="name"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="view" column="view"/>
+        <result property="createdDateTime" column="created_timestamp"/>
+        <result property="likes" column="likes"/>
+        <result property="hot" column="hot"/>
+    </resultMap>
+
+    <select id="findHotPostOutlinesByCategory" resultMap="postOutlineResultMap">
+        SELECT STRAIGHT_JOIN p.id,
+                             p.title,
+                             p.member_id,
+                             m.name,
+                             p.category_id,
+                             p.view,
+                             p.created_timestamp,
+                             count(l.post_id) AS likes,
+                             true             as hot
+        FROM hot_post h
+                 INNER JOIN post p ON h.post_id = p.id
+                 LEFT OUTER JOIN member m on p.member_id = m.id
+                 LEFT OUTER JOIN likes l ON p.id = l.post_id
+        WHERE p.category_id = #{categoryId}
+        GROUP BY p.id
+        LIMIT #{limit};
+    </select>
+
+    <select id="findMostViewedPostIdFrom">
+        SELECT id
+        FROM post
+        WHERE category_id = #{categoryId}
+          AND created_timestamp >= NOW() - INTERVAL #{hour} DAY
+        GROUP BY id
+        ORDER BY view DESC, created_timestamp DESC
+        LIMIT #{limit}
+    </select>
+
+    <delete id="deleteAllFromHotPost">
+        DELETE
+        FROM hot_post
+    </delete>
+
+    <insert id="insertAllHotPosts">
+        INSERT INTO hot_post
+        VALUES
+        <foreach collection="list" item="id" separator=",">
+            (#{id})
+        </foreach>
+    </insert>
+</mapper>
