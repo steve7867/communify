@@ -2,6 +2,7 @@ package com.communify.domain.post.application;
 
 import com.communify.domain.file.application.FileService;
 import com.communify.domain.file.dto.FileUploadRequest;
+import com.communify.domain.hotpost.application.HotPostSearchService;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostDeleteRequest;
 import com.communify.domain.post.dto.PostEditRequest;
@@ -16,13 +17,16 @@ import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -32,8 +36,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final FileService fileService;
     private final CacheService cacheService;
-
+    private final HotPostSearchService hotPostSearchService;
     private final ApplicationEventPublisher eventPublisher;
+
+    @Value("${post.search-size}")
+    private Integer postSearchSize;
 
     @Transactional
     public void uploadPost(PostUploadRequest request) {
@@ -52,7 +59,18 @@ public class PostService {
     @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
             key = "#searchCond.categoryId + '_' + #searchCond.lastPostId")
     public List<PostOutline> getPostOutlineList(PostOutlineSearchCondition searchCond) {
-        return postRepository.findAllPostOutlineBySearchCond(searchCond);
+        List<PostOutline> postOutlineList = new ArrayList<>(postSearchSize);
+
+        if (Objects.isNull(searchCond.getLastPostId())) {
+            Long categoryId = searchCond.getCategoryId();
+            List<PostOutline> hotPostOutlineList = hotPostSearchService.getHotPostOutlineListByCategory(categoryId);
+            postOutlineList.addAll(hotPostOutlineList);
+        }
+
+        Integer limit = postSearchSize - postOutlineList.size();
+        postOutlineList.addAll(postRepository.findAllPostOutlineBySearchCond(searchCond, limit));
+
+        return postOutlineList;
     }
 
     @Transactional(readOnly = true)

@@ -17,7 +17,7 @@
 
     <insert id="insert" useGeneratedKeys="true">
         INSERT INTO member(email, hashed, name)
-        VALUES (#{email}, #{hashed}, #{name})
+        VALUES (#{request.email}, #{request.hashed}, #{request.name})
     </insert>
 
     <select id="findByEmail" resultMap="memberInfoResultMap">
@@ -28,9 +28,8 @@
                m.created_timestamp,
                count(f.follow_id) AS followed,
                count(f.member_id) AS following
-        FROM member AS m
-                 LEFT OUTER JOIN follow AS f
-                                 ON m.id = f.follow_id OR m.id = f.member_id
+        FROM member m
+                 LEFT OUTER JOIN follow f ON m.id = f.follow_id OR m.id = f.member_id
         WHERE m.email = #{email}
         GROUP BY m.id
     </select>
@@ -43,9 +42,8 @@
                m.created_timestamp,
                count(f.follow_id) AS followed,
                count(f.member_id) AS following
-        FROM member AS m
-                 LEFT OUTER JOIN follow AS f
-                                 ON m.id = f.follow_id OR m.id = f.member_id
+        FROM member m
+                 LEFT OUTER JOIN follow f ON m.id = f.follow_id OR m.id = f.member_id
         WHERE m.id = #{memberId}
         GROUP BY m.id
     </select>

@@ -56,6 +56,7 @@ public class CacheConfig {
 
         RedisCacheConfiguration categoriesConfig = defaultCacheConfig.entryTtl(Duration.ofDays(1L));
         RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(5L));
+        RedisCacheConfiguration hotPostOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
         RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
         RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
 
@@ -63,6 +64,7 @@ public class CacheConfig {
                 .cacheDefaults(defaultCacheConfig)
                 .withCacheConfiguration(CacheNames.CATEGORIES, categoriesConfig)
                 .withCacheConfiguration(CacheNames.POST_OUTLINES, postOutlinesConfig)
+                .withCacheConfiguration(CacheNames.HOT_POST_OUTLINES, hotPostOutlinesConfig)
                 .withCacheConfiguration(CacheNames.POST_DETAIL, postDetailConfig)
                 .withCacheConfiguration(CacheNames.COMMENTS, commentsConfig)
                 .build();

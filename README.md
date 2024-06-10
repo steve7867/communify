@@ -5,19 +5,19 @@
 
 ## 🎯 Technical Issue
 
-- Redis 캐시를 활용한 읽기 작업 성능 향상
-- Redis 캐시 저장소, 세션 저장소 분리
-- Write Behind 전략을 활용해 게시글 좋아요, 조회 수 집계 구현
-- Redis Transaction을 사용해 Redis에 다수 접근하는 기능을 atomic하게 구현
-- DB 이중화(MySQL Replication)를 통한 데이터베이스 부하 분산
-- DB 인덱스 설정을 통해 조회 성능 향상
-- Bulk Insert를 이용한 데이터 삽입 성능 향상
-- 무한 스크롤 방식의 페이징 처리를 통해 게시글 목록 조회 성능 향상
-- FireBase를 이용한 푸시 알림 기능
-- 비동기 방식을 적용해 푸시 알림 기능 향상
-- Spring AOP를 사용한 로그인 체크 기능
-- Nginx의 Reversed-Proxy를 이용하여 로드밸런싱
-- Jasypt를 이용해 설정 정보 암호화
+- Redis 캐시를 활용한 읽기 성능 향상
+- Redis 캐시, 세션 저장소 분리
+- Write Behind 전략을 활용한 좋아요, 조회 수 집계 구현
+- Redis Transaction을 사용해 Redis에 다수 접근하는 로직을 atomic하게 구현
+- DB 이중화(MySQL Replication)를 통한 DB 부하 분산
+- DB 인덱스 설정을 통한 조회 성능 향상
+- Bulk Insert를 이용한 삽입 성능 향상
+- 무한 스크롤 방식의 페이징
+- FireBase를 이용한 푸시 알림
+- 비동기 방식을 적용해 푸시 알림 성능 향상
+- Spring AOP를 사용한 로그인 체크
+- Nginx의 Reversed-Proxy를 이용한 로드밸런싱
+- Jasypt를 이용한 설정 정보 암호화
 
 ## 🤔 TroubleShooting & 기술적 고민
 
@@ -25,7 +25,7 @@
 
 ## 🖼️ Application UI
 
-![Application UI](https://github.com/steve7867/Communify/assets/115217247/2405a74a-57e9-4be7-9cef-db59a395fc74)
+![Application UI](https://github.com/steve7867/Communify/assets/115217247/d07f70ec-d9d6-424b-a4c2-e642b4dcc2e5)
 
 ## 🛠️ 사용한 기술 및 개발 환경
 
@@ -53,6 +53,7 @@
 
 - 게시글 작성
 - 카테고리별 게시글 목록 조회
+- 인기 게시글 조회
 - 게시글 상세 조회
 - 게시글 수정
 - 게시글 삭제
@@ -67,7 +68,7 @@
 
 ### 🔔 푸시 알림
 
-- 다른 사람이 자신을 팔로우한 경우
-- 팔로우 중인 사람이 게시글을 작성한 경우
-- 다른 사람이 자신의 게시글에 댓글 작성한 경우
-- 다른 사람이 자신의 게시글에 좋아요 버튼을 누른 경우
+- 다른 회원이 자신을 팔로우한 경우
+- 팔로우 중인 회원이 새로운 게시글을 작성한 경우
+- 다른 회원이 자신의 게시글에 댓글 작성한 경우
+- 다른 회원이 자신의 게시글에 좋아요 버튼을 누른 경우

@@ -8,7 +8,7 @@
         <result property="content" column="content"/>
         <result property="memberId" column="member_id"/>
         <result property="memberName" column="name"/>
-        <result property="createdDateTime"  column="created_timestamp"/>
+        <result property="createdDateTime" column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
     </resultMap>
 
@@ -19,8 +19,8 @@
 
     <select id="findAllCommentsByPostId" resultMap="commentInfoResultMap">
         SELECT c.id, c.content, c.member_id, m.name, c.created_timestamp
-        FROM comment AS c
-                 LEFT OUTER JOIN member AS m ON c.member_id = m.id
+        FROM comment c
+                 LEFT OUTER JOIN member m ON c.member_id = m.id
         WHERE post_id = #{postId}
         ORDER BY c.created_timestamp;
     </select>
