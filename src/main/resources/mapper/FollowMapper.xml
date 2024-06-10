@@ -29,16 +29,16 @@
 
     <select id="findFollowers" resultMap="memberInfoResultMap">
         SELECT m.id, m.name, ft.fcm_token
-        FROM follow f
-                 INNER JOIN member m ON f.member_id = m.id
-                 LEFT OUTER JOIN fcm_token ft ON ft.member_id = m.id
+        FROM member m
+                 INNER JOIN follow f ON m.id = f.member_id
+                 LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id AND f.member_id = ft.member_id
         WHERE f.follow_id = #{memberId}
     </select>
 
     <select id="findFollowings" resultMap="memberInfoResultMap">
         SELECT m.id, m.name
-        FROM follow f
-                 INNER JOIN member m ON f.follow_id = m.id
+        FROM member m
+                 INNER JOIN follow f ON m.id = f.follow_id
         WHERE f.member_id = #{memberId}
     </select>
 </mapper>
