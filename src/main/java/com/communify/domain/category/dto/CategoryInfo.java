@@ -1,10 +1,10 @@
 package com.communify.domain.category.dto;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor(force = true)
 public class CategoryInfo {
 
     private final Long id;

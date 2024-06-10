@@ -8,9 +8,11 @@
         <result property="title" column="title"/>
         <result property="memberId" column="member_id"/>
         <result property="memberName" column="name"/>
-        <result property="createdDateTime" column="created_timestamp"/>
+        <result property="categoryId" column="category_id"/>
         <result property="view" column="view"/>
+        <result property="createdDateTime" column="created_timestamp"/>
         <result property="likes" column="likes"/>
+        <result property="hot" column="hot"/>
     </resultMap>
 
     <resultMap id="postDetailResultMap" type="PostDetail">
@@ -29,25 +31,46 @@
         VALUES (#{request.title}, #{request.content}, #{request.memberId}, #{request.categoryId});
     </insert>
 
+    <insert id="insertAllPost">
+        INSERT INTO post(title, content, member_id, category_id)
+        VALUES
+        <foreach collection="list" item="request" separator=",">
+            (#{request.title}, #{request.content}, #{request.memberId}, #{request.categoryId})
+        </foreach>
+    </insert>
+
     <select id="findAllPostOutlineBySearchCond" parameterType="PostOutlineSearchCondition"
             resultMap="postOutlineResultMap">
-        SELECT p.id, p.title, p.member_id, m.name, p.created_timestamp, p.view, count(l.post_id) AS likes
-        FROM post AS p
+        SELECT p.id,
+            p.title,
+            p.member_id,
+            m.name,
+            p.category_id,
+            p.view,
+            p.created_timestamp,
+            count(l.post_id) AS likes,
+            false as hot
+        FROM post p
             LEFT OUTER JOIN member m ON p.member_id = m.id
-            LEFT OUTER JOIN likes AS l ON p.id = l.post_id
-        WHERE p.category_id = #{categoryId}
-        <if test="lastPostId != null">
-            AND p.id &lt; #{lastPostId}
+            LEFT OUTER JOIN likes l ON p.id = l.post_id
+        WHERE p.category_id = #{searchCond.categoryId}
+        <if test="searchCond.lastPostId != null">
+            AND p.id &lt; #{searchCond.lastPostId}
         </if>
         GROUP BY p.id
         ORDER BY p.id DESC
-        LIMIT 20
+        LIMIT #{limit}
     </select>
 
     <select id="findPostDetail" resultMap="postDetailResultMap">
-        SELECT p.content, f.stored_filename, f.original_filename, f.extension, f.post_id, f.sequence
-        FROM post AS p
-                 LEFT OUTER JOIN file AS f ON p.id = f.post_id
+        SELECT p.content,
+               f.stored_filename,
+               f.original_filename,
+               f.extension,
+               f.post_id,
+               f.sequence
+        FROM post p
+                 LEFT OUTER JOIN file f ON p.id = f.post_id
         WHERE p.id = #{postId}
         ORDER BY f.sequence ASC
     </select>

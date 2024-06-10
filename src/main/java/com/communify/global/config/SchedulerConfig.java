@@ -10,8 +10,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@EnableSchedulerLock(defaultLockAtLeastFor = "5s", defaultLockAtMostFor = "5s")
 @EnableScheduling
+@EnableSchedulerLock(defaultLockAtLeastFor = "5s", defaultLockAtMostFor = "5s")
 public class SchedulerConfig {
 
     @Bean
