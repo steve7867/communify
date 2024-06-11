@@ -3,7 +3,10 @@ package com.communify.domain.post.presentation;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.MemberName;
-import com.communify.domain.post.application.PostService;
+import com.communify.domain.post.application.PostDeleteService;
+import com.communify.domain.post.application.PostEditService;
+import com.communify.domain.post.application.PostSearchService;
+import com.communify.domain.post.application.PostUploadService;
 import com.communify.domain.post.dto.PostDeleteRequest;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.PostUploadRequest;
@@ -39,7 +42,10 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
+    private final PostUploadService postUploadService;
+    private final PostSearchService postSearchService;
+    private final PostEditService postEditService;
+    private final PostDeleteService postDeleteService;
     private final PostUploadFormValidator postUploadFormValidator;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -56,7 +62,7 @@ public class PostController {
                 memberId,
                 memberName);
 
-        postService.uploadPost(request);
+        postUploadService.uploadPost(request);
     }
 
     /*
@@ -75,7 +81,7 @@ public class PostController {
     @ResponseStatus(OK)
     @LoginCheck
     public List<PostOutline> getPostOutlines(@ModelAttribute @Valid PostOutlineSearchCondition searchCond) {
-        return postService.getPostOutlineList(searchCond);
+        return postSearchService.getPostOutlineList(searchCond);
     }
 
     @GetMapping("/{postId}")
@@ -83,12 +89,12 @@ public class PostController {
     public ResponseEntity<PostDetail> getPostDetail(@PathVariable Long postId,
                                                     @MemberId Long memberId) {
 
-        Optional<PostDetail> postDetailOpt = postService.getPostDetail(postId);
+        Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId);
         if (postDetailOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        postService.incrementView(postId, memberId);
+        postEditService.incrementView(postId, memberId);
 
         return ResponseEntity.ok(postDetailOpt.get());
     }
@@ -106,7 +112,7 @@ public class PostController {
                 form.getCategoryId(),
                 memberId);
 
-        postService.editPost(request);
+        postEditService.editPost(request);
     }
 
     @DeleteMapping("/{postId}")
@@ -117,6 +123,6 @@ public class PostController {
 
         PostDeleteRequest request = new PostDeleteRequest(postId, memberId);
 
-        postService.deletePost(request);
+        postDeleteService.deletePost(request);
     }
 }
