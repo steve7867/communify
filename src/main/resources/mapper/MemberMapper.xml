@@ -64,4 +64,10 @@
         FROM fcm_token
         WHERE member_id = #{memberId}
     </select>
+
+    <update id="updatePassword">
+        UPDATE member
+        SET hashed = #{request.newHashed}
+        WHERE id = #{request.memberId}
+    </update>
 </mapper>
