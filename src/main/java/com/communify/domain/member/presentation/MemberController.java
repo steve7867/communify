@@ -10,6 +10,8 @@ import com.communify.domain.member.application.MemberWithdrawService;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
 import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
 import com.communify.domain.member.dto.incoming.PasswordForm;
+import com.communify.domain.member.dto.PasswordUpdateRequest;
+import com.communify.domain.member.dto.incoming.PasswordUpdateForm;
 import com.communify.domain.member.dto.outgoing.MemberInfo;
 import com.communify.domain.verification.application.VerificationService;
 import com.communify.domain.verification.dto.VerificationConfirmRequest;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,6 +81,19 @@ public class MemberController {
         MemberWithdrawRequest request = new MemberWithdrawRequest(form.getPassword(), memberId);
 
         memberWithdrawService.withdraw(request);
+    }
+
+    @PatchMapping("/password")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void updatePassword(@RequestBody @Valid PasswordUpdateForm form,
+                               @MemberId Long memberId) {
+
+        PasswordUpdateRequest request = new PasswordUpdateRequest(memberId,
+                form.getCurrentPassword(),
+                form.getNewPassword());
+
+        memberUpdateService.updatePassword(request);
     }
 
     @PostMapping("/fcmToken")
