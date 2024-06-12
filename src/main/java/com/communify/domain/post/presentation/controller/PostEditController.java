@@ -37,13 +37,14 @@ public class PostEditController {
                      @ModelAttribute @Valid PostUploadForm form,
                      @MemberId Long memberId) {
 
-        PostEditRequest request = new PostEditRequest(
-                postId,
-                form.getTitle(),
-                form.getContent(),
-                Collections.unmodifiableList(form.getFileList()),
-                form.getCategoryId(),
-                memberId);
+        PostEditRequest request = PostEditRequest.builder()
+                .postId(postId)
+                .title(form.getTitle())
+                .content(form.getContent())
+                .fileList(Collections.unmodifiableList(form.getFileList()))
+                .categoryId(form.getCategoryId())
+                .memberId(memberId)
+                .build();
 
         postEditService.editPost(request);
     }

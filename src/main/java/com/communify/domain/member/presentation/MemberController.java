@@ -89,9 +89,11 @@ public class MemberController {
     public void updatePassword(@RequestBody @Valid PasswordUpdateForm form,
                                @MemberId Long memberId) {
 
-        PasswordUpdateRequest request = new PasswordUpdateRequest(memberId,
-                form.getCurrentPassword(),
-                form.getNewPassword());
+        PasswordUpdateRequest request = PasswordUpdateRequest.builder()
+                .memberId(memberId)
+                .currentPassword(form.getCurrentPassword())
+                .newPassword(form.getNewPassword())
+                .build();
 
         memberUpdateService.updatePassword(request);
     }

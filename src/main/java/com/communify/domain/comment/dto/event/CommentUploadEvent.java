@@ -1,5 +1,6 @@
-package com.communify.domain.comment.dto;
+package com.communify.domain.comment.dto.event;
 
+import com.communify.domain.comment.dto.CommentUploadRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

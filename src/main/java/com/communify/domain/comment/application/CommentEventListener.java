@@ -1,6 +1,6 @@
 package com.communify.domain.comment.application;
 
-import com.communify.domain.comment.dto.CommentUploadEvent;
+import com.communify.domain.comment.dto.event.CommentUploadEvent;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.error.exception.FcmTokenNotSetException;

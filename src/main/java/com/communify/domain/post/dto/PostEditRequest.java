@@ -1,13 +1,13 @@
 package com.communify.domain.post.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
+@Builder
 public class PostEditRequest {
 
     private final Long postId;

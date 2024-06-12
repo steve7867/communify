@@ -1,14 +1,14 @@
 package com.communify.domain.comment.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@Builder
 public class CommentUploadRequest {
 
-    private final String content;
     private final Long postId;
+    private final String content;
     private final Long memberId;
     private final String memberName;
 }

@@ -37,13 +37,14 @@ public class PostUploadController {
                        @MemberId Long memberId,
                        @MemberName String memberName) {
 
-        PostUploadRequest request = new PostUploadRequest(
-                form.getTitle(),
-                form.getContent(),
-                Collections.unmodifiableList(form.getFileList()),
-                form.getCategoryId(),
-                memberId,
-                memberName);
+        PostUploadRequest request = PostUploadRequest.builder()
+                .title(form.getTitle())
+                .content(form.getContent())
+                .fileList(Collections.unmodifiableList(form.getFileList()))
+                .categoryId(form.getCategoryId())
+                .memberId(memberId)
+                .memberName(memberName)
+                .build();
 
         postUploadService.uploadPost(request);
     }

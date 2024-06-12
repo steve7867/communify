@@ -40,8 +40,13 @@ public class CommentController {
                            @MemberId Long memberId,
                            @MemberName String memberName) {
 
-        String content = form.getContent();
-        CommentUploadRequest request = new CommentUploadRequest(content, postId, memberId, memberName);
+        CommentUploadRequest request = CommentUploadRequest.builder()
+                .postId(postId)
+                .content(form.getContent())
+                .memberId(memberId)
+                .memberName(memberName)
+                .build();
+
         commentService.addComment(request);
     }
 
@@ -60,8 +65,12 @@ public class CommentController {
                             @RequestBody @Valid CommentForm form,
                             @MemberId Long memberId) {
 
-        String content = form.getContent();
-        CommentEditRequest request = new CommentEditRequest(postId, commentId, content, memberId);
+        CommentEditRequest request = CommentEditRequest.builder()
+                .postId(postId)
+                .commentId(commentId)
+                .content(form.getContent())
+                .memberId(memberId)
+                .build();
 
         commentService.editComment(request);
     }
@@ -73,7 +82,11 @@ public class CommentController {
                               @PathVariable Long commentId,
                               @MemberId Long memberId) {
 
-        CommentDeleteRequest request = new CommentDeleteRequest(postId, commentId, memberId);
+        CommentDeleteRequest request = CommentDeleteRequest.builder()
+                .postId(postId)
+                .commentId(commentId)
+                .memberId(memberId)
+                .build();
 
         commentService.deleteComment(request);
     }
