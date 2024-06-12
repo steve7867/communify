@@ -1,4 +1,4 @@
-package com.communify.domain.post.presentation;
+package com.communify.domain.post.presentation.validator;
 
 import com.communify.domain.post.dto.incoming.PostUploadForm;
 import org.springframework.stereotype.Component;
