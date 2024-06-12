@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -30,11 +29,12 @@ public class PostSearchService {
     private Integer postSearchSize;
 
     @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
-            key = "#searchCond.categoryId + '_' + #searchCond.lastPostId")
+            key = "#searchCond.categoryId + '_' + #searchCond.lastPostId",
+            condition = "#searchCond.isSearchingByCategory()")
     public List<PostOutline> getPostOutlineList(PostOutlineSearchCondition searchCond) {
         List<PostOutline> postOutlineList = new ArrayList<>(postSearchSize);
 
-        if (Objects.isNull(searchCond.getLastPostId())) {
+        if (searchCond.isSearchingByCategory() && searchCond.isSearchingUpperMost()) {
             Long categoryId = searchCond.getCategoryId();
             List<PostOutline> hotPostOutlineList = hotPostSearchService.getHotPostOutlineListByCategory(categoryId);
             postOutlineList.addAll(hotPostOutlineList);

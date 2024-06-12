@@ -17,8 +17,6 @@ public interface PostRepository {
 
     void insertPost(@Param("request") PostUploadRequest request);
 
-    void insertAllPost(List<PostUploadRequest> list);
-
     List<PostOutline> findAllPostOutlineBySearchCond(@Param("searchCond") PostOutlineSearchCondition searchCond,
                                                      @Param("limit") Integer limit);
 

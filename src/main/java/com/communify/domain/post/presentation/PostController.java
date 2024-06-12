@@ -47,6 +47,7 @@ public class PostController {
     private final PostEditService postEditService;
     private final PostDeleteService postDeleteService;
     private final PostUploadFormValidator postUploadFormValidator;
+    private final PostOutlineSearchConditionValidator postOutlineSearchConditionValidator;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(CREATED)
@@ -82,6 +83,11 @@ public class PostController {
     @LoginCheck
     public List<PostOutline> getPostOutlines(@ModelAttribute @Valid PostOutlineSearchCondition searchCond) {
         return postSearchService.getPostOutlineList(searchCond);
+    }
+
+    @InitBinder("postOutlineSearchCondition")
+    public void addPostOutlineSearchConditionValidator(WebDataBinder dataBinder) {
+        dataBinder.addValidators(postOutlineSearchConditionValidator);
     }
 
     @GetMapping("/{postId}")

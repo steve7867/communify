@@ -16,8 +16,9 @@ public class PostOutline {
     private final Long memberId;
     private final String memberName;
     private final Long categoryId;
-    private final Long view;
+    private final Integer view;
     private final LocalDateTime createdDateTime;
-    private final Integer likes;
+    private final Integer likeCount;
+    private final Integer commentCount;
     private final Boolean hot;
 }
