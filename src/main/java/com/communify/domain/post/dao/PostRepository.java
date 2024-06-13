@@ -20,7 +20,7 @@ public interface PostRepository {
     List<PostOutline> findAllPostOutlineBySearchCond(@Param("searchCond") PostOutlineSearchCondition searchCond,
                                                      @Param("limit") Integer limit);
 
-    Optional<PostDetail> findPostDetail(Long postId);
+    Optional<PostDetail> findPostDetail(Long postId, Long memberId);
 
     void incrementView(@Param("postId") Long postId,
                        @Param("view") Long view);

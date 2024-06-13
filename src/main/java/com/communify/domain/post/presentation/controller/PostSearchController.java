@@ -51,7 +51,7 @@ public class PostSearchController {
     public ResponseEntity<PostDetail> getPostDetail(@PathVariable Long postId,
                                                     @MemberId Long memberId) {
 
-        Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId);
+        Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId, memberId);
         if (postDetailOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

@@ -47,8 +47,8 @@ public class PostSearchService {
     }
 
     @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
-    public Optional<PostDetail> getPostDetail(Long postId) {
-        return postRepository.findPostDetail(postId);
+    public Optional<PostDetail> getPostDetail(Long postId, Long memberId) {
+        return postRepository.findPostDetail(postId, memberId);
     }
 
     public Long getWriterId(Long postId) {
