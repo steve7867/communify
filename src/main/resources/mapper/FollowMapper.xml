@@ -12,6 +12,7 @@
         <result property="modifiedDateTime" column="modified_timestamp"/>
         <result property="followed" column="followed"/>
         <result property="following" column="following"/>
+        <result property="isFollowing" column="is_following"/>
         <result property="fcmToken" column="fcm_token"/>
     </resultMap>
 
@@ -28,11 +29,15 @@
     </delete>
 
     <select id="findFollowers" resultMap="memberInfoResultMap">
-        SELECT m.id, m.name, ft.fcm_token
+        SELECT m.id,
+               m.name,
+               ft.fcm_token,
+               IF(f2.member_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM member m
-                 INNER JOIN follow f ON m.id = f.member_id
-                 LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id AND f.member_id = ft.member_id
-        WHERE f.follow_id = #{memberId}
+                 INNER JOIN follow f1 ON m.id = f1.member_id
+                 LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.follow_id AND f2.member_id = #{memberId}
+        WHERE f1.follow_id = #{memberId}
     </select>
 
     <select id="findFollowings" resultMap="memberInfoResultMap">
