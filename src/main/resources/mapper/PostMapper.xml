@@ -13,7 +13,7 @@
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="likeCount" column="like_count"/>
         <result property="commentCount" column="comment_count"/>
-        <result property="hot" column="hot"/>
+        <result property="isHot" column="is_hot"/>
     </resultMap>
 
     <resultMap id="postDetailResultMap" type="PostDetail">
@@ -43,7 +43,7 @@
                p.created_timestamp,
                COUNT(l.post_id) AS like_count,
                COUNT(c.id) AS comment_count,
-               false as hot
+               false as is_hot
         FROM post p
             LEFT OUTER JOIN member m ON p.member_id = m.id
             LEFT OUTER JOIN likes l ON p.id = l.post_id

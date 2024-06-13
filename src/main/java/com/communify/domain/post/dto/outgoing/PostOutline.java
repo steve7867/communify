@@ -20,5 +20,5 @@ public class PostOutline {
     private final LocalDateTime createdDateTime;
     private final Integer likeCount;
     private final Integer commentCount;
-    private final Boolean hot;
+    private final Boolean isHot;
 }
