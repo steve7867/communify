@@ -20,6 +20,7 @@ public class MemberInfo {
 
     private final Integer followed;
     private final Integer following;
+    private final Boolean isFollowing;
 
     @JsonIgnore
     private final String fcmToken;
