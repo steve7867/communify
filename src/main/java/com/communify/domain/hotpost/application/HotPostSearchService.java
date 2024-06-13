@@ -29,7 +29,7 @@ public class HotPostSearchService {
     @Value("${hot-post.limit-per-category}")
     private Integer hotPostLimitPerCategory;
 
-    @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES)
+    @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, sync = true)
     public List<PostOutline> getHotPostOutlineList() {
         List<CategoryInfo> categoryInfoList = categoryService.getAllCategories();
 
@@ -41,7 +41,7 @@ public class HotPostSearchService {
                 .collect(Collectors.toCollection(() -> new ArrayList<>(categoryInfoList.size() * hotPostLimitPerCategory)));
     }
 
-    @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, key = "#categoryId")
+    @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, key = "#categoryId", sync = true)
     public List<PostOutline> getHotPostOutlineListByCategory(Long categoryId) {
         return hotPostRepository.findHotPostOutlinesByCategory(categoryId, hotPostLimitPerCategory);
     }

@@ -29,7 +29,8 @@ public class PostSearchService {
 
     @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
             key = "#searchCond.categoryId + '_' + #searchCond.lastPostId",
-            condition = "#searchCond.isSearchingByCategory()")
+            condition = "#searchCond.isSearchingByCategory()",
+            sync = true)
     public List<PostOutline> getPostOutlineList(PostOutlineSearchCondition searchCond) {
         List<PostOutline> postOutlineList = new ArrayList<>(postSearchSize);
 
@@ -45,7 +46,7 @@ public class PostSearchService {
         return postOutlineList;
     }
 
-    @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
+    @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId", sync = true)
     public Optional<PostDetail> getPostDetail(Long postId, Long memberId) {
         return postRepository.findPostDetail(postId, memberId);
     }

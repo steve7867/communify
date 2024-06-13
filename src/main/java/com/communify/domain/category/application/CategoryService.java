@@ -18,7 +18,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    @Cacheable(CacheNames.CATEGORIES)
+    @Cacheable(value = CacheNames.CATEGORIES, sync = true)
     public List<CategoryInfo> getAllCategories() {
         List<CategoryInfo> categoryInfoList = categoryRepository.findAll();
         return Collections.unmodifiableList(categoryInfoList);

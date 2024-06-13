@@ -32,7 +32,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = CacheNames.COMMENTS, key = "#postId")
+    @Cacheable(cacheNames = CacheNames.COMMENTS, key = "#postId", sync = true)
     public List<CommentInfo> getComments(Long postId) {
         List<CommentInfo> commentInfoList = commentRepository.findAllCommentsByPostId(postId);
         return Collections.unmodifiableList(commentInfoList);
