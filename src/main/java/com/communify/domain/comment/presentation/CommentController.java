@@ -10,6 +10,8 @@ import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.outgoing.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +37,7 @@ public class CommentController {
     @PostMapping("/{postId}/comments")
     @ResponseStatus(OK)
     @LoginCheck
-    public void addComment(@PathVariable Long postId,
+    public void addComment(@PathVariable @NotNull @Positive Long postId,
                            @RequestBody @Valid CommentForm form,
                            @MemberId Long memberId,
                            @MemberName String memberName) {
@@ -53,15 +55,15 @@ public class CommentController {
     @GetMapping("/{postId}/comments")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<CommentInfo> getComments(@PathVariable Long postId) {
+    public List<CommentInfo> getComments(@PathVariable @NotNull @Positive Long postId) {
         return commentService.getComments(postId);
     }
 
     @PatchMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void editComment(@PathVariable Long postId,
-                            @PathVariable Long commentId,
+    public void editComment(@PathVariable @NotNull @Positive Long postId,
+                            @PathVariable @NotNull @Positive Long commentId,
                             @RequestBody @Valid CommentForm form,
                             @MemberId Long memberId) {
 
@@ -78,8 +80,8 @@ public class CommentController {
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void deleteComment(@PathVariable Long postId,
-                              @PathVariable Long commentId,
+    public void deleteComment(@PathVariable @NotNull @Positive Long postId,
+                              @PathVariable @NotNull @Positive Long commentId,
                               @MemberId Long memberId) {
 
         CommentDeleteRequest request = CommentDeleteRequest.builder()

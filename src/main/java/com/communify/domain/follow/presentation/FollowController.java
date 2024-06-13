@@ -7,7 +7,9 @@ import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.error.exception.SelfFollowException;
 import com.communify.domain.member.dto.outgoing.MemberInfo;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +34,9 @@ public class FollowController {
     @PostMapping("/{followId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void follow(@MemberId Long memberId,
-                       @MemberName String memberName,
-                       @PathVariable @NotNull Long followId) {
+    public void follow(@PathVariable @NotNull @Positive Long followId,
+                       @MemberId Long memberId,
+                       @MemberName String memberName) {
 
         if (Objects.equals(memberId, followId)) {
             throw new SelfFollowException(memberId);
@@ -47,8 +49,8 @@ public class FollowController {
     @DeleteMapping("/{followId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void unfollow(@MemberId Long memberId,
-                         @PathVariable @NotNull Long followId) {
+    public void unfollow(@PathVariable @Valid @NotNull @Positive Long followId,
+                         @MemberId Long memberId) {
 
         followService.unfollow(memberId, followId);
     }
@@ -56,14 +58,14 @@ public class FollowController {
     @GetMapping("/{memberId}/followers")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowers(@PathVariable Long memberId) {
+    public List<MemberInfo> getFollowers(@PathVariable @NotNull @Positive Long memberId) {
         return followService.getFollowers(memberId);
     }
 
     @GetMapping("/{memberId}/followings")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowings(@PathVariable Long memberId) {
+    public List<MemberInfo> getFollowings(@PathVariable @NotNull @Positive Long memberId) {
         return followService.getFollowings(memberId);
     }
 }

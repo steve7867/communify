@@ -5,6 +5,8 @@ import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.like.application.LikeService;
 import com.communify.domain.like.dto.LikeRequest;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,7 @@ public class LikeController {
     @PostMapping("/{postId}/like")
     @ResponseStatus(OK)
     @LoginCheck
-    public void like(@PathVariable Long postId,
+    public void like(@PathVariable @NotNull @Positive Long postId,
                      @MemberId Long memberId,
                      @MemberName String memberName) {
 
@@ -41,7 +43,7 @@ public class LikeController {
     @DeleteMapping("/{postId}/like")
     @ResponseStatus(OK)
     @LoginCheck
-    public void cancelLike(@PathVariable Long postId,
+    public void cancelLike(@PathVariable @NotNull @Positive Long postId,
                            @MemberId Long memberId) {
 
         likeService.cancelLike(postId, memberId);

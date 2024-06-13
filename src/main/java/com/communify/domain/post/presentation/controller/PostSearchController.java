@@ -9,6 +9,8 @@ import com.communify.domain.post.dto.outgoing.PostDetail;
 import com.communify.domain.post.dto.outgoing.PostOutline;
 import com.communify.domain.post.presentation.validator.PostOutlineSearchConditionValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
@@ -48,7 +50,7 @@ public class PostSearchController {
 
     @GetMapping("/{postId}")
     @LoginCheck
-    public ResponseEntity<PostDetail> getPostDetail(@PathVariable Long postId,
+    public ResponseEntity<PostDetail> getPostDetail(@PathVariable @NotNull @Positive Long postId,
                                                     @MemberId Long memberId) {
 
         Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId, memberId);

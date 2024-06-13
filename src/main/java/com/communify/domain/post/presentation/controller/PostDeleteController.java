@@ -4,6 +4,8 @@ import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.post.application.PostDeleteService;
 import com.communify.domain.post.dto.PostDeleteRequest;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,7 @@ public class PostDeleteController {
     @DeleteMapping("/{postId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void delete(@PathVariable Long postId,
+    public void delete(@PathVariable @NotNull @Positive Long postId,
                        @MemberId Long memberId) {
 
         PostDeleteRequest request = new PostDeleteRequest(postId, memberId);

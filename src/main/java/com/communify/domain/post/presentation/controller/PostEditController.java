@@ -7,6 +7,8 @@ import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.incoming.PostEditForm;
 import com.communify.domain.post.presentation.validator.PostUploadFormValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.WebDataBinder;
@@ -33,7 +35,7 @@ public class PostEditController {
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(OK)
     @LoginCheck
-    public void edit(@PathVariable Long postId,
+    public void edit(@PathVariable @NotNull @Positive Long postId,
                      @ModelAttribute @Valid PostEditForm form,
                      @MemberId Long memberId) {
 

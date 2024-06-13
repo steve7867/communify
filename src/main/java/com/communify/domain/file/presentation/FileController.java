@@ -4,6 +4,7 @@ import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.file.application.FileService;
 import com.communify.domain.file.dto.FileInfo;
 import com.communify.domain.file.dto.FileInfoAndResource;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +29,7 @@ public class FileController {
      */
     @GetMapping(value = "/images/{storedFilename}")
     @LoginCheck
-    public Resource getFile(@PathVariable String storedFilename) {
+    public Resource getFile(@PathVariable @NotNull String storedFilename) {
         return fileService.getFileInfoAndResource(storedFilename).getResource();
     }
 
@@ -38,7 +39,7 @@ public class FileController {
      */
     @GetMapping(value = "/images/{storedFilename}/download")
     @LoginCheck
-    public ResponseEntity<Resource> downloadFile(@PathVariable String storedFilename) {
+    public ResponseEntity<Resource> downloadFile(@PathVariable @NotNull String storedFilename) {
         FileInfoAndResource fileInfoAndResource = fileService.getFileInfoAndResource(storedFilename);
 
         Resource resource = fileInfoAndResource.getResource();
