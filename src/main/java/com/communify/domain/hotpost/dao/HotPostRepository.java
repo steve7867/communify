@@ -19,4 +19,6 @@ public interface HotPostRepository {
     void deleteAllFromHotPost();
 
     void insertAllHotPosts(List<Long> postIdList);
+
+    Boolean isHot(Long postId);
 }

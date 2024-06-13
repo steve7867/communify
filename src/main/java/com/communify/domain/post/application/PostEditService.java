@@ -2,8 +2,10 @@ package com.communify.domain.post.application;
 
 import com.communify.domain.file.application.FileService;
 import com.communify.domain.file.dto.FileUploadRequest;
+import com.communify.domain.hotpost.application.HotPostSearchService;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostEditRequest;
+import com.communify.domain.post.error.exception.HotPostCategoryEditException;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
 import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheKeyUtil;
@@ -20,6 +22,7 @@ public class PostEditService {
     private final PostRepository postRepository;
     private final FileService fileService;
     private final CacheService cacheService;
+    private final HotPostSearchService hotPostSearchService;
 
     public void incrementView(Long postId, Long memberId) {
         String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
@@ -29,6 +32,10 @@ public class PostEditService {
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#request.postId")
     public void editPost(PostEditRequest request) {
+        if (hotPostSearchService.isHot(request.getPostId()) && request.isEditingCategory()) {
+            throw new HotPostCategoryEditException(request.getPostId());
+        }
+
         boolean isEdited = postRepository.editPost(request);
         if (!isEdited) {
             Long postId = request.getPostId();

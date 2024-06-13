@@ -45,4 +45,8 @@ public class HotPostSearchService {
     public List<PostOutline> getHotPostOutlineListByCategory(Long categoryId) {
         return hotPostRepository.findHotPostOutlinesByCategory(categoryId, hotPostLimitPerCategory);
     }
+
+    public Boolean isHot(Long postId) {
+        return hotPostRepository.isHot(postId);
+    }
 }

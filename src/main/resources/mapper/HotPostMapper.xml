@@ -59,4 +59,10 @@
             (#{id})
         </foreach>
     </insert>
+
+    <select id="isHot">
+        SELECT EXISTS(SELECT *
+                      FROM hot_post
+                      WHERE post_id = #{postId})
+    </select>
 </mapper>

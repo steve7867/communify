@@ -89,7 +89,7 @@
         UPDATE post
         SET title       = #{request.title},
             content     = #{request.content},
-            category_id = #{request.categoryId}
+            category_id = #{request.newCategoryId}
         WHERE id = #{request.postId}
           AND member_id = #{request.memberId}
     </update>
