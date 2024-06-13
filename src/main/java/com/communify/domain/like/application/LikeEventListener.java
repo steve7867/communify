@@ -5,6 +5,7 @@ import com.communify.domain.like.dto.LikeRequest;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.error.exception.FcmTokenNotSetException;
 import com.communify.domain.post.application.PostSearchService;
+import com.communify.domain.post.error.exception.PostNotFoundException;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,9 @@ public class LikeEventListener {
         Long memberId = request.getMemberId();
         Long postId = request.getPostId();
 
-        Long writerId = postSearchService.getWriterId(postId);
+        Long writerId = postSearchService.getWriterId(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId));
+
         if (Objects.equals(memberId, writerId)) {
             return;
         }

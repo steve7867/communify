@@ -5,7 +5,6 @@ import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.incoming.PostOutlineSearchCondition;
 import com.communify.domain.post.dto.outgoing.PostDetail;
 import com.communify.domain.post.dto.outgoing.PostOutline;
-import com.communify.domain.post.error.exception.PostWriterNotFoundException;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,8 +50,7 @@ public class PostSearchService {
         return postRepository.findPostDetail(postId, memberId);
     }
 
-    public Long getWriterId(Long postId) {
-        return postRepository.findWriterId(postId)
-                .orElseThrow(() -> new PostWriterNotFoundException(postId));
+    public Optional<Long> getWriterId(Long postId) {
+        return postRepository.findWriterId(postId);
     }
 }

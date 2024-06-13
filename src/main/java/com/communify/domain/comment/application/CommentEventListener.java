@@ -5,6 +5,7 @@ import com.communify.domain.comment.dto.CommentUploadRequest;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.error.exception.FcmTokenNotSetException;
 import com.communify.domain.post.application.PostSearchService;
+import com.communify.domain.post.error.exception.PostWriterNotFoundException;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,9 @@ public class CommentEventListener {
         String content = request.getContent();
         Long postId = request.getPostId();
 
-        Long writerId = postSearchService.getWriterId(postId);
+        Long writerId = postSearchService.getWriterId(postId)
+                .orElseThrow(() -> new PostWriterNotFoundException(postId));
+
         if (Objects.equals(requesterId, writerId)) {
             return;
         }
