@@ -24,14 +24,14 @@ public class VerificationController {
     @PostMapping("/code-issue")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void requestVerificationCodeIssue(@RequestBody @Valid CodeIssueRequest request) {
+    public void requestVerificationCodeIssue(@RequestBody @Valid final CodeIssueRequest request) {
         verificationService.issueVerificationCode(request);
     }
 
     @PostMapping("/code")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void verifyCode(@RequestBody @Valid VerificationRequest request) {
+    public void verifyCode(@RequestBody @Valid final VerificationRequest request) {
         verificationService.verifyCode(request);
     }
 }

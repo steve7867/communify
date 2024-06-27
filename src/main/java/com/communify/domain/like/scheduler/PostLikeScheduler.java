@@ -29,17 +29,17 @@ public class PostLikeScheduler {
     @Scheduled(cron = "*/5 * * * * *")
     @SchedulerLock(name = "PostLikeScheduler_applyPostLikeToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
     public void applyPostLikeToDB() {
-        List<LikeRequest> totalLikeRequestList = new ArrayList<>();
+        final List<LikeRequest> totalLikeRequestList = new ArrayList<>();
 
-        Set<String> keySet = redisTemplate.keys(CacheNames.POST_LIKE + "*");
+        final Set<String> keySet = redisTemplate.keys(CacheNames.POST_LIKE + "*");
 
         for (String cacheKey : Objects.requireNonNull(keySet)) {
-            Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
 
-            List<Object> result = redisTemplate.execute(new SessionCallback<>() {
+            final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
 
                 @Override
-                public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                public List<Object> execute(final RedisOperations operations) throws DataAccessException {
                     operations.multi();
 
                     operations.opsForSet().members(cacheKey);
@@ -49,8 +49,8 @@ public class PostLikeScheduler {
                 }
             });
 
-            Set<Integer> memberIdSet = (Set<Integer>) result.get(0);
-            List<LikeRequest> likeRequestList = memberIdSet.stream()
+            final Set<Integer> memberIdSet = (Set<Integer>) result.get(0);
+            final List<LikeRequest> likeRequestList = memberIdSet.stream()
                     .mapToLong(Integer::longValue)
                     .mapToObj(memberId -> LikeRequest.builder()
                             .postId(postId)
@@ -61,11 +61,11 @@ public class PostLikeScheduler {
             totalLikeRequestList.addAll(likeRequestList);
         }
 
-        int size = totalLikeRequestList.size();
+        final int size = totalLikeRequestList.size();
         int lIdx = 0;
         while (lIdx < size) {
-            int rIdx = Math.min(lIdx + 100, size);
-            List<LikeRequest> subList = totalLikeRequestList.subList(lIdx, rIdx);
+            final int rIdx = Math.min(lIdx + 100, size);
+            final List<LikeRequest> subList = totalLikeRequestList.subList(lIdx, rIdx);
 
             BulkInsertUtil.forceBulkInsert(likeRepository, subList);
 

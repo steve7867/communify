@@ -1,11 +1,11 @@
 package com.communify.domain.follow.applilcation;
 
 import com.communify.domain.follow.dto.FollowEvent;
-import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.error.exception.FcmTokenNotSetException;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
+import com.communify.domain.push.dto.PushRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -16,26 +16,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FollowEventListener {
 
+    public static final String TITLE_FORMAT = "%s님이 회원님을 팔로우했습니다.";
     private final MemberFindService memberFindService;
     private final PushService pushService;
 
     @Async
     @Transactional(readOnly = true)
     @EventListener
-    public void pushFollowNotification(FollowEvent event) {
-        FollowRequest request = event.getFollowRequest();
+    public void pushFollowNotification(final FollowEvent event) {
+        final String memberName = event.getMemberName();
+        final Long followId = event.getFollowId();
 
-        String memberName = request.getMemberName();
-        Long followId = request.getFollowId();
-
-        String token = memberFindService.findFcmTokenById(followId)
+        final String token = memberFindService.findFcmTokenById(followId)
                 .orElseThrow(() -> new FcmTokenNotSetException(followId));
 
-        String title = String.format("%s님이 회원님을 팔로우했습니다.", memberName);
-        MessageDto messageDto = MessageDto.builder()
-                .title(title)
+        final MessageDto messageDto = MessageDto.builder()
+                .title(String.format(TITLE_FORMAT, memberName))
                 .build();
 
-        pushService.push(token, messageDto);
+        pushService.push(new PushRequest(token, messageDto));
     }
 }

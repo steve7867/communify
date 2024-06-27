@@ -6,10 +6,11 @@ import lombok.Getter;
 @Getter
 public class PostNotFoundException extends EntityNotFoundException {
 
+    public static final String MESSAGE_FORMAT = "%d번 게시글은 존재하지 않습니다.";
     private final Long postId;
 
-    public PostNotFoundException(Long postId) {
-        super(String.format("%d번 게시글은 존재하지 않습니다.", postId));
+    public PostNotFoundException(final Long postId) {
+        super(String.format(MESSAGE_FORMAT, postId));
         this.postId = postId;
     }
 }

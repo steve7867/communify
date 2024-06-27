@@ -17,8 +17,8 @@ public class RedisInitializer {
     private final RedisConnectionFactory sessionConnectionFactory;
     private final RedisConnectionFactory cacheConnectionFactory;
 
-    public RedisInitializer(@Qualifier("sessionConnectionFactory") RedisConnectionFactory sessionConnectionFactory,
-                            @Qualifier("cacheConnectionFactory") RedisConnectionFactory cacheConnectionFactory) {
+    public RedisInitializer(@Qualifier("sessionConnectionFactory") final RedisConnectionFactory sessionConnectionFactory,
+                            @Qualifier("cacheConnectionFactory") final RedisConnectionFactory cacheConnectionFactory) {
 
         this.sessionConnectionFactory = sessionConnectionFactory;
         this.cacheConnectionFactory = cacheConnectionFactory;
@@ -28,8 +28,8 @@ public class RedisInitializer {
     public void flushSessionRedis() {
         log.info("Flushing Session Redis");
 
-        RedisConnection connection = sessionConnectionFactory.getConnection();
-        RedisServerCommands redisServerCommands = connection.serverCommands();
+        final RedisConnection connection = sessionConnectionFactory.getConnection();
+        final RedisServerCommands redisServerCommands = connection.serverCommands();
         redisServerCommands.flushAll();
     }
 
@@ -37,8 +37,8 @@ public class RedisInitializer {
     public void flushCacheRedis() {
         log.info("Flushing Cache Redis");
 
-        RedisConnection connection = cacheConnectionFactory.getConnection();
-        RedisServerCommands redisServerCommands = connection.serverCommands();
+        final RedisConnection connection = cacheConnectionFactory.getConnection();
+        final RedisServerCommands redisServerCommands = connection.serverCommands();
         redisServerCommands.flushAll();
     }
 }

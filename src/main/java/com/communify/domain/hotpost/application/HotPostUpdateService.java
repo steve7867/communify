@@ -28,9 +28,9 @@ public class HotPostUpdateService {
 
     @Transactional
     public void updateHotPosts() {
-        List<CategoryInfo> categoryInfoList = categoryService.getAllCategories();
+        final List<CategoryInfo> categoryInfoList = categoryService.getAllCategories();
 
-        List<Long> renewedHotPostIdList = categoryInfoList.stream()
+        final List<Long> renewedHotPostIdList = categoryInfoList.stream()
                 .map(CategoryInfo::getId)
                 .map(categoryId -> hotPostRepository.findMostViewedPostIdFrom(renewPeriodInHour, categoryId, hotPostLimitPerCategory))
                 .flatMap(Collection::stream)

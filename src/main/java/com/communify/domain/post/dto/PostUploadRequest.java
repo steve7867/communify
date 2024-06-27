@@ -10,11 +10,11 @@ import java.util.List;
 @Builder
 public class PostUploadRequest {
 
+    private final Long id;
     private final String title;
     private final String content;
     private final List<MultipartFile> fileList;
     private final Long categoryId;
     private final Long memberId;
     private final String memberName;
-    private Long id;
 }

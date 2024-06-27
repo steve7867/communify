@@ -1,13 +1,13 @@
 package com.communify.domain.comment.application;
 
 import com.communify.domain.comment.dto.event.CommentUploadEvent;
-import com.communify.domain.comment.dto.CommentUploadRequest;
 import com.communify.domain.member.application.MemberFindService;
 import com.communify.domain.member.error.exception.FcmTokenNotSetException;
 import com.communify.domain.post.application.PostSearchService;
 import com.communify.domain.post.error.exception.PostWriterNotFoundException;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
+import com.communify.domain.push.dto.PushRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -20,6 +20,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CommentEventListener {
 
+    public static final String TITLE_FORMAT = "%s님이 회원님의 게시글에 댓글을 작성하였습니다.";
     private final PostSearchService postSearchService;
     private final PushService pushService;
     private final MemberFindService memberFindService;
@@ -27,29 +28,27 @@ public class CommentEventListener {
     @Async
     @Transactional(readOnly = true)
     @EventListener
-    public void pushCommentUploadNotification(CommentUploadEvent event) {
-        CommentUploadRequest request = event.getCommentUploadRequest();
+    public void pushCommentUploadNotification(final CommentUploadEvent event) {
+        final Long requesterId = event.getMemberId();
+        final String requesterName = event.getMemberName();
+        final String content = event.getContent();
+        final Long postId = event.getPostId();
 
-        Long requesterId = request.getMemberId();
-        String requesterName = request.getMemberName();
-        String content = request.getContent();
-        Long postId = request.getPostId();
-
-        Long writerId = postSearchService.getWriterId(postId)
+        final Long writerId = postSearchService.getWriterId(postId)
                 .orElseThrow(() -> new PostWriterNotFoundException(postId));
 
         if (Objects.equals(requesterId, writerId)) {
             return;
         }
 
-        String token = memberFindService.findFcmTokenById(writerId)
+        final String token = memberFindService.findFcmTokenById(writerId)
                 .orElseThrow(() -> new FcmTokenNotSetException(writerId));
 
-        MessageDto messageDto = MessageDto.builder()
-                .title(String.format("%s님이 회원님의 게시글에 댓글을 작성하였습니다.", requesterName))
+        final MessageDto messageDto = MessageDto.builder()
+                .title(String.format(TITLE_FORMAT, requesterName))
                 .body(content)
                 .build();
 
-        pushService.push(token, messageDto);
+        pushService.push(new PushRequest(token, messageDto));
     }
 }

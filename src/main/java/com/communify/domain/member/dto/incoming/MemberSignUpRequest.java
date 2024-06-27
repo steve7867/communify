@@ -29,9 +29,9 @@ public class MemberSignUpRequest {
     private final String hashed;
 
     @JsonCreator
-    public MemberSignUpRequest(@JsonProperty("email") String email,
-                               @JsonProperty("password") String password,
-                               @JsonProperty("name") String name) {
+    public MemberSignUpRequest(@JsonProperty("email") final String email,
+                               @JsonProperty("password") final String password,
+                               @JsonProperty("name") final String name) {
 
         this.email = email;
         this.password = password;

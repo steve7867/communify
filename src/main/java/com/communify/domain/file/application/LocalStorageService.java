@@ -27,23 +27,23 @@ public class LocalStorageService implements StorageService {
     private String localDir;
 
     @Override
-    public List<FileInfo> saveInFileSystem(FileUploadRequest request) {
-        Long postId = request.getPostId();
-        List<MultipartFile> multipartFileList = request.getMultipartFileList();
-
-        File dir = new File(localDir);
+    public List<FileInfo> saveInFileSystem(final FileUploadRequest request) {
+        final File dir = new File(localDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
+        final Long postId = request.getPostId();
+        final List<MultipartFile> multipartFileList = request.getMultipartFileList();
+
         return IntStream.range(0, multipartFileList.size())
                 .boxed()
                 .map(i -> {
-                    MultipartFile multipartFile = multipartFileList.get(i);
-                    FileInfo fileInfo = FileInfo.of(multipartFile.getOriginalFilename(), postId, i);
-                    String filePath = resolveFilePath(fileInfo);
+                    final MultipartFile multipartFile = multipartFileList.get(i);
+                    final FileInfo fileInfo = new FileInfo(multipartFile.getOriginalFilename(), postId, i);
 
                     try {
+                        final String filePath = resolveFilePath(fileInfo);
                         multipartFile.transferTo(new File(filePath));
                     } catch (IOException e) {
                         throw new FileUploadFailException(multipartFile, fileInfo, e);
@@ -54,23 +54,23 @@ public class LocalStorageService implements StorageService {
     }
 
     @Override
-    public Resource toResource(FileInfo fileInfo) {
-        String filePath = resolveFilePath(fileInfo);
-        String fileUri = "file:///" + filePath;
+    public Resource toResource(final FileInfo fileInfo) {
+        final String filePath = resolveFilePath(fileInfo);
+        final String fileUri = "file:///" + filePath;
         return resourceLoader.getResource(fileUri);
     }
 
     @Override
-    public void deleteAllFiles(List<FileInfo> fileInfoList) {
+    public void deleteAllFiles(final List<FileInfo> fileInfoList) {
         fileInfoList.forEach(fileInfo -> {
-            String filePath = resolveFilePath(fileInfo);
-            File file = new File(filePath);
+            final String filePath = resolveFilePath(fileInfo);
+            final File file = new File(filePath);
 
             deleteFile(file);
         });
     }
 
-    private void deleteFile(File file) {
+    private void deleteFile(final File file) {
         try {
             FileUtils.forceDelete(file);
         } catch (IOException e) {
@@ -78,9 +78,9 @@ public class LocalStorageService implements StorageService {
         }
     }
 
-    private String resolveFilePath(FileInfo fileInfo) {
-        String storedFilename = fileInfo.getStoredFilename();
-        String extension = fileInfo.getExtension();
+    private String resolveFilePath(final FileInfo fileInfo) {
+        final String storedFilename = fileInfo.getStoredFilename();
+        final String extension = fileInfo.getExtension();
 
         return localDir + File.separator + storedFilename + "." + extension;
     }

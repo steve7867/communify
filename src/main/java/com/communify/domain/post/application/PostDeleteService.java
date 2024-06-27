@@ -19,11 +19,11 @@ public class PostDeleteService {
 
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#request.postId")
-    public void deletePost(PostDeleteRequest request) {
-        Long postId = request.getPostId();
-        Long memberId = request.getMemberId();
+    public void deletePost(final PostDeleteRequest request) {
+        final Long postId = request.getPostId();
+        final Long memberId = request.getMemberId();
 
-        boolean canDelete = postRepository.isWrittenBy(postId, memberId);
+        final boolean canDelete = postRepository.isWrittenBy(postId, memberId);
         if (!canDelete) {
             throw new InvalidPostAccessException(postId, memberId);
         }

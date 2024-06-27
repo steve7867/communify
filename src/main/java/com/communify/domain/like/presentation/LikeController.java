@@ -1,9 +1,10 @@
 package com.communify.domain.like.presentation;
 
+import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.MemberName;
-import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.like.application.LikeService;
+import com.communify.domain.like.dto.LikeCancelRequest;
 import com.communify.domain.like.dto.LikeRequest;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -27,11 +28,11 @@ public class LikeController {
     @PostMapping("/{postId}/like")
     @ResponseStatus(OK)
     @LoginCheck
-    public void like(@PathVariable @NotNull @Positive Long postId,
-                     @MemberId Long memberId,
-                     @MemberName String memberName) {
+    public void like(@PathVariable @NotNull @Positive final Long postId,
+                     @MemberId final Long memberId,
+                     @MemberName final String memberName) {
 
-        LikeRequest request = LikeRequest.builder()
+        final LikeRequest request = LikeRequest.builder()
                 .postId(postId)
                 .memberId(memberId)
                 .memberName(memberName)
@@ -43,9 +44,14 @@ public class LikeController {
     @DeleteMapping("/{postId}/like")
     @ResponseStatus(OK)
     @LoginCheck
-    public void cancelLike(@PathVariable @NotNull @Positive Long postId,
-                           @MemberId Long memberId) {
+    public void cancelLike(@PathVariable @NotNull @Positive final Long postId,
+                           @MemberId final Long memberId) {
 
-        likeService.cancelLike(postId, memberId);
+        final LikeCancelRequest request = LikeCancelRequest.builder()
+                .postId(postId)
+                .memberId(memberId)
+                .build();
+
+        likeService.cancelLike(request);
     }
 }

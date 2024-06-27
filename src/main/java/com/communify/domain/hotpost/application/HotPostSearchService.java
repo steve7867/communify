@@ -31,7 +31,7 @@ public class HotPostSearchService {
 
     @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, sync = true)
     public List<PostOutline> getHotPostOutlineList() {
-        List<CategoryInfo> categoryInfoList = categoryService.getAllCategories();
+        final List<CategoryInfo> categoryInfoList = categoryService.getAllCategories();
 
         return categoryInfoList
                 .stream()
@@ -42,11 +42,11 @@ public class HotPostSearchService {
     }
 
     @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, key = "#categoryId", sync = true)
-    public List<PostOutline> getHotPostOutlineListByCategory(Long categoryId) {
+    public List<PostOutline> getHotPostOutlineListByCategory(final Long categoryId) {
         return hotPostRepository.findHotPostOutlinesByCategory(categoryId, hotPostLimitPerCategory);
     }
 
-    public Boolean isHot(Long postId) {
+    public Boolean isHot(final Long postId) {
         return hotPostRepository.isHot(postId);
     }
 }

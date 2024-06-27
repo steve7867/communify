@@ -10,10 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -23,24 +21,23 @@ public class FileServiceImpl implements FileService {
     private final StorageService storageService;
 
     @Override
-    public void uploadFile(FileUploadRequest request) {
-        List<MultipartFile> multipartFileList = request.getMultipartFileList();
-        if (Objects.isNull(multipartFileList) || multipartFileList.isEmpty()) {
+    public void uploadFile(final FileUploadRequest request) {
+        if (request.isMultipartFileListNull() || request.isMultipartFileListEmpty()) {
             return;
         }
 
-        List<FileInfo> fileInfoList = storageService.saveInFileSystem(request);
+        final List<FileInfo> fileInfoList = storageService.saveInFileSystem(request);
 
         fileRepository.insertFileInfoList(fileInfoList);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public FileInfoAndResource getFileInfoAndResource(String storedFilename) {
-        FileInfo fileInfo = fileRepository.findByStoredFilename(storedFilename)
+    public FileInfoAndResource getFileInfoAndResource(final String storedFilename) {
+        final FileInfo fileInfo = fileRepository.findByStoredFilename(storedFilename)
                 .orElseThrow(() -> new FileNotFoundException(storedFilename));
 
-        Resource resource = storageService.toResource(fileInfo);
+        final Resource resource = storageService.toResource(fileInfo);
         if (!resource.exists()) {
             throw new ResourceNotFoundException(storedFilename);
         }
@@ -49,8 +46,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void deleteFiles(Long postId) {
-        List<FileInfo> fileInfoList = fileRepository.findAllByPostId(postId);
+    public void deleteFiles(final Long postId) {
+        final List<FileInfo> fileInfoList = fileRepository.findAllByPostId(postId);
         storageService.deleteAllFiles(fileInfoList);
 
         fileRepository.deleteAll(postId);

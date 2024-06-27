@@ -26,13 +26,13 @@ public class PostViewScheduler {
     @Scheduled(cron = "*/5 * * * * *")
     @SchedulerLock(name = "PostViewScheduler_applyPostViewToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
     public void applyPostViewToDB() {
-        Set<String> keySet = redisTemplate.keys(CacheNames.POST_VIEW + "*");
+        final Set<String> keySet = redisTemplate.keys(CacheNames.POST_VIEW + "*");
 
         for (String cacheKey : Objects.requireNonNull(keySet)) {
-            List<Object> result = redisTemplate.execute(new SessionCallback<>() {
+            final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
 
                 @Override
-                public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                public List<Object> execute(final RedisOperations operations) throws DataAccessException {
                     operations.multi();
 
                     operations.opsForSet().size(cacheKey);
@@ -42,8 +42,8 @@ public class PostViewScheduler {
                 }
             });
 
-            Long view = (Long) result.get(0);
-            Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+            final Long view = (Long) result.get(0);
+            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
 
             postRepository.incrementView(postId, view);
         }

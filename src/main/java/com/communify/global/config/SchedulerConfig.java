@@ -16,7 +16,7 @@ public class SchedulerConfig {
 
     @Bean
     public LockProvider lockProvider(
-            @Qualifier("cacheConnectionFactory") RedisConnectionFactory redisConnectionFactory) {
+            @Qualifier("cacheConnectionFactory") final RedisConnectionFactory redisConnectionFactory) {
 
         return new RedisLockProvider(redisConnectionFactory);
     }

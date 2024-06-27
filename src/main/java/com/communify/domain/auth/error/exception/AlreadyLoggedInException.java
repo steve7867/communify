@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 
 public class AlreadyLoggedInException extends InvalidAccessException {
 
-    private static final String message = "이미 로그인하셨습니다.";
+    private static final String MESSAGE = "이미 로그인하셨습니다.";
 
     public AlreadyLoggedInException() {
-        super(HttpStatus.BAD_REQUEST, message);
+        super(HttpStatus.BAD_REQUEST, MESSAGE);
     }
 }

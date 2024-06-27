@@ -39,21 +39,21 @@ public class PostSearchController {
     @GetMapping
     @ResponseStatus(OK)
     @LoginCheck
-    public List<PostOutline> getPostOutlines(@ModelAttribute @Valid PostOutlineSearchCondition searchCond) {
+    public List<PostOutline> getPostOutlines(@ModelAttribute @Valid final PostOutlineSearchCondition searchCond) {
         return postSearchService.getPostOutlineList(searchCond);
     }
 
     @InitBinder("postOutlineSearchCondition")
-    public void addPostOutlineSearchConditionValidator(WebDataBinder dataBinder) {
+    public void addPostOutlineSearchConditionValidator(final WebDataBinder dataBinder) {
         dataBinder.addValidators(postOutlineSearchConditionValidator);
     }
 
     @GetMapping("/{postId}")
     @LoginCheck
-    public ResponseEntity<PostDetail> getPostDetail(@PathVariable @NotNull @Positive Long postId,
-                                                    @MemberId Long memberId) {
+    public ResponseEntity<PostDetail> getPostDetail(@PathVariable @NotNull @Positive final Long postId,
+                                                    @MemberId final Long memberId) {
 
-        Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId, memberId);
+        final Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId, memberId);
         if (postDetailOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

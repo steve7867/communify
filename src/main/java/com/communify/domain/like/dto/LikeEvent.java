@@ -8,4 +8,16 @@ import lombok.RequiredArgsConstructor;
 public class LikeEvent {
 
     private final LikeRequest likeRequest;
+
+    public String getMemberName() {
+        return likeRequest.getMemberName();
+    }
+
+    public Long getMemberId() {
+        return likeRequest.getMemberId();
+    }
+
+    public Long getPostId() {
+        return likeRequest.getPostId();
+    }
 }

@@ -1,12 +1,18 @@
 package com.communify.domain.post.dto.event;
 
-import lombok.Getter;
+import com.communify.domain.post.dto.PostUploadRequest;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public class PostUploadEvent {
 
-    private final Long memberId;
-    private final String memberName;
+    private final PostUploadRequest request;
+
+    public Long getMemberId() {
+        return request.getMemberId();
+    }
+
+    public String getMemberName() {
+        return request.getMemberName();
+    }
 }

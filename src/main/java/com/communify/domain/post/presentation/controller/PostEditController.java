@@ -35,11 +35,11 @@ public class PostEditController {
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(OK)
     @LoginCheck
-    public void edit(@PathVariable @NotNull @Positive Long postId,
-                     @ModelAttribute @Valid PostEditForm form,
-                     @MemberId Long memberId) {
+    public void edit(@PathVariable @NotNull @Positive final Long postId,
+                     @ModelAttribute @Valid final PostEditForm form,
+                     @MemberId final Long memberId) {
 
-        PostEditRequest request = PostEditRequest.builder()
+        final PostEditRequest request = PostEditRequest.builder()
                 .postId(postId)
                 .title(form.getTitle())
                 .content(form.getContent())
@@ -53,7 +53,7 @@ public class PostEditController {
     }
 
     @InitBinder("postUploadForm")
-    public void addPostUploadFormValidator(WebDataBinder dataBinder) {
+    public void addPostUploadFormValidator(final WebDataBinder dataBinder) {
         dataBinder.addValidators(postUploadFormValidator);
     }
 }

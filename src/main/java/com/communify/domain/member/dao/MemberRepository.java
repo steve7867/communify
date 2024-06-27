@@ -1,8 +1,8 @@
 package com.communify.domain.member.dao;
 
 import com.communify.domain.member.dto.PasswordUpdateRequest;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
 import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
+import com.communify.domain.member.dto.outgoing.MemberInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

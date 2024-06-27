@@ -3,9 +3,9 @@ package com.communify.domain.comment.application;
 import com.communify.domain.comment.dao.CommentRepository;
 import com.communify.domain.comment.dto.CommentDeleteRequest;
 import com.communify.domain.comment.dto.CommentEditRequest;
-import com.communify.domain.comment.dto.outgoing.CommentInfo;
-import com.communify.domain.comment.dto.event.CommentUploadEvent;
 import com.communify.domain.comment.dto.CommentUploadRequest;
+import com.communify.domain.comment.dto.event.CommentUploadEvent;
+import com.communify.domain.comment.dto.outgoing.CommentInfo;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,7 +25,7 @@ public class CommentService {
     private final ApplicationEventPublisher eventPublisher;
 
     @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
-    public void addComment(CommentUploadRequest request) {
+    public void addComment(final CommentUploadRequest request) {
         commentRepository.insert(request);
 
         eventPublisher.publishEvent(new CommentUploadEvent(request));
@@ -33,18 +33,18 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheNames.COMMENTS, key = "#postId", sync = true)
-    public List<CommentInfo> getComments(Long postId) {
-        List<CommentInfo> commentInfoList = commentRepository.findAllCommentsByPostId(postId);
+    public List<CommentInfo> getComments(final Long postId) {
+        final List<CommentInfo> commentInfoList = commentRepository.findAllCommentsByPostId(postId);
         return Collections.unmodifiableList(commentInfoList);
     }
 
     @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
-    public void editComment(CommentEditRequest request) {
+    public void editComment(final CommentEditRequest request) {
         commentRepository.editComment(request);
     }
 
     @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
-    public void deleteComment(CommentDeleteRequest request) {
+    public void deleteComment(final CommentDeleteRequest request) {
         commentRepository.deleteComment(request);
     }
 }

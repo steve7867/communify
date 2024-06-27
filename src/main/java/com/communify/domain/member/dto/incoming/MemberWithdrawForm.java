@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(force = true)
-public class PasswordForm {
+public class MemberWithdrawForm {
 
     @NotBlank
     private String password;

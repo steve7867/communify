@@ -10,14 +10,14 @@ public class CacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public boolean addToSet(String key, Object value) {
-        Long addCount = redisTemplate.opsForSet().add(key, value);
+    public boolean addToSet(final String key, final Object value) {
+        final Long addCount = redisTemplate.opsForSet().add(key, value);
 
         return addCount > 0;
     }
 
-    public boolean removeFromSet(String key, Object value) {
-        Long removeCount = redisTemplate.opsForSet().remove(key, value);
+    public boolean removeFromSet(final String key, final Object value) {
+        final Long removeCount = redisTemplate.opsForSet().remove(key, value);
 
         return removeCount > 0;
     }

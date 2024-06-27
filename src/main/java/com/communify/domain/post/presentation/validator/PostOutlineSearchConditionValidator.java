@@ -11,16 +11,16 @@ import java.util.Objects;
 public class PostOutlineSearchConditionValidator implements Validator {
 
     @Override
-    public boolean supports(Class<?> clazz) {
+    public boolean supports(final Class<?> clazz) {
         return PostOutlineSearchCondition.class.isAssignableFrom(clazz);
     }
 
     @Override
-    public void validate(Object target, Errors errors) {
-        PostOutlineSearchCondition searchCondition = (PostOutlineSearchCondition) target;
+    public void validate(final Object target, final Errors errors) {
+        final PostOutlineSearchCondition searchCondition = (PostOutlineSearchCondition) target;
 
-        Long categoryId = searchCondition.getCategoryId();
-        Long memberId = searchCondition.getMemberId();
+        final Long categoryId = searchCondition.getCategoryId();
+        final Long memberId = searchCondition.getMemberId();
 
         if ((Objects.nonNull(categoryId) && Objects.nonNull(memberId))) {
             errors.reject("null", "categoryId와 memberId 중 하나는 null이어야 합니다.");

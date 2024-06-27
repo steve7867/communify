@@ -18,14 +18,14 @@
 
     <insert id="insertFollow">
         INSERT INTO follow(member_id, follow_id)
-        VALUES (#{memberId}, #{followId})
+        VALUES (#{request.memberId}, #{request.followId})
     </insert>
 
     <delete id="deleteFollow">
         DELETE
         FROM follow
-        WHERE member_id = #{memberId}
-          AND follow_id = #{followId}
+        WHERE member_id = #{request.memberId}
+          AND follow_id = #{request.followId}
     </delete>
 
     <select id="findFollowers" resultMap="memberInfoResultMap">

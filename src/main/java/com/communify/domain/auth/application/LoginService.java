@@ -18,14 +18,14 @@ public class LoginService {
     private final MemberFindService memberFindService;
     private final SessionService sessionService;
 
-    public void login(LoginRequest request) {
-        String email = request.getEmail();
-        String password = request.getPassword();
+    public void login(final LoginRequest request) {
+        final String email = request.getEmail();
+        final String password = request.getPassword();
 
-        MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email)
+        final MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(email));
 
-        String hashed = memberInfo.getHashed();
+        final String hashed = memberInfo.getHashed();
         if (!PasswordEncryptor.isMatch(password, hashed)) {
             throw new InvalidPasswordException(password);
         }

@@ -31,27 +31,27 @@ public class PostSearchService {
             key = "#searchCond.categoryId + '_' + #searchCond.lastPostId",
             condition = "#searchCond.isSearchingByCategory()",
             sync = true)
-    public List<PostOutline> getPostOutlineList(PostOutlineSearchCondition searchCond) {
-        List<PostOutline> postOutlineList = new ArrayList<>(postSearchSize);
+    public List<PostOutline> getPostOutlineList(final PostOutlineSearchCondition searchCond) {
+        final List<PostOutline> postOutlineList = new ArrayList<>(postSearchSize);
 
         if (searchCond.isSearchingByCategory() && searchCond.isSearchingUpperMost()) {
-            Long categoryId = searchCond.getCategoryId();
-            List<PostOutline> hotPostOutlineList = hotPostSearchService.getHotPostOutlineListByCategory(categoryId);
+            final Long categoryId = searchCond.getCategoryId();
+            final List<PostOutline> hotPostOutlineList = hotPostSearchService.getHotPostOutlineListByCategory(categoryId);
             postOutlineList.addAll(hotPostOutlineList);
         }
 
-        Integer limit = postSearchSize - postOutlineList.size();
+        final Integer limit = postSearchSize - postOutlineList.size();
         postOutlineList.addAll(postRepository.findAllPostOutlineBySearchCond(searchCond, limit));
 
         return postOutlineList;
     }
 
     @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId", sync = true)
-    public Optional<PostDetail> getPostDetail(Long postId, Long memberId) {
+    public Optional<PostDetail> getPostDetail(final Long postId, final Long memberId) {
         return postRepository.findPostDetail(postId, memberId);
     }
 
-    public Optional<Long> getWriterId(Long postId) {
+    public Optional<Long> getWriterId(final Long postId) {
         return postRepository.findWriterId(postId);
     }
 }

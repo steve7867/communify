@@ -19,15 +19,11 @@ public class PostUploadService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void uploadPost(PostUploadRequest request) {
+    public void uploadPost(final PostUploadRequest request) {
         postRepository.insertPost(request);
 
-        Long postId = request.getId();
-        fileService.uploadFile(new FileUploadRequest(postId, request.getFileList()));
+        fileService.uploadFile(new FileUploadRequest(request.getId(), request.getFileList()));
 
-        Long memberId = request.getMemberId();
-        String memberName = request.getMemberName();
-        PostUploadEvent event = new PostUploadEvent(memberId, memberName);
-        eventPublisher.publishEvent(event);
+        eventPublisher.publishEvent(new PostUploadEvent(request));
     }
 }

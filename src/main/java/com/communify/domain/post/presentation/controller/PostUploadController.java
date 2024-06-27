@@ -33,11 +33,11 @@ public class PostUploadController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(CREATED)
     @LoginCheck
-    public void upload(@ModelAttribute @Valid PostUploadForm form,
-                       @MemberId Long memberId,
-                       @MemberName String memberName) {
+    public void upload(@ModelAttribute @Valid final PostUploadForm form,
+                       @MemberId final Long memberId,
+                       @MemberName final String memberName) {
 
-        PostUploadRequest request = PostUploadRequest.builder()
+        final PostUploadRequest request = PostUploadRequest.builder()
                 .title(form.getTitle())
                 .content(form.getContent())
                 .fileList(Collections.unmodifiableList(form.getFileList()))
@@ -57,7 +57,7 @@ public class PostUploadController {
      * WebDataBinder에 검증기를 추가하면 validation을 자동으로 적용할 수 있다.
      */
     @InitBinder("postUploadForm")
-    public void addPostUploadFormValidator(WebDataBinder dataBinder) {
+    public void addPostUploadFormValidator(final WebDataBinder dataBinder) {
         dataBinder.addValidators(postUploadFormValidator);
     }
 }

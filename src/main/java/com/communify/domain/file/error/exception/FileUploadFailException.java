@@ -8,11 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class FileUploadFailException extends InternalServerException {
 
+    public static final String MESSAGE = "파일 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.";
     private final MultipartFile multipartFile;
     private final FileInfo fileInfo;
 
     public FileUploadFailException(MultipartFile multipartFile, FileInfo fileInfo, Throwable cause) {
-        super("파일 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.", cause);
+        super(MESSAGE, cause);
         this.multipartFile = multipartFile;
         this.fileInfo = fileInfo;
     }

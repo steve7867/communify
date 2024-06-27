@@ -24,26 +24,26 @@ public class PostEditService {
     private final CacheService cacheService;
     private final HotPostSearchService hotPostSearchService;
 
-    public void incrementView(Long postId, Long memberId) {
-        String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
+    public void incrementView(final Long postId, final Long memberId) {
+        final String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
         cacheService.addToSet(key, memberId);
     }
 
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#request.postId")
-    public void editPost(PostEditRequest request) {
+    public void editPost(final PostEditRequest request) {
         if (hotPostSearchService.isHot(request.getPostId()) && request.isEditingCategory()) {
             throw new HotPostCategoryEditException(request.getPostId());
         }
 
-        boolean isEdited = postRepository.editPost(request);
+        final boolean isEdited = postRepository.editPost(request);
         if (!isEdited) {
-            Long postId = request.getPostId();
-            Long memberId = request.getMemberId();
+            final Long postId = request.getPostId();
+            final Long memberId = request.getMemberId();
             throw new InvalidPostAccessException(postId, memberId);
         }
 
-        Long postId = request.getPostId();
+        final Long postId = request.getPostId();
         fileService.deleteFiles(postId);
 
         fileService.uploadFile(new FileUploadRequest(postId, request.getFileList()));

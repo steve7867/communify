@@ -29,7 +29,7 @@ public class FileController {
      */
     @GetMapping(value = "/images/{storedFilename}")
     @LoginCheck
-    public Resource getFile(@PathVariable @NotNull String storedFilename) {
+    public Resource getFile(@PathVariable @NotNull final String storedFilename) {
         return fileService.getFileInfoAndResource(storedFilename).getResource();
     }
 
@@ -39,14 +39,14 @@ public class FileController {
      */
     @GetMapping(value = "/images/{storedFilename}/download")
     @LoginCheck
-    public ResponseEntity<Resource> downloadFile(@PathVariable @NotNull String storedFilename) {
-        FileInfoAndResource fileInfoAndResource = fileService.getFileInfoAndResource(storedFilename);
+    public ResponseEntity<Resource> downloadFile(@PathVariable @NotNull final String storedFilename) {
+        final FileInfoAndResource fileInfoAndResource = fileService.getFileInfoAndResource(storedFilename);
 
-        Resource resource = fileInfoAndResource.getResource();
-        FileInfo fileInfo = fileInfoAndResource.getFileInfo();
+        final Resource resource = fileInfoAndResource.getResource();
+        final FileInfo fileInfo = fileInfoAndResource.getFileInfo();
 
-        String originalFilename = fileInfo.getOriginalFilename();
-        String encodedOriginalFilename = UriUtils.encode(originalFilename, StandardCharsets.UTF_8);
+        final String originalFilename = fileInfo.getOriginalFilename();
+        final String encodedOriginalFilename = UriUtils.encode(originalFilename, StandardCharsets.UTF_8);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedOriginalFilename + "\"")

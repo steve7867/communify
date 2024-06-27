@@ -27,10 +27,10 @@ public class EmailBasedVerificationService implements VerificationService {
     private Long expirationTime;
 
     @Override
-    public void issueVerificationCode(CodeIssueRequest request) {
-        String email = request.getEmail();
+    public void issueVerificationCode(final CodeIssueRequest request) {
+        final String email = request.getEmail();
 
-        String verificationCode = UUID.randomUUID().toString().substring(0, 8);
+        final String verificationCode = UUID.randomUUID().toString().substring(0, 8);
 
         mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + verificationCode);
 
@@ -39,12 +39,12 @@ public class EmailBasedVerificationService implements VerificationService {
     }
 
     @Override
-    public void verifyCode(VerificationRequest request) {
-        String code = request.getCode();
+    public void verifyCode(final VerificationRequest request) {
+        final String code = request.getCode();
 
-        String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
+        final String verificationCode = (String) sessionService.get(SessionKey.VERIFICATION_CODE)
                 .orElseThrow(VerificationCodeNotPublishedException::new);
-        Long publicationTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
+        final Long publicationTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
 
         if (isTimeOut(publicationTime)) {
             throw new VerificationTimeOutException();
@@ -59,12 +59,12 @@ public class EmailBasedVerificationService implements VerificationService {
         sessionService.add(SessionKey.EMAIL_VERIFIED, true);
     }
 
-    private boolean isTimeOut(Long issueTime) {
+    private boolean isTimeOut(final Long issueTime) {
         return System.currentTimeMillis() - issueTime > expirationTime;
     }
 
     @Override
-    public boolean isVerified(VerificationConfirmRequest request) {
+    public boolean isVerified(final VerificationConfirmRequest request) {
         return sessionService.get(SessionKey.EMAIL_VERIFIED).isPresent();
     }
 }

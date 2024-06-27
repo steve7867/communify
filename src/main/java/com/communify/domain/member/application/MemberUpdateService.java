@@ -16,13 +16,13 @@ public class MemberUpdateService {
     private final MemberFindService memberFindService;
     private final MemberRepository memberRepository;
 
-    public void updatePassword(PasswordUpdateRequest request) {
-        Long memberId = request.getMemberId();
+    public void updatePassword(final PasswordUpdateRequest request) {
+        final Long memberId = request.getMemberId();
 
-        MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId)
+        final MemberInfo memberInfo = memberFindService.findMemberInfoById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
-        String currentPassword = request.getCurrentPassword();
+        final String currentPassword = request.getCurrentPassword();
         if (!PasswordEncryptor.isMatch(currentPassword, memberInfo.getHashed())) {
             throw new InvalidPasswordException(currentPassword);
         }
@@ -30,7 +30,7 @@ public class MemberUpdateService {
         memberRepository.updatePassword(request);
     }
 
-    public void setFcmToken(String fcmToken, Long memberId) {
+    public void setFcmToken(final String fcmToken, final Long memberId) {
         memberRepository.setFcmToken(fcmToken, memberId);
     }
 }

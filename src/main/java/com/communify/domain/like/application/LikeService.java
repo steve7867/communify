@@ -1,6 +1,7 @@
 package com.communify.domain.like.application;
 
 import com.communify.domain.like.dao.LikeRepository;
+import com.communify.domain.like.dto.LikeCancelRequest;
 import com.communify.domain.like.dto.LikeEvent;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.global.application.CacheService;
@@ -18,22 +19,21 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public void like(LikeRequest request) {
-        String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, request.getPostId());
+    public void like(final LikeRequest request) {
+        final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, request.getPostId());
         cacheService.addToSet(cacheKey, request.getMemberId());
 
         eventPublisher.publishEvent(new LikeEvent(request));
     }
 
-    public void cancelLike(Long postId, Long memberId) {
-        String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, postId);
+    public void cancelLike(final LikeCancelRequest request) {
+        final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, request.getPostId());
 
-        boolean removed = cacheService.removeFromSet(cacheKey, memberId);
-
+        final boolean removed = cacheService.removeFromSet(cacheKey, request.getMemberId());
         if (removed) {
             return;
         }
 
-        likeRepository.deleteLike(postId, memberId);
+        likeRepository.deleteLike(request);
     }
 }

@@ -8,9 +8,9 @@ import com.communify.domain.member.application.MemberSignUpService;
 import com.communify.domain.member.application.MemberUpdateService;
 import com.communify.domain.member.application.MemberWithdrawService;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
-import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
-import com.communify.domain.member.dto.incoming.PasswordForm;
 import com.communify.domain.member.dto.PasswordUpdateRequest;
+import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
+import com.communify.domain.member.dto.incoming.MemberWithdrawForm;
 import com.communify.domain.member.dto.incoming.PasswordUpdateForm;
 import com.communify.domain.member.dto.outgoing.MemberInfo;
 import com.communify.domain.verification.application.VerificationService;
@@ -51,8 +51,8 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(CREATED)
     @NotLoginCheck
-    public void signUp(@RequestBody @Valid MemberSignUpRequest request) {
-        boolean isEmailVerified = verificationService.isVerified(VerificationConfirmRequest.empty());
+    public void signUp(@RequestBody @Valid final MemberSignUpRequest request) {
+        final boolean isEmailVerified = verificationService.isVerified(VerificationConfirmRequest.empty());
         if (!isEmailVerified) {
             throw new EmailNotVerifiedException(request.getEmail());
         }
@@ -62,8 +62,8 @@ public class MemberController {
 
     @GetMapping("/{memberId}")
     @LoginCheck
-    public ResponseEntity<MemberInfo> getMemberInfo(@PathVariable @NotNull @Positive Long memberId) {
-        Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoById(memberId);
+    public ResponseEntity<MemberInfo> getMemberInfo(@PathVariable @NotNull @Positive final Long memberId) {
+        final Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoById(memberId);
 
         if (memberInfoOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -75,10 +75,10 @@ public class MemberController {
     @DeleteMapping("/me")
     @ResponseStatus(OK)
     @LoginCheck
-    public void withdraw(@RequestBody @Valid PasswordForm form,
-                         @MemberId Long memberId) {
+    public void withdraw(@RequestBody @Valid final MemberWithdrawForm form,
+                         @MemberId final Long memberId) {
 
-        MemberWithdrawRequest request = new MemberWithdrawRequest(form.getPassword(), memberId);
+        final MemberWithdrawRequest request = new MemberWithdrawRequest(form.getPassword(), memberId);
 
         memberWithdrawService.withdraw(request);
     }
@@ -86,10 +86,10 @@ public class MemberController {
     @PatchMapping("/password")
     @ResponseStatus(OK)
     @LoginCheck
-    public void updatePassword(@RequestBody @Valid PasswordUpdateForm form,
-                               @MemberId Long memberId) {
+    public void updatePassword(@RequestBody @Valid final PasswordUpdateForm form,
+                               @MemberId final Long memberId) {
 
-        PasswordUpdateRequest request = PasswordUpdateRequest.builder()
+        final PasswordUpdateRequest request = PasswordUpdateRequest.builder()
                 .memberId(memberId)
                 .currentPassword(form.getCurrentPassword())
                 .newPassword(form.getNewPassword())
@@ -101,8 +101,8 @@ public class MemberController {
     @PostMapping("/fcmToken")
     @ResponseStatus(OK)
     @LoginCheck
-    public void setFcmToken(@RequestBody @NotBlank String fcmToken,
-                            @MemberId Long memberId) {
+    public void setFcmToken(@RequestBody @NotBlank final String fcmToken,
+                            @MemberId final Long memberId) {
 
         memberUpdateService.setFcmToken(fcmToken, memberId);
     }

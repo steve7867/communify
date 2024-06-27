@@ -13,7 +13,7 @@ public class PasswordUpdateRequest {
     private final String newHashed;
 
     @Builder
-    private PasswordUpdateRequest(Long memberId, String currentPassword, String newPassword) {
+    private PasswordUpdateRequest(final Long memberId, final String currentPassword, final String newPassword) {
         this.memberId = memberId;
         this.currentPassword = currentPassword;
         this.newPassword = newPassword;

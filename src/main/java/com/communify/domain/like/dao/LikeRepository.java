@@ -1,5 +1,6 @@
 package com.communify.domain.like.dao;
 
+import com.communify.domain.like.dto.LikeCancelRequest;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.global.dao.BulkInsertable;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,6 +17,5 @@ public interface LikeRepository extends BulkInsertable<LikeRequest> {
 
     void bulkInsert(Collection<LikeRequest> likeCollection);
 
-    void deleteLike(@Param("postId") Long postId,
-                    @Param("memberId") Long memberId);
+    void deleteLike(@Param("request") LikeCancelRequest request);
 }

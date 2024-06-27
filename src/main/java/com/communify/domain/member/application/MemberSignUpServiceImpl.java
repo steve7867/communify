@@ -13,7 +13,7 @@ public class MemberSignUpServiceImpl implements MemberSignUpService {
 
     private final MemberRepository memberRepository;
 
-    public void signUp(MemberSignUpRequest request) {
+    public void signUp(final MemberSignUpRequest request) {
         try {
             memberRepository.insert(request);
         } catch (DuplicateKeyException e) {

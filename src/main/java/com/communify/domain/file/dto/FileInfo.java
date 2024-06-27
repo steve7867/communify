@@ -2,13 +2,11 @@ package com.communify.domain.file.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(force = true)
-@RequiredArgsConstructor
 public class FileInfo {
 
     private final String storedFilename;
@@ -17,21 +15,24 @@ public class FileInfo {
     private final Long postId;
     private final Integer sequence;
 
-    public static FileInfo of(String originalFilename, Long postId, Integer sequence) {
-        String extension = extractExtension(originalFilename);
-        originalFilename = trimExtension(originalFilename);
-        String storedFilename = UUID.randomUUID().toString();
+    public FileInfo(final String originalFilename,
+                    final Long postId,
+                    final Integer sequence) {
 
-        return new FileInfo(storedFilename, originalFilename, extension, postId, sequence);
+        this.storedFilename = UUID.randomUUID().toString();
+        this.originalFilename = trimExtension(originalFilename);
+        this.extension = extractExtension(originalFilename);
+        this.postId = postId;
+        this.sequence = sequence;
     }
 
-    private static String trimExtension(String filename) {
-        int i = filename.lastIndexOf(".");
-        return filename.substring(0, i);
+    private String trimExtension(final String filename) {
+        final int indexOfDot = filename.lastIndexOf(".");
+        return filename.substring(0, indexOfDot);
     }
 
-    private static String extractExtension(String filename) {
-        int i = filename.lastIndexOf(".");
-        return filename.substring(i + 1);
+    private String extractExtension(final String filename) {
+        final int indexOfDot = filename.lastIndexOf(".");
+        return filename.substring(indexOfDot + 1);
     }
 }
