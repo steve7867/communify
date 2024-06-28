@@ -1,4 +1,4 @@
-package com.communify.global.application;
+package com.communify.global.application.mail;
 
 import com.communify.global.error.exception.MailTransmissionFailureException;
 import lombok.RequiredArgsConstructor;

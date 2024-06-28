@@ -1,51 +1,33 @@
 package com.communify.domain.post.scheduler;
 
 import com.communify.domain.post.dao.PostRepository;
-import com.communify.global.util.CacheKeyUtil;
-import com.communify.global.util.CacheNames;
+import com.communify.domain.post.dto.PostViewIncrementRequest;
+import com.communify.global.application.cache.PostViewCacheService;
 import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class PostViewScheduler {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final PostViewCacheService postViewCacheService;
     private final PostRepository postRepository;
 
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "*/30 * * * * *")
     @SchedulerLock(name = "PostViewScheduler_applyPostViewToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
     public void applyPostViewToDB() {
-        final Set<String> keySet = redisTemplate.keys(CacheNames.POST_VIEW + "*");
+        final Map<Long, Integer> map = postViewCacheService.getAllOfPostViewCountAndClear();
 
-        for (String cacheKey : Objects.requireNonNull(keySet)) {
-            final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
+        final List<PostViewIncrementRequest> list = map.entrySet()
+                .stream()
+                .map(entry -> new PostViewIncrementRequest(entry.getKey(), entry.getValue()))
+                .toList();
 
-                @Override
-                public List<Object> execute(final RedisOperations operations) throws DataAccessException {
-                    operations.multi();
-
-                    operations.opsForSet().size(cacheKey);
-                    operations.delete(cacheKey);
-
-                    return operations.exec();
-                }
-            });
-
-            final Long view = (Long) result.get(0);
-            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
-
-            postRepository.incrementView(postId, view);
-        }
+        postRepository.incrementViewCount(list);
     }
 }

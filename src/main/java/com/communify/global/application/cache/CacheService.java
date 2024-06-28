@@ -1,4 +1,4 @@
-package com.communify.global.application;
+package com.communify.global.application.cache;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

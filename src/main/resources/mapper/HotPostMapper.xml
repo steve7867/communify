@@ -9,7 +9,7 @@
         <result property="memberId" column="member_id"/>
         <result property="memberName" column="name"/>
         <result property="categoryId" column="category_id"/>
-        <result property="view" column="view"/>
+        <result property="viewCount" column="view_count"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="likeCount" column="like_count"/>
         <result property="commentCount" column="comment_count"/>
@@ -22,7 +22,7 @@
                p.member_id,
                m.name,
                p.category_id,
-               p.view,
+               p.view_count,
                p.created_timestamp,
                COUNT(l.post_id) AS like_count,
                COUNT(c.id)      AS comment_count,
@@ -43,7 +43,7 @@
         WHERE category_id = #{categoryId}
           AND created_timestamp >= NOW() - INTERVAL #{hour} DAY
         GROUP BY id
-        ORDER BY view DESC, created_timestamp DESC
+        ORDER BY view_count DESC, created_timestamp DESC
         LIMIT #{limit}
     </select>
 

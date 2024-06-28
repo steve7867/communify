@@ -4,7 +4,7 @@ import com.communify.domain.like.dao.LikeRepository;
 import com.communify.domain.like.dto.LikeCancelRequest;
 import com.communify.domain.like.dto.LikeEvent;
 import com.communify.domain.like.dto.LikeRequest;
-import com.communify.global.application.CacheService;
+import com.communify.global.application.cache.CacheService;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;

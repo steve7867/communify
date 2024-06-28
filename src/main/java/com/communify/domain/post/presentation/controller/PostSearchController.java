@@ -58,7 +58,7 @@ public class PostSearchController {
             return ResponseEntity.notFound().build();
         }
 
-        postEditService.incrementView(postId, memberId);
+        postEditService.incrementView(postId);
 
         return ResponseEntity.ok(postDetailOpt.get());
     }

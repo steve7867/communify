@@ -3,6 +3,7 @@ package com.communify.domain.post.dao;
 import com.communify.domain.post.dto.PostDeleteRequest;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.dto.PostViewIncrementRequest;
 import com.communify.domain.post.dto.incoming.PostOutlineSearchCondition;
 import com.communify.domain.post.dto.outgoing.PostDetail;
 import com.communify.domain.post.dto.outgoing.PostOutline;
@@ -22,8 +23,7 @@ public interface PostRepository {
 
     Optional<PostDetail> findPostDetail(Long postId, Long memberId);
 
-    void incrementView(@Param("postId") Long postId,
-                       @Param("view") Long view);
+    void incrementViewCount(List<PostViewIncrementRequest> list);
 
     boolean editPost(@Param("request") PostEditRequest request);
 
@@ -32,5 +32,4 @@ public interface PostRepository {
     boolean isWrittenBy(Long postId, Long memberId);
 
     Optional<Long> findWriterId(Long postId);
-
 }
