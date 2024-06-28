@@ -7,8 +7,7 @@ import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.error.exception.HotPostCategoryEditException;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
-import com.communify.global.application.CacheService;
-import com.communify.global.util.CacheKeyUtil;
+import com.communify.global.application.cache.PostViewCacheService;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,12 +20,11 @@ public class PostEditService {
 
     private final PostRepository postRepository;
     private final FileService fileService;
-    private final CacheService cacheService;
+    private final PostViewCacheService postViewCacheService;
     private final HotPostSearchService hotPostSearchService;
 
-    public void incrementView(final Long postId, final Long memberId) {
-        final String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
-        cacheService.addToSet(key, memberId);
+    public void incrementView(final Long postId) {
+        postViewCacheService.incrementView(postId);
     }
 
     @Transactional

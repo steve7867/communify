@@ -81,8 +81,16 @@
 
     <update id="incrementView">
         UPDATE post
-        SET view = view + #{view}
-        WHERE id = #{postId}
+        SET view = CASE
+        <foreach collection="list" item="request" separator="">
+            WHEN id = #{request.postId} THEN view + #{request.view}
+        </foreach>
+        ELSE view
+        END
+        WHERE id IN
+        <foreach collection="list" item="request" open="(" separator="," close=")">
+            #{request.postId}
+        </foreach>
     </update>
 
     <update id="editPost">
