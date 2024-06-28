@@ -1,4 +1,4 @@
-package com.communify.global.application;
+package com.communify.global.application.session;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

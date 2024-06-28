@@ -2,7 +2,7 @@ package com.communify.global.resolver;
 
 import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.error.exception.NotLoggedInException;
-import com.communify.global.application.SessionService;
+import com.communify.global.application.session.SessionService;
 import com.communify.global.util.SessionKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
