@@ -12,6 +12,8 @@ import lombok.Getter;
 @Getter
 public class MemberSignUpRequest {
 
+    private final Long id;
+
     @Email
     @NotBlank
     @Size(min = 5, max = 50)
@@ -33,6 +35,7 @@ public class MemberSignUpRequest {
                                @JsonProperty("password") final String password,
                                @JsonProperty("name") final String name) {
 
+        this.id = null;
         this.email = email;
         this.password = password;
         this.name = name;
