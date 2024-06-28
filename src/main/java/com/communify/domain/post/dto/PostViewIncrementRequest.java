@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 public class PostViewIncrementRequest {
 
     private final Long postId;
-    private final Integer view;
+    private final Integer viewCount;
 }

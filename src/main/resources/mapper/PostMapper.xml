@@ -9,7 +9,7 @@
         <result property="memberId" column="member_id"/>
         <result property="memberName" column="name"/>
         <result property="categoryId" column="category_id"/>
-        <result property="view" column="view"/>
+        <result property="viewCount" column="view_count"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="likeCount" column="like_count"/>
         <result property="commentCount" column="comment_count"/>
@@ -39,7 +39,7 @@
         p.member_id,
         m.name,
         p.category_id,
-        p.view,
+        p.view_count,
         p.created_timestamp,
         COUNT(l.post_id) AS like_count,
         COUNT(c.id) AS comment_count,
@@ -79,13 +79,13 @@
         ORDER BY f.sequence
     </select>
 
-    <update id="incrementView">
+    <update id="incrementViewCount">
         UPDATE post
-        SET view = CASE
+        SET view_count = CASE
         <foreach collection="list" item="request" separator="">
-            WHEN id = #{request.postId} THEN view + #{request.view}
+            WHEN id = #{request.postId} THEN view_count + #{request.viewCount}
         </foreach>
-        ELSE view
+        ELSE view_count
         END
         WHERE id IN
         <foreach collection="list" item="request" open="(" separator="," close=")">

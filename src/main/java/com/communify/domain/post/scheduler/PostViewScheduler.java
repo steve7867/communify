@@ -28,6 +28,6 @@ public class PostViewScheduler {
                 .map(entry -> new PostViewIncrementRequest(entry.getKey(), entry.getValue()))
                 .toList();
 
-        postRepository.incrementView(list);
+        postRepository.incrementViewCount(list);
     }
 }

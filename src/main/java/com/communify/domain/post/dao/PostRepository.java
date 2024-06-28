@@ -23,7 +23,7 @@ public interface PostRepository {
 
     Optional<PostDetail> findPostDetail(Long postId, Long memberId);
 
-    void incrementView(List<PostViewIncrementRequest> list);
+    void incrementViewCount(List<PostViewIncrementRequest> list);
 
     boolean editPost(@Param("request") PostEditRequest request);
 

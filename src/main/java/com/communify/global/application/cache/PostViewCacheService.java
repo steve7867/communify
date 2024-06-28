@@ -46,9 +46,9 @@ public class PostViewCacheService {
             });
 
             final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
-            final Integer view = (Integer) result.get(0);
+            final Integer viewCount = (Integer) result.get(0);
 
-            map.put(postId, view);
+            map.put(postId, viewCount);
         }
 
         return map;
