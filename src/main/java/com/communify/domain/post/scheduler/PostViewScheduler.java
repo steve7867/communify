@@ -23,7 +23,7 @@ public class PostViewScheduler {
     private final RedisTemplate<String, Object> redisTemplate;
     private final PostRepository postRepository;
 
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "*/30 * * * * *")
     @SchedulerLock(name = "PostViewScheduler_applyPostViewToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
     public void applyPostViewToDB() {
         final Set<String> keySet = redisTemplate.keys(CacheNames.POST_VIEW + "*");
