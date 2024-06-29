@@ -16,10 +16,4 @@
         </foreach>
     </insert>
 
-    <delete id="deleteLike">
-        DELETE
-        FROM likes
-        WHERE post_id = #{request.postId}
-          AND member_id = #{request.memberId}
-    </delete>
 </mapper>

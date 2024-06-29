@@ -17,5 +17,4 @@ public interface LikeRepository extends BulkInsertable<LikeRequest> {
 
     void bulkInsert(Collection<LikeRequest> likeCollection);
 
-    void deleteLike(@Param("request") LikeCancelRequest request);
 }
