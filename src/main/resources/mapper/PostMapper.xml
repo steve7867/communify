@@ -91,7 +91,7 @@
 
     <update id="incrementLikeCount">
         UPDATE post
-        SET like_count = #{likeCount}
+        SET like_count = like_count + #{likeCount}
         WHERE id = #{postId}
     </update>
 
