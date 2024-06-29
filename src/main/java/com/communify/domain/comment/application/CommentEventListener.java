@@ -20,7 +20,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CommentEventListener {
 
-    public static final String TITLE_FORMAT = "%s님이 회원님의 게시글에 댓글을 작성하였습니다.";
     private final PostSearchService postSearchService;
     private final PushService pushService;
     private final MemberFindService memberFindService;
@@ -29,25 +28,20 @@ public class CommentEventListener {
     @Transactional(readOnly = true)
     @EventListener
     public void pushCommentUploadNotification(final CommentUploadEvent event) {
-        final Long requesterId = event.getMemberId();
-        final String requesterName = event.getMemberName();
-        final String content = event.getContent();
+        final Long commentWriterId = event.getCommentWriterId();
         final Long postId = event.getPostId();
 
-        final Long writerId = postSearchService.getWriterId(postId)
+        final Long postWriterId = postSearchService.getWriterId(postId)
                 .orElseThrow(() -> new PostWriterNotFoundException(postId));
 
-        if (Objects.equals(requesterId, writerId)) {
+        if (Objects.equals(commentWriterId, postWriterId)) {
             return;
         }
 
-        final String token = memberFindService.findFcmTokenById(writerId)
-                .orElseThrow(() -> new FcmTokenNotSetException(writerId));
+        final String token = memberFindService.findFcmTokenById(postWriterId)
+                .orElseThrow(() -> new FcmTokenNotSetException(postWriterId));
 
-        final MessageDto messageDto = MessageDto.builder()
-                .title(String.format(TITLE_FORMAT, requesterName))
-                .body(content)
-                .build();
+        final MessageDto messageDto = MessageDto.forComment(event.getCommentWriterName(), event.getCommentContent());
 
         pushService.push(new PushRequest(token, messageDto));
     }

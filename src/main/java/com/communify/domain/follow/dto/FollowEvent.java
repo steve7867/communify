@@ -9,7 +9,7 @@ public class FollowEvent {
 
     private final FollowRequest followRequest;
 
-    public String getMemberName() {
+    public String getFollowerName() {
         return followRequest.getMemberName();
     }
 

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FollowEventListener {
 
-    public static final String TITLE_FORMAT = "%s님이 회원님을 팔로우했습니다.";
     private final MemberFindService memberFindService;
     private final PushService pushService;
 
@@ -24,15 +23,13 @@ public class FollowEventListener {
     @Transactional(readOnly = true)
     @EventListener
     public void pushFollowNotification(final FollowEvent event) {
-        final String memberName = event.getMemberName();
+        final String followerName = event.getFollowerName();
         final Long followId = event.getFollowId();
 
         final String token = memberFindService.findFcmTokenById(followId)
                 .orElseThrow(() -> new FcmTokenNotSetException(followId));
 
-        final MessageDto messageDto = MessageDto.builder()
-                .title(String.format(TITLE_FORMAT, memberName))
-                .build();
+        final MessageDto messageDto = MessageDto.forFollow(followerName);
 
         pushService.push(new PushRequest(token, messageDto));
     }

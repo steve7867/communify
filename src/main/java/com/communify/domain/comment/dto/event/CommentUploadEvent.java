@@ -10,15 +10,15 @@ public class CommentUploadEvent {
 
     private final CommentUploadRequest commentUploadRequest;
 
-    public Long getMemberId() {
+    public Long getCommentWriterId() {
         return commentUploadRequest.getMemberId();
     }
 
-    public String getMemberName() {
+    public String getCommentWriterName() {
         return commentUploadRequest.getMemberName();
     }
 
-    public String getContent() {
+    public String getCommentContent() {
         return commentUploadRequest.getContent();
     }
 

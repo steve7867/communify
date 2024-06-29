@@ -8,11 +8,11 @@ public class PostUploadEvent {
 
     private final PostUploadRequest request;
 
-    public Long getMemberId() {
+    public Long getWriterId() {
         return request.getMemberId();
     }
 
-    public String getMemberName() {
+    public String getWriterName() {
         return request.getMemberName();
     }
 }

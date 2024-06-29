@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LikeEventListener {
 
-    public static final String TITLE_FORMAT = "%s님이 회원님의 게시글에 '좋아요'를 눌렀습니다.";
     private final LikeRepository likeRepository;
     private final PushService pushService;
 
@@ -31,10 +30,7 @@ public class LikeEventListener {
         final List<LikeNotificationInfo> filteredLikeNotificationInfoList = likeRepository.findFilteredLikeNotificationInfoList(likeRequestList);
 
         for (LikeNotificationInfo info : filteredLikeNotificationInfoList) {
-            final MessageDto messageDto = MessageDto.builder()
-                    .title(String.format(TITLE_FORMAT, info.getLikerName()))
-                    .build();
-
+            final MessageDto messageDto = MessageDto.forPostLike(info.getLikerName());
             pushService.push(new PushRequest(info.getFcmToken(), messageDto));
         }
 

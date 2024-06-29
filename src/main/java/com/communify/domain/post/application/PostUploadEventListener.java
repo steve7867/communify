@@ -19,7 +19,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostUploadEventListener {
 
-    public static final String TITLE_FORMAT = "%s님이 새로운 게시글을 작성했습니다.";
     private final FollowService followService;
     private final PushService pushService;
 
@@ -27,14 +26,12 @@ public class PostUploadEventListener {
     @Transactional(readOnly = true)
     @EventListener
     public void pushPostUploadNotification(final PostUploadEvent event) {
-        final Long memberId = event.getMemberId();
-        final String memberName = event.getMemberName();
+        final Long writerId = event.getWriterId();
+        final String writerName = event.getWriterName();
 
-        final List<MemberInfo> followerList = followService.getFollowers(memberId);
+        final List<MemberInfo> followerList = followService.getFollowers(writerId);
 
-        final MessageDto messageDto = MessageDto.builder()
-                .title(String.format(TITLE_FORMAT, memberName))
-                .build();
+        final MessageDto messageDto = MessageDto.forPostUpload(writerName);
 
         followerList.stream()
                 .map(MemberInfo::getFcmToken)
