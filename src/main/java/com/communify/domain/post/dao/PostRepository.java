@@ -27,15 +27,13 @@ public interface PostRepository {
 
     void incrementLikeCount(Long postId, Integer likeCount);
 
-    void incrementCommentCount(Long postId, Integer commentCount);
+    void incrementCommentCount(Long postId, Integer count);
 
-    void decrementCommentCount(Long postId, Integer commentCount);
+    void decrementCommentCount(Long postId, Integer count);
 
     boolean editPost(@Param("request") PostEditRequest request);
 
     boolean deletePost(@Param("request") PostDeleteRequest request);
 
     boolean isWrittenBy(Long postId, Long memberId);
-
-    Optional<Long> findWriterId(Long postId);
 }

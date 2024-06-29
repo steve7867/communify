@@ -96,13 +96,13 @@
 
     <update id="incrementCommentCount">
         UPDATE post
-        SET comment_count = comment_count + #{commentCount}
+        SET comment_count = comment_count + #{count}
         WHERE id = #{postId}
     </update>
 
     <update id="decrementCommentCount">
         UPDATE post
-        SET comment_count = comment_count - #{commentCount}
+        SET comment_count = comment_count - #{count}
         WHERE id = #{postId}
     </update>
 
@@ -127,11 +127,5 @@
                       FROM post
                       WHERE id = #{postId}
                         AND member_id = #{memberId})
-    </select>
-
-    <select id="findWriterId">
-        SELECT member_id
-        FROM post
-        WHERE id = #{postId}
     </select>
 </mapper>
