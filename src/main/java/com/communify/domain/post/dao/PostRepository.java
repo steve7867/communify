@@ -25,6 +25,8 @@ public interface PostRepository {
 
     void incrementViewCount(List<PostViewIncrementRequest> list);
 
+    void incrementLikeCount(Long postId, Integer likeCount);
+
     boolean editPost(@Param("request") PostEditRequest request);
 
     boolean deletePost(@Param("request") PostDeleteRequest request);

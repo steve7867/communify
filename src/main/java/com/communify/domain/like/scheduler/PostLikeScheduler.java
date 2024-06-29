@@ -1,75 +1,52 @@
 package com.communify.domain.like.scheduler;
 
-import com.communify.domain.like.dao.LikeRepository;
+import com.communify.domain.like.application.LikeSaveService;
+import com.communify.domain.like.dto.LikeEvent;
 import com.communify.domain.like.dto.LikeRequest;
-import com.communify.global.util.BulkInsertUtil;
-import com.communify.global.util.CacheKeyUtil;
-import com.communify.global.util.CacheNames;
+import com.communify.global.application.cache.PostLikeCacheService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.Map;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PostLikeScheduler {
 
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final LikeRepository likeRepository;
+    private final PostLikeCacheService postLikeCacheService;
+    private final LikeSaveService likeSaveService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Scheduled(cron = "*/5 * * * * *")
-    @SchedulerLock(name = "PostLikeScheduler_applyPostLikeToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
-    public void applyPostLikeToDB() {
-        final List<LikeRequest> totalLikeRequestList = new ArrayList<>();
+    @SchedulerLock(name = "PostLikeScheduler_applyPostLikeCacheToDB",
+            lockAtLeastFor = "5s",
+            lockAtMostFor = "7s")
+    public void applyPostLikeCacheToDB() {
+        log.info("Applying PostLikeScheduler");
 
-        final Set<String> keySet = redisTemplate.keys(CacheNames.POST_LIKE + "*");
+        final Map<Long, List<Long>> postLikeMap = postLikeCacheService.getPostLikeCacheAsMapAndClear();
 
-        for (String cacheKey : Objects.requireNonNull(keySet)) {
-            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+        postLikeMap.keySet()
+                .stream()
+                .sorted()
+                .forEach(postId -> {
+                    final List<Long> likerIdList = postLikeMap.get(postId);
 
-            final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
+                    final List<LikeRequest> likeRequestList = likerIdList
+                            .stream()
+                            .map(likerId -> LikeRequest.builder().postId(postId).likerId(likerId).build())
+                            .toList();
 
-                @Override
-                public List<Object> execute(final RedisOperations operations) throws DataAccessException {
-                    operations.multi();
-
-                    operations.opsForSet().members(cacheKey);
-                    operations.delete(cacheKey);
-
-                    return operations.exec();
-                }
-            });
-
-            final Set<Integer> memberIdSet = (Set<Integer>) result.get(0);
-            final List<LikeRequest> likeRequestList = memberIdSet.stream()
-                    .mapToLong(Integer::longValue)
-                    .mapToObj(memberId -> LikeRequest.builder()
-                            .postId(postId)
-                            .memberId(memberId)
-                            .build()
-                    ).toList();
-
-            totalLikeRequestList.addAll(likeRequestList);
-        }
-
-        final int size = totalLikeRequestList.size();
-        int lIdx = 0;
-        while (lIdx < size) {
-            final int rIdx = Math.min(lIdx + 100, size);
-            final List<LikeRequest> subList = totalLikeRequestList.subList(lIdx, rIdx);
-
-            BulkInsertUtil.forceBulkInsert(likeRepository, subList);
-
-            lIdx = rIdx;
-        }
+                    likeSaveService.savePostLike(postId, likeRequestList);
+                    eventPublisher.publishEvent(new LikeEvent(postId, likeRequestList));
+                });
     }
+
+
 }
