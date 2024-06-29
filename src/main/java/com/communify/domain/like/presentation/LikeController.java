@@ -7,6 +7,7 @@ import com.communify.domain.like.dto.LikeRequest;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +35,14 @@ public class LikeController {
                 .build();
 
         likeService.like(request);
+    }
+
+    @GetMapping("/{postId}/isLiking")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public Boolean isLiking(@PathVariable @NotNull @Positive final Long postId,
+                            @MemberId final Long memberId) {
+
+        return likeService.isLiking(postId, memberId);
     }
 }

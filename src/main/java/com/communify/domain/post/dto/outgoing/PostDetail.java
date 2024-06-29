@@ -12,5 +12,4 @@ public class PostDetail {
 
     private final String content;
     private final List<FileInfo> fileInfoList;
-    private final Boolean isLiking;
 }

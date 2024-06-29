@@ -18,7 +18,6 @@
 
     <resultMap id="postDetailResultMap" type="PostDetail">
         <result property="content" column="content"/>
-        <result property="isLiking" column="is_liking"/>
         <collection property="fileInfoList" ofType="FileInfo">
             <id property="storedFilename" column="stored_filename"/>
             <result property="originalFilename" column="original_filename"/>
@@ -65,14 +64,12 @@
 
     <select id="findPostDetail" resultMap="postDetailResultMap">
         SELECT p.content,
-               IF(l.member_id IS NOT NULL, TRUE, FALSE) AS is_liking,
                f.stored_filename,
                f.original_filename,
                f.extension,
                f.post_id,
                f.sequence
         FROM post p
-                 LEFT OUTER JOIN likes l ON p.id = l.post_id AND l.member_id = #{memberId}
                  LEFT OUTER JOIN file f ON p.id = f.post_id
         WHERE p.id = #{postId}
         ORDER BY f.sequence

@@ -25,4 +25,6 @@ public interface LikeRepository {
     List<LikeNotificationInfo> findFilteredLikeNotificationInfoList(List<LikeRequest> likeRequestList);
 
     void setNotified(List<LikeNotificationInfo> likeNotificationInfoList);
+
+    Boolean findLiking(Long postId, Long memberId);
 }

@@ -44,4 +44,10 @@
                 post_id = #{info.postId} AND member_id = #{info.memberId}
             </foreach>
     </update>
+
+    <select id="findLiking">
+        SELECT EXISTS(SELECT *
+                      FROM likes
+                      WHERE post_id = #{postId} AND member_id = #{memberId})
+    </select>
 </mapper>
