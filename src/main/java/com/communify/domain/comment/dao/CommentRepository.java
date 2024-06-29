@@ -12,11 +12,11 @@ import java.util.List;
 @Mapper
 public interface CommentRepository {
 
-    void insert(@Param("request") CommentUploadRequest request);
+    Integer insert(@Param("request") CommentUploadRequest request);
 
     List<CommentInfo> findAllCommentsByPostId(Long postId);
 
     void editComment(@Param("request") CommentEditRequest request);
 
-    void deleteComment(@Param("request") CommentDeleteRequest request);
+    Integer deleteComment(@Param("request") CommentDeleteRequest request);
 }

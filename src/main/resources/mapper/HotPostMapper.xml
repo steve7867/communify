@@ -24,13 +24,12 @@
                p.category_id,
                p.view_count,
                p.like_count,
-               COUNT(c.id)      AS comment_count,
+               p.comment_count,
                p.created_timestamp,
                true             as is_hot
         FROM hot_post h
                  INNER JOIN post p ON h.post_id = p.id
                  LEFT OUTER JOIN member m on p.member_id = m.id
-                 LEFT OUTER JOIN comment c ON p.id = c.post_id
         WHERE p.category_id = #{categoryId}
         GROUP BY p.id
         LIMIT #{limit};
