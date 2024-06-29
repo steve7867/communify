@@ -50,8 +50,4 @@ public class PostSearchService {
     public Optional<PostDetail> getPostDetail(final Long postId, final Long memberId) {
         return postRepository.findPostDetail(postId, memberId);
     }
-
-    public Optional<Long> getWriterId(final Long postId) {
-        return postRepository.findWriterId(postId);
-    }
 }
