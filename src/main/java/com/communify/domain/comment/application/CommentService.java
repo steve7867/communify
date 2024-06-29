@@ -6,6 +6,7 @@ import com.communify.domain.comment.dto.CommentEditRequest;
 import com.communify.domain.comment.dto.CommentUploadRequest;
 import com.communify.domain.comment.dto.event.CommentUploadEvent;
 import com.communify.domain.comment.dto.outgoing.CommentInfo;
+import com.communify.domain.post.dao.PostRepository;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,11 +23,14 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional
     @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
     public void addComment(final CommentUploadRequest request) {
-        commentRepository.insert(request);
+        final Integer addedCount = commentRepository.insert(request);
+        postRepository.incrementCommentCount(request.getPostId(), addedCount);
 
         eventPublisher.publishEvent(new CommentUploadEvent(request));
     }
@@ -43,8 +47,10 @@ public class CommentService {
         commentRepository.editComment(request);
     }
 
+    @Transactional
     @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
     public void deleteComment(final CommentDeleteRequest request) {
-        commentRepository.deleteComment(request);
+        final Integer deletedCount = commentRepository.deleteComment(request);
+        postRepository.decrementCommentCount(request.getPostId(), deletedCount);
     }
 }

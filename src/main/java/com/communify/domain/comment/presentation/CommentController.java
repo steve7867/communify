@@ -44,9 +44,9 @@ public class CommentController {
 
         final CommentUploadRequest request = CommentUploadRequest.builder()
                 .postId(postId)
-                .content(form.getContent())
-                .memberId(memberId)
-                .memberName(memberName)
+                .commentContent(form.getContent())
+                .commentWriterId(memberId)
+                .commentWriterName(memberName)
                 .build();
 
         commentService.addComment(request);

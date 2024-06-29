@@ -40,12 +40,11 @@
         p.category_id,
         p.view_count,
         p.like_count,
-        COUNT(c.id) AS comment_count,
+        p.comment_count,
         p.created_timestamp,
         false as is_hot
         FROM post p
             LEFT OUTER JOIN member m ON p.member_id = m.id
-            LEFT OUTER JOIN comment c ON p.id = c.post_id
         <where>
             <if test="searchCond.categoryId != null">
                 p.category_id = #{searchCond.categoryId}
@@ -92,6 +91,18 @@
     <update id="incrementLikeCount">
         UPDATE post
         SET like_count = like_count + #{likeCount}
+        WHERE id = #{postId}
+    </update>
+
+    <update id="incrementCommentCount">
+        UPDATE post
+        SET comment_count = comment_count + #{commentCount}
+        WHERE id = #{postId}
+    </update>
+
+    <update id="decrementCommentCount">
+        UPDATE post
+        SET comment_count = comment_count - #{commentCount}
         WHERE id = #{postId}
     </update>
 

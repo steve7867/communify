@@ -1,10 +1,8 @@
 package com.communify.domain.comment.application;
 
+import com.communify.domain.comment.dao.CommentRepository;
+import com.communify.domain.comment.dto.PostWriterInfoForNotification;
 import com.communify.domain.comment.dto.event.CommentUploadEvent;
-import com.communify.domain.member.application.MemberFindService;
-import com.communify.domain.member.error.exception.FcmTokenNotSetException;
-import com.communify.domain.post.application.PostSearchService;
-import com.communify.domain.post.error.exception.PostWriterNotFoundException;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
 import com.communify.domain.push.dto.PushRequest;
@@ -15,34 +13,38 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class CommentEventListener {
 
-    private final PostSearchService postSearchService;
     private final PushService pushService;
-    private final MemberFindService memberFindService;
+    private final CommentRepository commentRepository;
 
     @Async
     @Transactional(readOnly = true)
     @EventListener
     public void pushCommentUploadNotification(final CommentUploadEvent event) {
-        final Long commentWriterId = event.getCommentWriterId();
         final Long postId = event.getPostId();
+        final String commentContent = event.getCommentContent();
+        final Long commentWriterId = event.getCommentWriterId();
+        final String commentWriterName = event.getCommentWriterName();
 
-        final Long postWriterId = postSearchService.getWriterId(postId)
-                .orElseThrow(() -> new PostWriterNotFoundException(postId));
+        final Optional<PostWriterInfoForNotification> postWriterInfoOpt = commentRepository
+                .findPostWriterInfoForNotification(postId);
 
-        if (Objects.equals(commentWriterId, postWriterId)) {
+        if (postWriterInfoOpt.isEmpty()) {
             return;
         }
 
-        final String token = memberFindService.findFcmTokenById(postWriterId)
-                .orElseThrow(() -> new FcmTokenNotSetException(postWriterId));
+        final PostWriterInfoForNotification postWriterInfo = postWriterInfoOpt.get();
 
-        final MessageDto messageDto = MessageDto.forComment(event.getCommentWriterName(), event.getCommentContent());
+        if (Objects.equals(postWriterInfo.getWriterId(), commentWriterId) || !postWriterInfo.isFcmTokenExisting()) {
+            return;
+        }
 
-        pushService.push(new PushRequest(token, messageDto));
+        final MessageDto messageDto = MessageDto.forComment(commentWriterName, commentContent);
+        pushService.push(new PushRequest(postWriterInfo.getFcmToken(), messageDto));
     }
 }

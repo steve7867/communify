@@ -27,6 +27,10 @@ public interface PostRepository {
 
     void incrementLikeCount(Long postId, Integer likeCount);
 
+    void incrementCommentCount(Long postId, Integer commentCount);
+
+    void decrementCommentCount(Long postId, Integer commentCount);
+
     boolean editPost(@Param("request") PostEditRequest request);
 
     boolean deletePost(@Param("request") PostDeleteRequest request);
