@@ -10,9 +10,9 @@
         <result property="memberName" column="name"/>
         <result property="categoryId" column="category_id"/>
         <result property="viewCount" column="view_count"/>
-        <result property="createdDateTime" column="created_timestamp"/>
         <result property="likeCount" column="like_count"/>
         <result property="commentCount" column="comment_count"/>
+        <result property="createdDateTime" column="created_timestamp"/>
         <result property="isHot" column="is_hot"/>
     </resultMap>
 
@@ -23,14 +23,13 @@
                m.name,
                p.category_id,
                p.view_count,
-               p.created_timestamp,
-               COUNT(l.post_id) AS like_count,
+               p.like_count,
                COUNT(c.id)      AS comment_count,
+               p.created_timestamp,
                true             as is_hot
         FROM hot_post h
                  INNER JOIN post p ON h.post_id = p.id
                  LEFT OUTER JOIN member m on p.member_id = m.id
-                 LEFT OUTER JOIN likes l ON p.id = l.post_id
                  LEFT OUTER JOIN comment c ON p.id = c.post_id
         WHERE p.category_id = #{categoryId}
         GROUP BY p.id

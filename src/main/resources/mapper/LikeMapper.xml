@@ -3,23 +3,45 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.like.dao.LikeRepository">
-    <insert id="insert" parameterType="LikeRequest">
-        INSERT INTO likes(post_id, member_id)
-            VALUE (#{request.postId}, #{request.memberId})
-    </insert>
+    <resultMap id="LikeNotificationInfoMap" type="LikeNotificationInfo">
+        <result property="postId" column="post_id"/>
+        <result property="fcmToken" column="fcm_token"/>
+        <result property="likerId" column="liker_id"/>
+        <result property="likerName" column="liker_name"/>
+    </resultMap>
 
-    <insert id="bulkInsert" parameterType="java.util.Collection">
-        INSERT INTO likes(post_id, member_id)
+    <insert id="insertLikeBulk" parameterType="java.util.List">
+        INSERT IGNORE INTO likes(post_id, member_id)
         VALUES
-        <foreach collection="collection" item="request" index="idx" separator=",">
+        <foreach collection="list" item="request" index="idx" separator=",">
             (#{request.postId}, #{request.memberId})
         </foreach>
     </insert>
 
-    <delete id="deleteLike">
-        DELETE
-        FROM likes
-        WHERE post_id = #{request.postId}
-          AND member_id = #{request.memberId}
-    </delete>
+    <select id="findFilteredLikeNotificationInfoList" resultMap="LikeNotificationInfoMap">
+        SELECT p.id AS postId,
+               ft.fcm_token,
+               liker.id AS liker_id,
+               liker.name AS liker_name
+        FROM likes l
+            INNER JOIN post p ON l.post_id = p.id
+            INNER JOIN member writer ON p.member_id = writer.id
+            INNER JOIN fcm_token ft ON writer.id = ft.member_id
+            INNER JOIN member liker ON l.member_id = liker.id
+        WHERE
+            <foreach collection="list" item="request" open="(" separator="OR" close=")">
+                l.post_id = #{request.postId} AND l.member_id = #{request.memberId}
+            </foreach>
+            AND writer.id != liker.id
+            AND l.state = 'fresh'
+    </select>
+
+    <update id="setNotified">
+        UPDATE likes
+        SET state = 'notified'
+        WHERE
+            <foreach collection="list" item="info" open="(" separator="OR" close=")">
+                post_id = #{info.postId} AND member_id = #{info.memberId}
+            </foreach>
+    </update>
 </mapper>
