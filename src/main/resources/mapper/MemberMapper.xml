@@ -15,7 +15,7 @@
         <result property="fcmToken" column="fcm_token"/>
     </resultMap>
 
-    <insert id="insert" useGeneratedKeys="true">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="request.id">
         INSERT INTO member(email, hashed, name)
         VALUES (#{request.email}, #{request.hashed}, #{request.name})
     </insert>
