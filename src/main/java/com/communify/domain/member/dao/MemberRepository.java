@@ -24,4 +24,12 @@ public interface MemberRepository {
     Optional<String> findFcmTokenById(Long memberId);
 
     void updatePassword(@Param("request") PasswordUpdateRequest request);
+
+    void incrementFollowedCount(Long followedId, Integer count);
+
+    void incrementFollowingCount(Long followerId, Integer count);
+
+    void decrementFollowedCount(Long followedId, Integer count);
+
+    void decrementFollowingCount(Long followerId, Integer count);
 }

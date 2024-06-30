@@ -4,6 +4,7 @@ import com.communify.domain.follow.dao.FollowRepository;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.dto.UnfollowRequest;
+import com.communify.domain.member.dao.MemberRepository;
 import com.communify.domain.member.dto.outgoing.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,16 +19,23 @@ import java.util.List;
 public class FollowService {
 
     private final FollowRepository followRepository;
+    private final MemberRepository memberRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional
     public void follow(final FollowRequest request) {
-        followRepository.insertFollow(request);
+        final Integer count = followRepository.insertFollow(request);
+        memberRepository.incrementFollowedCount(request.getFollowedId(), count);
+        memberRepository.incrementFollowingCount(request.getFollowerId(), count);
 
         eventPublisher.publishEvent(new FollowEvent(request));
     }
 
+    @Transactional
     public void unfollow(final UnfollowRequest request) {
-        followRepository.deleteFollow(request);
+        final Integer count = followRepository.deleteFollow(request);
+        memberRepository.decrementFollowedCount(request.getFollowedId(), count);
+        memberRepository.decrementFollowingCount(request.getFollowerId(), count);
     }
 
     @Transactional(readOnly = true)

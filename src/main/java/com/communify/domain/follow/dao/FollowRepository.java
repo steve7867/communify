@@ -11,9 +11,9 @@ import java.util.List;
 @Mapper
 public interface FollowRepository {
 
-    void insertFollow(@Param("request") FollowRequest request);
+    Integer insertFollow(@Param("request") FollowRequest request);
 
-    void deleteFollow(@Param("request") UnfollowRequest request);
+    Integer deleteFollow(@Param("request") UnfollowRequest request);
 
     List<MemberInfo> findFollowers(Long followedId);
 
