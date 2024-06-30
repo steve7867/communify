@@ -29,38 +29,38 @@ public class FollowController {
 
     private final FollowService followService;
 
-    @PostMapping("/{followId}/follow")
+    @PostMapping("/{followedId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void follow(@PathVariable @NotNull @Positive final Long followId,
-                       @MemberId final Long memberId,
-                       @MemberName final String memberName) {
+    public void follow(@PathVariable @NotNull @Positive final Long followedId,
+                       @MemberId final Long followerId,
+                       @MemberName final String followerName) {
 
-        final FollowRequest request = new FollowRequest(memberId, memberName, followId);
+        final FollowRequest request = new FollowRequest(followerId, followerName, followedId);
         followService.follow(request);
     }
 
-    @DeleteMapping("/{followId}/follow")
+    @DeleteMapping("/{followedId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void unfollow(@PathVariable @NotNull @Positive final Long followId,
-                         @MemberId final Long memberId) {
+    public void unfollow(@PathVariable @NotNull @Positive final Long followedId,
+                         @MemberId final Long followerId) {
 
-        final UnfollowRequest request = new UnfollowRequest(memberId, followId);
+        final UnfollowRequest request = new UnfollowRequest(followerId, followedId);
         followService.unfollow(request);
     }
 
-    @GetMapping("/{memberId}/followers")
+    @GetMapping("/{followedId}/followers")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowers(@PathVariable @NotNull @Positive final Long memberId) {
-        return followService.getFollowers(memberId);
+    public List<MemberInfo> getFollowers(@PathVariable @NotNull @Positive final Long followedId) {
+        return followService.getFollowers(followedId);
     }
 
-    @GetMapping("/{memberId}/followings")
+    @GetMapping("/{followerId}/followings")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowings(@PathVariable @NotNull @Positive final Long memberId) {
-        return followService.getFollowings(memberId);
+    public List<MemberInfo> getFollowings(@PathVariable @NotNull @Positive final Long followerId) {
+        return followService.getFollowings(followerId);
     }
 }

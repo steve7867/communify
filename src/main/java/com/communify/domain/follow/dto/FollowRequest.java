@@ -8,17 +8,17 @@ import java.util.Objects;
 @Getter
 public class FollowRequest {
 
-    private final Long memberId;
-    private final String memberName;
-    private final Long followId;
+    private final Long followerId;
+    private final String followerName;
+    private final Long followedId;
 
-    public FollowRequest(final Long memberId, final String memberName, final Long followId) {
-        if (Objects.equals(memberId, followId)) {
-            throw new SelfFollowException(memberId);
+    public FollowRequest(final Long followerId, final String followerName, final Long followedId) {
+        if (Objects.equals(followerId, followedId)) {
+            throw new SelfFollowException(followerId);
         }
 
-        this.memberId = memberId;
-        this.memberName = memberName;
-        this.followId = followId;
+        this.followerId = followerId;
+        this.followerName = followerName;
+        this.followedId = followedId;
     }
 }

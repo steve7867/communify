@@ -10,10 +10,10 @@ public class FollowEvent {
     private final FollowRequest followRequest;
 
     public String getFollowerName() {
-        return followRequest.getMemberName();
+        return followRequest.getFollowerName();
     }
 
     public Long getFollowId() {
-        return followRequest.getFollowId();
+        return followRequest.getFollowedId();
     }
 }

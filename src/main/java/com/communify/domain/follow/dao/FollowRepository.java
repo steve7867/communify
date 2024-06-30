@@ -15,7 +15,7 @@ public interface FollowRepository {
 
     void deleteFollow(@Param("request") UnfollowRequest request);
 
-    List<MemberInfo> findFollowers(Long memberId);
+    List<MemberInfo> findFollowers(Long followedId);
 
-    List<MemberInfo> findFollowings(Long memberId);
+    List<MemberInfo> findFollowings(Long followerId);
 }

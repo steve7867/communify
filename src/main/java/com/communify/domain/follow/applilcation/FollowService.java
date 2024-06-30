@@ -31,14 +31,14 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowers(final Long memberId) {
-        final List<MemberInfo> followerList = followRepository.findFollowers(memberId);
+    public List<MemberInfo> getFollowers(final Long followedId) {
+        final List<MemberInfo> followerList = followRepository.findFollowers(followedId);
         return Collections.unmodifiableList(followerList);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowings(final Long memberId) {
-        final List<MemberInfo> followingList = followRepository.findFollowings(memberId);
+    public List<MemberInfo> getFollowings(final Long followerId) {
+        final List<MemberInfo> followingList = followRepository.findFollowings(followerId);
         return Collections.unmodifiableList(followingList);
     }
 }

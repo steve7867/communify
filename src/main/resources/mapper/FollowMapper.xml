@@ -17,33 +17,33 @@
     </resultMap>
 
     <insert id="insertFollow">
-        INSERT INTO follow(member_id, follow_id)
-        VALUES (#{request.memberId}, #{request.followId})
+        INSERT INTO follow(follower_id, followed_id)
+        VALUES (#{request.folloerId}, #{request.followedId})
     </insert>
 
     <delete id="deleteFollow">
         DELETE
         FROM follow
-        WHERE member_id = #{request.memberId}
-          AND follow_id = #{request.followId}
+        WHERE follower_id = #{request.followerId}
+          AND followed_id = #{request.followedId}
     </delete>
 
     <select id="findFollowers" resultMap="memberInfoResultMap">
         SELECT m.id,
                m.name,
                ft.fcm_token,
-               IF(f2.member_id IS NOT NULL, TRUE, FALSE) AS is_following
+               IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM member m
-                 INNER JOIN follow f1 ON m.id = f1.member_id
+                 INNER JOIN follow f1 ON m.id = f1.follower_id
                  LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.follow_id AND f2.member_id = #{memberId}
-        WHERE f1.follow_id = #{memberId}
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followed_id AND f2.follower_id = #{followedId}
+        WHERE f1.followed_id = #{followedId}
     </select>
 
     <select id="findFollowings" resultMap="memberInfoResultMap">
         SELECT m.id, m.name
         FROM member m
-                 INNER JOIN follow f ON m.id = f.follow_id
-        WHERE f.member_id = #{memberId}
+                 INNER JOIN follow f ON m.id = f.followed_id
+        WHERE f.follower_id = #{followerId}
     </select>
 </mapper>
