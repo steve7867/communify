@@ -2,7 +2,7 @@ package com.communify.domain.like.application;
 
 import com.communify.domain.like.dao.LikeRepository;
 import com.communify.domain.like.dto.LikeEvent;
-import com.communify.domain.like.dto.LikeNotificationInfo;
+import com.communify.domain.like.dto.LikeInfoForNotification;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dto.MessageDto;
@@ -27,13 +27,21 @@ public class LikeEventListener {
     @EventListener
     public void pushLikeNotification(final LikeEvent event) {
         final List<LikeRequest> likeRequestList = event.getLikeRequestList();
-        final List<LikeNotificationInfo> filteredLikeNotificationInfoList = likeRepository.findFilteredLikeNotificationInfoList(likeRequestList);
+        final List<LikeInfoForNotification> infoList = likeRepository
+                .findLikeInfoForNotificationList(likeRequestList);
 
-        for (LikeNotificationInfo info : filteredLikeNotificationInfoList) {
+        final List<LikeInfoForNotification> qualifiedInfoList = infoList.stream()
+                .filter(LikeInfoForNotification::isPostWriterExist)
+                .filter(LikeInfoForNotification::isFcmTokenExist)
+                .filter(info -> !info.isWriterSameAsLiker())
+                .filter(LikeInfoForNotification::isFresh)
+                .toList();
+
+        for (LikeInfoForNotification info : qualifiedInfoList) {
             final MessageDto messageDto = MessageDto.forPostLike(info.getLikerName());
             pushService.push(new PushRequest(info.getFcmToken(), messageDto));
         }
 
-        likeRepository.setNotified(filteredLikeNotificationInfoList);
+        likeRepository.setNotified(infoList);
     }
 }

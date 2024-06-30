@@ -3,37 +3,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.like.dao.LikeRepository">
-    <resultMap id="LikeNotificationInfoMap" type="LikeNotificationInfo">
-        <result property="postId" column="post_id"/>
+    <resultMap id="LikeInfoForNotificationMap" type="LikeInfoForNotification">
+        <result property="postWriterId" column="post_writer_id"/>
         <result property="fcmToken" column="fcm_token"/>
         <result property="likerId" column="liker_id"/>
         <result property="likerName" column="liker_name"/>
+        <result property="state" column="state"/>
     </resultMap>
 
     <insert id="insertLikeBulk" parameterType="java.util.List">
-        INSERT IGNORE INTO likes(post_id, member_id)
+        INSERT IGNORE INTO likes(post_id, liker_id)
         VALUES
         <foreach collection="list" item="request" index="idx" separator=",">
-            (#{request.postId}, #{request.memberId})
+            (#{request.postId}, #{request.likerId})
         </foreach>
     </insert>
 
-    <select id="findFilteredLikeNotificationInfoList" resultMap="LikeNotificationInfoMap">
-        SELECT p.id AS postId,
+    <select id="findLikeInfoForNotificationList" resultMap="LikeInfoForNotificationMap">
+        SELECT writer.id AS post_writer_id,
                ft.fcm_token,
                liker.id AS liker_id,
-               liker.name AS liker_name
+               liker.name AS liker_name,
+               l.state
         FROM likes l
             INNER JOIN post p ON l.post_id = p.id
-            INNER JOIN member writer ON p.member_id = writer.id
-            INNER JOIN fcm_token ft ON writer.id = ft.member_id
-            INNER JOIN member liker ON l.member_id = liker.id
+            LEFT OUTER JOIN member writer ON p.member_id = writer.id
+            LEFT OUTER JOIN fcm_token ft ON writer.id = ft.member_id
+            INNER JOIN member liker ON l.liker_id = liker.id
         WHERE
             <foreach collection="list" item="request" open="(" separator="OR" close=")">
-                l.post_id = #{request.postId} AND l.member_id = #{request.memberId}
+                l.post_id = #{request.postId} AND l.liker_id = #{request.likerId}
             </foreach>
-            AND writer.id != liker.id
-            AND l.state = 'fresh'
     </select>
 
     <update id="setNotified">
