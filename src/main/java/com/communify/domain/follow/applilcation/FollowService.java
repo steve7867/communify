@@ -3,6 +3,8 @@ package com.communify.domain.follow.applilcation;
 import com.communify.domain.follow.dao.FollowRepository;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
+import com.communify.domain.follow.dto.FollowerSearchCondition;
+import com.communify.domain.follow.dto.FollowingSearchCondition;
 import com.communify.domain.follow.dto.UnfollowRequest;
 import com.communify.domain.member.dao.MemberRepository;
 import com.communify.domain.member.dto.outgoing.MemberInfo;
@@ -39,14 +41,14 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowers(final Long followedId) {
-        final List<MemberInfo> followerList = followRepository.findFollowers(followedId);
+    public List<MemberInfo> getFollowers(final FollowerSearchCondition searchCondition) {
+        final List<MemberInfo> followerList = followRepository.findFollowers(searchCondition);
         return Collections.unmodifiableList(followerList);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowings(final Long followerId) {
-        final List<MemberInfo> followingList = followRepository.findFollowings(followerId);
+    public List<MemberInfo> getFollowings(final FollowingSearchCondition searchCondition) {
+        final List<MemberInfo> followingList = followRepository.findFollowings(searchCondition);
         return Collections.unmodifiableList(followingList);
     }
 }

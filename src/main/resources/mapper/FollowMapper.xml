@@ -18,7 +18,7 @@
 
     <insert id="insertFollow">
         INSERT INTO follow(follower_id, followed_id)
-        VALUES (#{request.folloerId}, #{request.followedId})
+        VALUES (#{request.followerId}, #{request.followedId})
     </insert>
 
     <delete id="deleteFollow">
@@ -31,19 +31,39 @@
     <select id="findFollowers" resultMap="memberInfoResultMap">
         SELECT m.id,
                m.name,
-               ft.fcm_token,
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
-        FROM member m
-                 INNER JOIN follow f1 ON m.id = f1.follower_id
+        FROM follow f1
+                 INNER JOIN member m ON f1.follower_id = m.id
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followed_id AND f2.follower_id = #{cond.searcherId}
+        WHERE f1.followed_id = #{cond.followedId}
+        <if test="cond.lastFollowerId != null">
+            AND m.id > #{cond.lastFollowerId}
+        </if>
+        ORDER BY m.id
+        LIMIT #{cond.limit}
+    </select>
+
+    <select id="findFollowerInfoForNotificationList">
+        SELECT f.follower_id,
+               ft.fcm_token
+        FROM follow f
+                 INNER JOIN member m ON f.follower_id = m.id
                  LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.followed_id AND f2.follower_id = #{followedId}
-        WHERE f1.followed_id = #{followedId}
+        WHERE f.followed_id = #{followedId}
     </select>
 
     <select id="findFollowings" resultMap="memberInfoResultMap">
-        SELECT m.id, m.name
-        FROM member m
-                 INNER JOIN follow f ON m.id = f.followed_id
-        WHERE f.follower_id = #{followerId}
+        SELECT m.id,
+               m.name,
+               IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
+        FROM follow f1
+                 INNER JOIN member m ON f1.followed_id = m.id
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followed_id AND f2.follower_id = #{cond.searcherId}
+        WHERE f1.follower_id = #{followerId}
+        <if test="cond.lastFollowingId != null">
+            AND m.id > #{cond.lastFollowingId}
+        </if>
+        ORDER BY m.id
+        LIMIT #{cond.limit}
     </select>
 </mapper>
