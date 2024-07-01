@@ -10,15 +10,15 @@ public class FollowRequest {
 
     private final Long followerId;
     private final String followerName;
-    private final Long followedId;
+    private final Long followeeId;
 
-    public FollowRequest(final Long followerId, final String followerName, final Long followedId) {
-        if (Objects.equals(followerId, followedId)) {
+    public FollowRequest(final Long followerId, final String followerName, final Long followeeId) {
+        if (Objects.equals(followerId, followeeId)) {
             throw new SelfFollowException(followerId);
         }
 
         this.followerId = followerId;
         this.followerName = followerName;
-        this.followedId = followedId;
+        this.followeeId = followeeId;
     }
 }

@@ -6,7 +6,7 @@ import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.dto.FollowerSearchCondition;
-import com.communify.domain.follow.dto.FollowingSearchCondition;
+import com.communify.domain.follow.dto.FolloweeSearchCondition;
 import com.communify.domain.follow.dto.UnfollowRequest;
 import com.communify.domain.member.dto.outgoing.MemberInfo;
 import jakarta.validation.constraints.NotNull;
@@ -32,56 +32,56 @@ public class FollowController {
 
     private final FollowService followService;
 
-    @PostMapping("/{followedId}/follow")
+    @PostMapping("/{followeeId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void follow(@PathVariable @NotNull @Positive final Long followedId,
+    public void follow(@PathVariable @NotNull @Positive final Long followeeId,
                        @MemberId final Long followerId,
                        @MemberName final String followerName) {
 
-        final FollowRequest request = new FollowRequest(followerId, followerName, followedId);
+        final FollowRequest request = new FollowRequest(followerId, followerName, followeeId);
         followService.follow(request);
     }
 
-    @DeleteMapping("/{followedId}/follow")
+    @DeleteMapping("/{followeeId}/follow")
     @ResponseStatus(OK)
     @LoginCheck
-    public void unfollow(@PathVariable @NotNull @Positive final Long followedId,
+    public void unfollow(@PathVariable @NotNull @Positive final Long followeeId,
                          @MemberId final Long followerId) {
 
-        final UnfollowRequest request = new UnfollowRequest(followerId, followedId);
+        final UnfollowRequest request = new UnfollowRequest(followerId, followeeId);
         followService.unfollow(request);
     }
 
-    @GetMapping("/{followedId}/followers")
+    @GetMapping("/{followeeId}/followers")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowers(@PathVariable @NotNull @Positive final Long followedId,
+    public List<MemberInfo> getFollowers(@PathVariable @NotNull @Positive final Long followeeId,
                                          @RequestParam @Positive final Long lastFollowerId,
                                          @MemberId final Long searcherId) {
 
-        final FollowerSearchCondition searchCondition = FollowerSearchCondition.builder()
-                .followedId(followedId)
+        final FollowerSearchCondition searchCond = FollowerSearchCondition.builder()
+                .followeeId(followeeId)
                 .lastFollowerId(lastFollowerId)
                 .searcherId(searcherId)
                 .build();
 
-        return followService.getFollowers(searchCondition);
+        return followService.getFollowers(searchCond);
     }
 
-    @GetMapping("/{followerId}/followings")
+    @GetMapping("/{followerId}/followees")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowings(@PathVariable @NotNull @Positive final Long followerId,
-                                          @RequestParam @Positive final Long lastFollowingId,
-                                          @MemberId final Long searcherId) {
+    public List<MemberInfo> getFollowees(@PathVariable @NotNull @Positive final Long followerId,
+                                         @RequestParam @Positive final Long lastFolloweeId,
+                                         @MemberId final Long searcherId) {
 
-        final FollowingSearchCondition searchCondition = FollowingSearchCondition.builder()
+        final FolloweeSearchCondition searchCond = FolloweeSearchCondition.builder()
                 .followerId(followerId)
-                .lastFollowingId(lastFollowingId)
+                .lastFolloweeId(lastFolloweeId)
                 .searcherId(searcherId)
                 .build();
 
-        return followService.getFollowings(searchCondition);
+        return followService.getFollowees(searchCond);
     }
 }
