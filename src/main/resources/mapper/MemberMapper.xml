@@ -8,8 +8,8 @@
         <result property="email" column="email"/>
         <result property="hashed" column="hashed"/>
         <result property="name" column="name"/>
-        <result property="followedCount" column="followed_count"/>
-        <result property="followingCount" column="following_count"/>
+        <result property="followerCount" column="follower_count"/>
+        <result property="followeeCount" column="followee_count"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
         <result property="fcmToken" column="fcm_token"/>
@@ -21,13 +21,13 @@
     </insert>
 
     <select id="findByEmail" resultMap="memberInfoResultMap">
-        SELECT id, email, hashed, name, followed_count, following_count, created_timestamp
+        SELECT id, email, hashed, name, follower_count, followee_count, created_timestamp
         FROM member
         WHERE email = #{email}
     </select>
 
     <select id="findById" resultMap="memberInfoResultMap">
-        SELECT id, email, hashed, name, followed_count, following_count, created_timestamp
+        SELECT id, email, hashed, name, follower_count, followee_count, created_timestamp
         FROM member
         WHERE id = #{memberId}
     </select>
@@ -55,43 +55,43 @@
         WHERE id = #{request.memberId}
     </update>
 
-    <update id="incrementFollowedCount">
+    <update id="incrementFollowerCount">
         UPDATE member
-        SET followed_count = followed_count + #{count}
-        WHERE id = #{followedId}
+        SET follower_count = follower_count + #{count}
+        WHERE id = #{followeeId}
     </update>
 
-    <update id="incrementFollowingCount">
+    <update id="incrementFolloweeCount">
         UPDATE member
-        SET following_count = following_count + #{count}
+        SET followee_count = followee_count + #{count}
         WHERE id = #{followerId}
     </update>
 
-    <update id="decrementFollowedCount">
+    <update id="decrementFollowerCount">
         UPDATE member
-        SET followed_count = followed_count - #{count}
-        WHERE id = #{followedId}
+        SET follower_count = follower_count - #{count}
+        WHERE id = #{followeeId}
     </update>
 
     <update id="decrementFollowingCount">
         UPDATE member
-        SET following_count = following_count - #{count}
+        SET followee_count = followee_count - #{count}
         WHERE id = #{followerId}
     </update>
 
-    <update id="decrementFollowingCountOfFollowers">
+    <update id="decrementFollowerCountOfFollowees">
         UPDATE member
-        SET following_count = following_count - #{count}
-        WHERE id IN (SELECT follower_id
+        SET follower_count = follower_count - #{count}
+        WHERE id IN (SELECT followee_id
                      FROM follow
-                     WHERE followed_id = #{memberId})
+                     WHERE follower_id = #{followerId})
     </update>
 
-    <update id="decrementFollowedCountOfFollowees">
+    <update id="decrementFolloweeCountOfFollowers">
         UPDATE member
-        SET followed_count = followed_count - #{count}
-        WHERE id IN (SELECT followed_id
+        SET followee_count = followee_count - #{count}
+        WHERE id IN (SELECT follower_id
                      FROM follow
-                     WHERE follower_id = #{memberId})
+                     WHERE followee_id = #{followeeId})
     </update>
 </mapper>

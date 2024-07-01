@@ -25,15 +25,15 @@ public interface MemberRepository {
 
     void updatePassword(@Param("request") PasswordUpdateRequest request);
 
-    void incrementFollowedCount(Long followedId, Integer count);
+    void incrementFollowerCount(Long followeeId, Integer count);
 
-    void incrementFollowingCount(Long followerId, Integer count);
+    void incrementFolloweeCount(Long followerId, Integer count);
 
-    void decrementFollowedCount(Long followedId, Integer count);
+    void decrementFollowerCount(Long followeeId, Integer count);
 
-    void decrementFollowingCount(Long followerId, Integer count);
+    void decrementFolloweeCount(Long followerId, Integer count);
 
-    void decrementFollowingCountOfFollowers(Long memberId, Integer count);
+    void decrementFollowerCountOfFollowees(Long followerId, Integer count);
 
-    void decrementFollowedCountOfFollowees(Long memberId, Integer count);
+    void decrementFolloweeCountOfFollowers(Long followeeId, Integer count);
 }

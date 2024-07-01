@@ -10,9 +10,8 @@
         <result property="name" column="name"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
-<!--        todo: property 수정-->
-        <result property="followed" column="followed"/>
-        <result property="following" column="following"/>
+        <result property="followerCount" column="follower_count"/>
+        <result property="followeeCount" column="followee_count"/>
         <result property="isFollowing" column="is_following"/>
         <result property="fcmToken" column="fcm_token"/>
     </resultMap>

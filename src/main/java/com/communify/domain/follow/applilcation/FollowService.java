@@ -31,8 +31,8 @@ public class FollowService {
             return;
         }
 
-        memberRepository.incrementFollowedCount(request.getFolloweeId(), count);
-        memberRepository.incrementFollowingCount(request.getFollowerId(), count);
+        memberRepository.incrementFollowerCount(request.getFolloweeId(), count);
+        memberRepository.incrementFolloweeCount(request.getFollowerId(), count);
 
         eventPublisher.publishEvent(new FollowEvent(request));
     }
@@ -44,8 +44,8 @@ public class FollowService {
             return;
         }
 
-        memberRepository.decrementFollowedCount(request.getFolloweeId(), count);
-        memberRepository.decrementFollowingCount(request.getFollowerId(), count);
+        memberRepository.decrementFollowerCount(request.getFolloweeId(), count);
+        memberRepository.decrementFolloweeCount(request.getFollowerId(), count);
     }
 
     @Transactional(readOnly = true)
