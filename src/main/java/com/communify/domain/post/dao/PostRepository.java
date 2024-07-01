@@ -1,10 +1,11 @@
 package com.communify.domain.post.dao;
 
+import com.communify.domain.post.dto.PostOutlineSearchConditionByMember;
 import com.communify.domain.post.dto.PostDeleteRequest;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.dto.PostViewIncrementRequest;
-import com.communify.domain.post.dto.incoming.PostOutlineSearchCondition;
+import com.communify.domain.post.dto.PostOutlineSearchConditionByCategory;
 import com.communify.domain.post.dto.outgoing.PostDetail;
 import com.communify.domain.post.dto.outgoing.PostOutline;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,8 +19,9 @@ public interface PostRepository {
 
     void insertPost(@Param("request") PostUploadRequest request);
 
-    List<PostOutline> findAllPostOutlineBySearchCond(@Param("searchCond") PostOutlineSearchCondition searchCond,
-                                                     @Param("limit") Integer limit);
+    List<PostOutline> findPostOutlineByCategory(@Param("cond") PostOutlineSearchConditionByCategory searchCond);
+
+    List<PostOutline> findPostOutlineByMember(@Param("cond") PostOutlineSearchConditionByMember searchCond);
 
     Optional<PostDetail> findPostDetail(Long postId, Long memberId);
 

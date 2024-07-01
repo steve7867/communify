@@ -12,8 +12,8 @@
         <result property="viewCount" column="view_count"/>
         <result property="likeCount" column="like_count"/>
         <result property="commentCount" column="comment_count"/>
-        <result property="createdDateTime" column="created_timestamp"/>
         <result property="isHot" column="is_hot"/>
+        <result property="createdDateTime" column="created_timestamp"/>
     </resultMap>
 
     <resultMap id="postDetailResultMap" type="PostDetail">
@@ -32,33 +32,48 @@
         VALUES (#{request.title}, #{request.content}, #{request.memberId}, #{request.categoryId});
     </insert>
 
-    <select id="findAllPostOutlineBySearchCond" resultMap="postOutlineResultMap">
+    <select id="findPostOutlineByCategory" resultMap="postOutlineResultMap">
         SELECT p.id,
-        p.title,
-        p.member_id,
-        m.name,
-        p.category_id,
-        p.view_count,
-        p.like_count,
-        p.comment_count,
-        p.created_timestamp,
-        false as is_hot
+               p.title,
+               p.member_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               false as is_hot
         FROM post p
             LEFT OUTER JOIN member m ON p.member_id = m.id
-        <where>
-            <if test="searchCond.categoryId != null">
-                p.category_id = #{searchCond.categoryId}
+        WHERE p.category_id = #{cond.categoryId}
+            <if test="cond.lastPostId != null">
+                AND p.id &lt; #{cond.lastPostId}
             </if>
-            <if test="searchCond.memberId != null">
-                p.member_id = #{searchCond.memberId}
-            </if>
-            <if test="searchCond.lastPostId != null">
-                AND p.id &lt; #{searchCond.lastPostId}
-            </if>
-        </where>
         GROUP BY p.id
         ORDER BY p.id DESC
-        LIMIT #{limit}
+        LIMIT #{cond.searchSize}
+    </select>
+
+    <select id="findPostOutlineByMember" resultMap="postOutlineResultMap">
+        SELECT p.id,
+               p.title,
+               p.member_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               false as is_hot
+        FROM post p
+            INNER JOIN member m ON p.member_id = m.id
+        WHERE m.id = #{cond.memberId}
+        <if test="cond.lastPostId != null">
+            AND p.id &lt; #{cond.lastPostId}
+        </if>
+        GROUP BY p.id
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize}
     </select>
 
     <select id="findPostDetail" resultMap="postDetailResultMap">
