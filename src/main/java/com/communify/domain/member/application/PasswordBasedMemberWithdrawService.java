@@ -33,6 +33,7 @@ public class PasswordBasedMemberWithdrawService implements MemberWithdrawService
         }
 
         memberRepository.decrementFollowingCountOfFollowers(memberId, 1);
+        memberRepository.decrementFollowedCountOfFollowees(memberId, 1);
 
         memberRepository.deleteById(memberId);
         loginService.logout();

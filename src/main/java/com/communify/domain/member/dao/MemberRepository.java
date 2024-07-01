@@ -34,4 +34,6 @@ public interface MemberRepository {
     void decrementFollowingCount(Long followerId, Integer count);
 
     void decrementFollowingCountOfFollowers(Long memberId, Integer count);
+
+    void decrementFollowedCountOfFollowees(Long memberId, Integer count);
 }
