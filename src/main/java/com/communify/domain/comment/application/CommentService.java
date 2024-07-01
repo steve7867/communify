@@ -30,6 +30,10 @@ public class CommentService {
     @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
     public void addComment(final CommentUploadRequest request) {
         final Integer addedCount = commentRepository.insert(request);
+        if (addedCount == 0) {
+            return;
+        }
+
         postRepository.incrementCommentCount(request.getPostId(), addedCount);
 
         eventPublisher.publishEvent(new CommentUploadEvent(request));
@@ -51,6 +55,10 @@ public class CommentService {
     @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#request.postId")
     public void deleteComment(final CommentDeleteRequest request) {
         final Integer deletedCount = commentRepository.deleteComment(request);
+        if (deletedCount == 0) {
+            return;
+        }
+
         postRepository.decrementCommentCount(request.getPostId(), deletedCount);
     }
 }
