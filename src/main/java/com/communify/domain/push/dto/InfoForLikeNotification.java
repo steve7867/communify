@@ -16,7 +16,7 @@ public class InfoForLikeNotification implements InfoForNotification {
     private final String state;
 
     @Override
-    public Boolean canSendNotification() {
+    public Boolean isPushable() {
         return isPostWriterExist()
                 && isFcmTokenExist()
                 && !isPostWriterEqualToLiker()

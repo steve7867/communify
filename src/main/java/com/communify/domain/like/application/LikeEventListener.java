@@ -30,7 +30,7 @@ public class LikeEventListener {
                 .findInfoForLikeNotificationList(likeRequestList);
 
         infoList.stream()
-                .filter(InfoForNotification::canSendNotification)
+                .filter(InfoForNotification::isPushable)
                 .map(InfoForNotification::generatePushRequest)
                 .forEach(pushService::push);
 

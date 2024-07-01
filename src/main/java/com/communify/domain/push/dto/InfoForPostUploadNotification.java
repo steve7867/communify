@@ -14,7 +14,7 @@ public class InfoForPostUploadNotification implements InfoForNotification {
     private final String writerName;
 
     @Override
-    public Boolean canSendNotification() {
+    public Boolean isPushable() {
         return isFcmTokenExisting();
     }
 

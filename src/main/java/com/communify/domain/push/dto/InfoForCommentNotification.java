@@ -15,7 +15,7 @@ public class InfoForCommentNotification implements InfoForNotification {
     private final String commentWriterName;
 
     @Override
-    public Boolean canSendNotification() {
+    public Boolean isPushable() {
         return isPostWriterExisting() && isFcmTokenExisting();
     }
 

@@ -30,7 +30,7 @@ public class PostUploadEventListener {
                 .findInfoForPostUploadNotificationList(postUploadRequest);
 
         infoList.stream()
-                .filter(InfoForNotification::canSendNotification)
+                .filter(InfoForNotification::isPushable)
                 .map(InfoForNotification::generatePushRequest)
                 .forEach(pushService::push);
     }

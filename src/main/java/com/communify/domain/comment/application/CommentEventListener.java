@@ -27,7 +27,7 @@ public class CommentEventListener {
         final InfoForNotification info = pushRepository
                 .findInfoForCommentNotification(commentUploadRequest);
 
-        if (!info.canSendNotification()) {
+        if (!info.isPushable()) {
             return;
         }
 

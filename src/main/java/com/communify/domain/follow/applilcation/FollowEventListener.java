@@ -26,7 +26,7 @@ public class FollowEventListener {
 
         final InfoForNotification info = pushRepository.findInfoForFollowNotification(followRequest);
 
-        if (!info.canSendNotification()) {
+        if (!info.isPushable()) {
             return;
         }
 

@@ -12,7 +12,7 @@ public class InfoForFollowNotification implements InfoForNotification {
     private final String followerName;
 
     @Override
-    public Boolean canSendNotification() {
+    public Boolean isPushable() {
         return isFollowedExisting() && isFcmTokenExisting();
     }
 
