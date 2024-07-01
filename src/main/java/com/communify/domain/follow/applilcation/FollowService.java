@@ -4,7 +4,7 @@ import com.communify.domain.follow.dao.FollowRepository;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.dto.FollowerSearchCondition;
-import com.communify.domain.follow.dto.FollowingSearchCondition;
+import com.communify.domain.follow.dto.FolloweeSearchCondition;
 import com.communify.domain.follow.dto.UnfollowRequest;
 import com.communify.domain.member.dao.MemberRepository;
 import com.communify.domain.member.dto.outgoing.MemberInfo;
@@ -31,8 +31,8 @@ public class FollowService {
             return;
         }
 
-        memberRepository.incrementFollowedCount(request.getFollowedId(), count);
-        memberRepository.incrementFollowingCount(request.getFollowerId(), count);
+        memberRepository.incrementFollowerCount(request.getFolloweeId(), count);
+        memberRepository.incrementFolloweeCount(request.getFollowerId(), count);
 
         eventPublisher.publishEvent(new FollowEvent(request));
     }
@@ -44,19 +44,19 @@ public class FollowService {
             return;
         }
 
-        memberRepository.decrementFollowedCount(request.getFollowedId(), count);
-        memberRepository.decrementFollowingCount(request.getFollowerId(), count);
+        memberRepository.decrementFollowerCount(request.getFolloweeId(), count);
+        memberRepository.decrementFolloweeCount(request.getFollowerId(), count);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowers(final FollowerSearchCondition searchCondition) {
-        final List<MemberInfo> followerList = followRepository.findFollowers(searchCondition);
+    public List<MemberInfo> getFollowers(final FollowerSearchCondition searchCond) {
+        final List<MemberInfo> followerList = followRepository.findFollowers(searchCond);
         return Collections.unmodifiableList(followerList);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowings(final FollowingSearchCondition searchCondition) {
-        final List<MemberInfo> followingList = followRepository.findFollowings(searchCondition);
-        return Collections.unmodifiableList(followingList);
+    public List<MemberInfo> getFollowees(final FolloweeSearchCondition searchCond) {
+        final List<MemberInfo> followeeList = followRepository.findFollowees(searchCond);
+        return Collections.unmodifiableList(followeeList);
     }
 }

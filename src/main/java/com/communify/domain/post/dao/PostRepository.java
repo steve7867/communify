@@ -1,6 +1,6 @@
 package com.communify.domain.post.dao;
 
-import com.communify.domain.post.dto.PostOutlineSearchConditionByMember;
+import com.communify.domain.post.dto.PostOutlineSearchConditionByWriter;
 import com.communify.domain.post.dto.PostDeleteRequest;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.dto.PostUploadRequest;
@@ -21,7 +21,7 @@ public interface PostRepository {
 
     List<PostOutline> findPostOutlineByCategory(@Param("cond") PostOutlineSearchConditionByCategory searchCond);
 
-    List<PostOutline> findPostOutlineByMember(@Param("cond") PostOutlineSearchConditionByMember searchCond);
+    List<PostOutline> findPostOutlineByWriter(@Param("cond") PostOutlineSearchConditionByWriter searchCond);
 
     Optional<PostDetail> findPostDetail(Long postId, Long memberId);
 

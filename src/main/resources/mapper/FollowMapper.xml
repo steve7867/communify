@@ -10,22 +10,22 @@
         <result property="name" column="name"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
-        <result property="followed" column="followed"/>
-        <result property="following" column="following"/>
+        <result property="followerCount" column="follower_count"/>
+        <result property="followeeCount" column="followee_count"/>
         <result property="isFollowing" column="is_following"/>
         <result property="fcmToken" column="fcm_token"/>
     </resultMap>
 
     <insert id="insertFollow">
-        INSERT INTO follow(follower_id, followed_id)
-        VALUES (#{request.followerId}, #{request.followedId})
+        INSERT INTO follow(follower_id, followee_id)
+        VALUES (#{request.followerId}, #{request.followeeId})
     </insert>
 
     <delete id="deleteFollow">
         DELETE
         FROM follow
         WHERE follower_id = #{request.followerId}
-          AND followed_id = #{request.followedId}
+          AND followee_id = #{request.followeeId}
     </delete>
 
     <select id="findFollowers" resultMap="memberInfoResultMap">
@@ -34,8 +34,8 @@
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM follow f1
                  INNER JOIN member m ON f1.follower_id = m.id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.followed_id AND f2.follower_id = #{cond.searcherId}
-        WHERE f1.followed_id = #{cond.followedId}
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{cond.searcherId}
+        WHERE f1.followee_id = #{cond.followeeId}
         <if test="cond.lastFollowerId != null">
             AND m.id > #{cond.lastFollowerId}
         </if>
@@ -43,16 +43,16 @@
         LIMIT #{cond.limit}
     </select>
 
-    <select id="findFollowings" resultMap="memberInfoResultMap">
+    <select id="findFollowees" resultMap="memberInfoResultMap">
         SELECT m.id,
                m.name,
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM follow f1
-                 INNER JOIN member m ON f1.followed_id = m.id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.followed_id AND f2.follower_id = #{cond.searcherId}
+                 INNER JOIN member m ON f1.followee_id = m.id
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{cond.searcherId}
         WHERE f1.follower_id = #{followerId}
         <if test="cond.lastFollowingId != null">
-            AND m.id > #{cond.lastFollowingId}
+            AND m.id > #{cond.lastFolloweeId}
         </if>
         ORDER BY m.id
         LIMIT #{cond.limit}

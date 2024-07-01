@@ -15,8 +15,8 @@ public class MemberInfo {
     @JsonIgnore
     private final String hashed;
     private final String name;
-    private final Integer followedCount;
-    private final Integer followingCount;
+    private final Integer followerCount;
+    private final Integer followeeCount;
     private final LocalDateTime createdDateTime;
 
     private final Boolean isFollowing;

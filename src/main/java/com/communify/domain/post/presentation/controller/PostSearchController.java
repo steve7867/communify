@@ -5,7 +5,7 @@ import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.post.application.PostEditService;
 import com.communify.domain.post.application.PostSearchService;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByCategory;
-import com.communify.domain.post.dto.PostOutlineSearchConditionByMember;
+import com.communify.domain.post.dto.PostOutlineSearchConditionByWriter;
 import com.communify.domain.post.dto.outgoing.PostDetail;
 import com.communify.domain.post.dto.outgoing.PostOutline;
 import jakarta.validation.constraints.NotNull;
@@ -42,16 +42,16 @@ public class PostSearchController {
         return postSearchService.getPostOutlinesByCategory(searchCond);
     }
 
-    @GetMapping("/members/{memberId}/posts")
+    @GetMapping("/members/{writerId}/posts")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<PostOutline> getPostOutlinesByMember(@PathVariable @Positive @NotNull final Long memberId,
+    public List<PostOutline> getPostOutlinesByMember(@PathVariable @Positive @NotNull final Long writerId,
                                                      @RequestParam @Positive @NotNull final Long lastPostId) {
 
-        final PostOutlineSearchConditionByMember searchCond =
-                new PostOutlineSearchConditionByMember(memberId, lastPostId);
+        final PostOutlineSearchConditionByWriter searchCond =
+                new PostOutlineSearchConditionByWriter(writerId, lastPostId);
 
-        return postSearchService.getPostOutlinesByMember(searchCond);
+        return postSearchService.getPostOutlinesByWriter(searchCond);
     }
 
     @GetMapping("/posts/{postId}")

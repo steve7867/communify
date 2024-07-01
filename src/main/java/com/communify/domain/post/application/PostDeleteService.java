@@ -21,7 +21,7 @@ public class PostDeleteService {
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#request.postId")
     public void deletePost(final PostDeleteRequest request) {
         final Long postId = request.getPostId();
-        final Long memberId = request.getMemberId();
+        final Long memberId = request.getRequesterId();
 
         final boolean canDelete = postRepository.isWrittenBy(postId, memberId);
         if (!canDelete) {

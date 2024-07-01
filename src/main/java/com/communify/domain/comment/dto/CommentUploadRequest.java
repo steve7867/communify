@@ -8,7 +8,7 @@ import lombok.Getter;
 public class CommentUploadRequest {
 
     private final Long postId;
-    private final String commentContent;
-    private final Long commentWriterId;
-    private final String commentWriterName;
+    private final String content;
+    private final Long writerId;
+    private final String writerName;
 }

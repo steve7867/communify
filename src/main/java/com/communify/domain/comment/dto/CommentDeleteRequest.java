@@ -9,5 +9,5 @@ public class CommentDeleteRequest {
 
     private final Long postId;
     private final Long commentId;
-    private final Long memberId;
+    private final Long requesterId;
 }

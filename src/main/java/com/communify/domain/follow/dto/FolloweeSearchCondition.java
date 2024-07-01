@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class FollowingSearchCondition {
+public class FolloweeSearchCondition {
 
     private final Long followerId;
-    private final Long lastFollowingId;
+    private final Long lastFolloweeId;
     private final Long searcherId;
     private final Integer limit = 100;
 }

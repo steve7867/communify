@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class FollowerSearchCondition {
 
-    private final Long followedId;
+    private final Long followeeId;
     private final Long lastFollowerId;
     private final Long searcherId;
     private final Integer limit = 100;

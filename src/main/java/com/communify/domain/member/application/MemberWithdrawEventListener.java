@@ -20,8 +20,8 @@ public class MemberWithdrawEventListener {
     public void memberWithdraw(final MemberWithdrawEvent event) {
         final Long memberId = event.getMemberId();
 
-        memberRepository.decrementFollowingCountOfFollowers(memberId, 1);
-        memberRepository.decrementFollowedCountOfFollowees(memberId, 1);
+        memberRepository.decrementFollowerCountOfFollowees(memberId, 1);
+        memberRepository.decrementFolloweeCountOfFollowers(memberId, 1);
 
         memberRepository.deleteById(memberId);
     }

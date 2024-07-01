@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PostOutlineSearchConditionByMember {
+public class PostOutlineSearchConditionByWriter {
 
-    private final Long memberId;
+    private final Long writerId;
     private final Long lastPostId;
     private final Integer searchSize = 20;
 }

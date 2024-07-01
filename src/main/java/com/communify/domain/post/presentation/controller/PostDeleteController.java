@@ -26,9 +26,9 @@ public class PostDeleteController {
     @ResponseStatus(OK)
     @LoginCheck
     public void delete(@PathVariable @NotNull @Positive final Long postId,
-                       @MemberId final Long memberId) {
+                       @MemberId final Long requesterId) {
 
-        final PostDeleteRequest request = new PostDeleteRequest(postId, memberId);
+        final PostDeleteRequest request = new PostDeleteRequest(postId, requesterId);
 
         postDeleteService.deletePost(request);
     }

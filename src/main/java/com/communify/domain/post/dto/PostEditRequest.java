@@ -18,7 +18,7 @@ public class PostEditRequest {
     private final Long currentCategoryId;
     private final Long newCategoryId;
 
-    private final Long memberId;
+    private final Long requesterId;
 
     public Boolean isEditingCategory() {
         return !Objects.equals(currentCategoryId, newCategoryId);

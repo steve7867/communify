@@ -9,14 +9,14 @@ import java.util.Objects;
 public class UnfollowRequest {
 
     private final Long followerId;
-    private final Long followedId;
+    private final Long followeeId;
 
-    public UnfollowRequest(final Long followerId, final Long followedId) {
-        if (Objects.equals(followerId, followedId)) {
+    public UnfollowRequest(final Long followerId, final Long followeeId) {
+        if (Objects.equals(followerId, followeeId)) {
             throw new SelfUnfollowException(followerId);
         }
 
         this.followerId = followerId;
-        this.followedId = followedId;
+        this.followeeId = followeeId;
     }
 }
