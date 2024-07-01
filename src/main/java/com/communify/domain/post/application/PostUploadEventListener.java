@@ -1,11 +1,10 @@
 package com.communify.domain.post.application;
 
-import com.communify.domain.follow.dao.FollowRepository;
-import com.communify.domain.follow.dto.FollowerInfoForNotification;
+import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.dto.event.PostUploadEvent;
 import com.communify.domain.push.application.PushService;
-import com.communify.domain.push.dto.MessageDto;
-import com.communify.domain.push.dto.PushRequest;
+import com.communify.domain.push.dao.PushRepository;
+import com.communify.domain.push.dto.InfoForNotification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -18,23 +17,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostUploadEventListener {
 
-    private final FollowRepository followRepository;
+    private final PushRepository pushRepository;
     private final PushService pushService;
 
     @Async
     @Transactional(readOnly = true)
     @EventListener
     public void pushPostUploadNotification(final PostUploadEvent event) {
-        final Long writerId = event.getWriterId();
-        final String writerName = event.getWriterName();
+        final PostUploadRequest postUploadRequest = event.getPostUploadRequest();
 
-        final List<FollowerInfoForNotification> infoList = followRepository
-                .findFollowerInfoForNotificationList(writerId);
-
-        final MessageDto messageDto = MessageDto.forPostUpload(writerName);
+        final List<InfoForNotification> infoList = pushRepository
+                .findInfoForPostUploadNotificationList(postUploadRequest);
 
         infoList.stream()
-                .filter(FollowerInfoForNotification::isFcmTokenExisting)
-                .forEach(info -> pushService.push(new PushRequest(info.getFcmToken(), messageDto)));
+                .filter(InfoForNotification::isPushable)
+                .map(InfoForNotification::generatePushRequest)
+                .forEach(pushService::push);
     }
 }

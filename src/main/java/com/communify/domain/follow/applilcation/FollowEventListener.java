@@ -1,11 +1,10 @@
 package com.communify.domain.follow.applilcation;
 
 import com.communify.domain.follow.dto.FollowEvent;
-import com.communify.domain.member.application.MemberFindService;
-import com.communify.domain.member.error.exception.FcmTokenNotSetException;
+import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.push.application.PushService;
-import com.communify.domain.push.dto.MessageDto;
-import com.communify.domain.push.dto.PushRequest;
+import com.communify.domain.push.dao.PushRepository;
+import com.communify.domain.push.dto.InfoForNotification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -16,21 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FollowEventListener {
 
-    private final MemberFindService memberFindService;
+    private final PushRepository pushRepository;
     private final PushService pushService;
 
     @Async
     @Transactional(readOnly = true)
     @EventListener
     public void pushFollowNotification(final FollowEvent event) {
-        final String followerName = event.getFollowerName();
-        final Long followId = event.getFollowId();
+        final FollowRequest followRequest = event.getFollowRequest();
 
-        final String token = memberFindService.findFcmTokenById(followId)
-                .orElseThrow(() -> new FcmTokenNotSetException(followId));
+        final InfoForNotification info = pushRepository.findInfoForFollowNotification(followRequest);
 
-        final MessageDto messageDto = MessageDto.forFollow(followerName);
+        if (!info.isPushable()) {
+            return;
+        }
 
-        pushService.push(new PushRequest(token, messageDto));
+        pushService.push(info.generatePushRequest());
     }
 }

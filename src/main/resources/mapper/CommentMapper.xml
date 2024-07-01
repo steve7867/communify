@@ -40,12 +40,4 @@
           AND post_id = #{request.postId}
           AND member_id = #{request.memberId}
     </delete>
-
-    <select id="findPostWriterInfoForNotification" resultType="PostWriterInfoForNotification">
-        SELECT p.member_id AS writer_id, ft.fcm_token
-        FROM post p
-             LEFT OUTER JOIN member m ON p.member_id = m.id
-             LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id
-        WHERE p.id = #{postId}
-    </select>
 </mapper>

@@ -1,12 +1,10 @@
 package com.communify.domain.like.application;
 
-import com.communify.domain.like.dao.LikeRepository;
 import com.communify.domain.like.dto.LikeEvent;
-import com.communify.domain.like.dto.LikeInfoForNotification;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.domain.push.application.PushService;
-import com.communify.domain.push.dto.MessageDto;
-import com.communify.domain.push.dto.PushRequest;
+import com.communify.domain.push.dao.PushRepository;
+import com.communify.domain.push.dto.InfoForNotification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -19,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LikeEventListener {
 
-    private final LikeRepository likeRepository;
+    private final PushRepository pushRepository;
     private final PushService pushService;
 
     @Async
@@ -27,21 +25,15 @@ public class LikeEventListener {
     @EventListener
     public void pushLikeNotification(final LikeEvent event) {
         final List<LikeRequest> likeRequestList = event.getLikeRequestList();
-        final List<LikeInfoForNotification> infoList = likeRepository
-                .findLikeInfoForNotificationList(likeRequestList);
 
-        final List<LikeInfoForNotification> qualifiedInfoList = infoList.stream()
-                .filter(LikeInfoForNotification::isPostWriterExist)
-                .filter(LikeInfoForNotification::isFcmTokenExist)
-                .filter(info -> !info.isWriterSameAsLiker())
-                .filter(LikeInfoForNotification::isFresh)
-                .toList();
+        final List<InfoForNotification> infoList = pushRepository
+                .findInfoForLikeNotificationList(likeRequestList);
 
-        for (LikeInfoForNotification info : qualifiedInfoList) {
-            final MessageDto messageDto = MessageDto.forPostLike(info.getLikerName());
-            pushService.push(new PushRequest(info.getFcmToken(), messageDto));
-        }
+        infoList.stream()
+                .filter(InfoForNotification::isPushable)
+                .map(InfoForNotification::generatePushRequest)
+                .forEach(pushService::push);
 
-        likeRepository.setNotified(infoList);
+        pushRepository.setNotified(likeRequestList);
     }
 }

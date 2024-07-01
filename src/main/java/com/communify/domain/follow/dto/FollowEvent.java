@@ -8,12 +8,4 @@ import lombok.RequiredArgsConstructor;
 public class FollowEvent {
 
     private final FollowRequest followRequest;
-
-    public String getFollowerName() {
-        return followRequest.getFollowerName();
-    }
-
-    public Long getFollowId() {
-        return followRequest.getFollowedId();
-    }
 }

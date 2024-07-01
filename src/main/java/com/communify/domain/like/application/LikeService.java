@@ -17,7 +17,7 @@ public class LikeService {
         postLikeCacheService.cacheLike(request);
     }
 
-    public Boolean isLiking(Long postId, Long memberId) {
-        return likeRepository.findLiking(postId, memberId);
+    public Boolean isLiking(Long postId, Long likerId) {
+        return likeRepository.findLiking(postId, likerId);
     }
 }

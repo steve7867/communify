@@ -41,8 +41,8 @@ public class LikeController {
     @ResponseStatus(OK)
     @LoginCheck
     public Boolean isLiking(@PathVariable @NotNull @Positive final Long postId,
-                            @MemberId final Long memberId) {
+                            @MemberId final Long likerId) {
 
-        return likeService.isLiking(postId, memberId);
+        return likeService.isLiking(postId, likerId);
     }
 }
