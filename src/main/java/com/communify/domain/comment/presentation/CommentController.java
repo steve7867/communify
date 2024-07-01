@@ -39,14 +39,14 @@ public class CommentController {
     @LoginCheck
     public void addComment(@PathVariable @NotNull @Positive final Long postId,
                            @RequestBody @Valid final CommentForm form,
-                           @MemberId final Long memberId,
-                           @MemberName final String memberName) {
+                           @MemberId final Long writerId,
+                           @MemberName final String writerName) {
 
         final CommentUploadRequest request = CommentUploadRequest.builder()
                 .postId(postId)
-                .commentContent(form.getContent())
-                .commentWriterId(memberId)
-                .commentWriterName(memberName)
+                .content(form.getContent())
+                .writerId(writerId)
+                .writerName(writerName)
                 .build();
 
         commentService.addComment(request);
@@ -65,13 +65,13 @@ public class CommentController {
     public void editComment(@PathVariable @NotNull @Positive final Long postId,
                             @PathVariable @NotNull @Positive final Long commentId,
                             @RequestBody @Valid final CommentForm form,
-                            @MemberId final Long memberId) {
+                            @MemberId final Long requesterId) {
 
         final CommentEditRequest request = CommentEditRequest.builder()
                 .postId(postId)
                 .commentId(commentId)
                 .content(form.getContent())
-                .memberId(memberId)
+                .requesterId(requesterId)
                 .build();
 
         commentService.editComment(request);
@@ -82,12 +82,12 @@ public class CommentController {
     @LoginCheck
     public void deleteComment(@PathVariable @NotNull @Positive final Long postId,
                               @PathVariable @NotNull @Positive final Long commentId,
-                              @MemberId final Long memberId) {
+                              @MemberId final Long requesterId) {
 
         final CommentDeleteRequest request = CommentDeleteRequest.builder()
                 .postId(postId)
                 .commentId(commentId)
-                .memberId(memberId)
+                .requesterId(requesterId)
                 .build();
 
         commentService.deleteComment(request);

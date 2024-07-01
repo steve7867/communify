@@ -6,21 +6,25 @@
     <resultMap id="commentInfoResultMap" type="CommentInfo">
         <result property="id" column="id"/>
         <result property="content" column="content"/>
-        <result property="memberId" column="member_id"/>
-        <result property="memberName" column="name"/>
+        <result property="writerId" column="writer_id"/>
+        <result property="writerName" column="name"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true">
-        INSERT INTO comment(content, post_id, member_id)
-            VALUE (#{request.content}, #{request.postId}, #{request.memberId})
+        INSERT INTO comment(content, post_id, writer_id)
+            VALUE (#{request.content}, #{request.postId}, #{request.writerId})
     </insert>
 
     <select id="findAllCommentsByPostId" resultMap="commentInfoResultMap">
-        SELECT c.id, c.content, c.member_id, m.name, c.created_timestamp
+        SELECT c.id,
+               c.content,
+               c.writer_id,
+               m.name,
+               c.created_timestamp
         FROM comment c
-                 LEFT OUTER JOIN member m ON c.member_id = m.id
+                 LEFT OUTER JOIN member m ON c.writer_id = m.id
         WHERE post_id = #{postId}
         ORDER BY c.created_timestamp;
     </select>
@@ -30,7 +34,7 @@
         SET content = #{request.content}
         WHERE id = #{request.commentId}
           AND post_id = #{request.postId}
-          AND member_id = #{request.memberId}
+          AND writer_id = #{request.requesterId}
     </update>
 
     <delete id="deleteComment">
@@ -38,6 +42,6 @@
         FROM comment
         WHERE id = #{request.commentId}
           AND post_id = #{request.postId}
-          AND member_id = #{request.memberId}
+          AND writer_id = #{request.requesterId}
     </delete>
 </mapper>

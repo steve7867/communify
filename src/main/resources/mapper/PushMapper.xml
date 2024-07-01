@@ -50,8 +50,8 @@
     <select id="findInfoForCommentNotification" resultType="InfoForCommentNotification">
         SELECT p.member_id AS post_writer_id,
                ft.fcm_token,
-               #{request.commentContent} AS comment_content,
-               #{request.commentWriterName} AS comment_writer_name
+               #{request.content} AS comment_content,
+               #{request.writerName} AS comment_writer_name
         FROM post p
                  LEFT OUTER JOIN member m ON p.member_id = m.id
                  LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id
