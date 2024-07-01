@@ -8,10 +8,10 @@
         <result property="email" column="email"/>
         <result property="hashed" column="hashed"/>
         <result property="name" column="name"/>
+        <result property="followedCount" column="followed_count"/>
+        <result property="followingCount" column="following_count"/>
         <result property="createdDateTime" column="created_timestamp"/>
         <result property="modifiedDateTime" column="modified_timestamp"/>
-        <result property="followed" column="followed"/>
-        <result property="following" column="following"/>
         <result property="fcmToken" column="fcm_token"/>
     </resultMap>
 
@@ -21,31 +21,15 @@
     </insert>
 
     <select id="findByEmail" resultMap="memberInfoResultMap">
-        SELECT m.id,
-               m.email,
-               m.hashed,
-               m.name,
-               m.created_timestamp,
-               count(f.follow_id) AS followed,
-               count(f.member_id) AS following
-        FROM member m
-                 LEFT OUTER JOIN follow f ON m.id = f.follow_id OR m.id = f.member_id
-        WHERE m.email = #{email}
-        GROUP BY m.id
+        SELECT id, email, hashed, name, followed_count, following_count, created_timestamp
+        FROM member
+        WHERE email = #{email}
     </select>
 
     <select id="findById" resultMap="memberInfoResultMap">
-        SELECT m.id,
-               m.email,
-               m.hashed,
-               m.name,
-               m.created_timestamp,
-               count(f.follow_id) AS followed,
-               count(f.member_id) AS following
-        FROM member m
-                 LEFT OUTER JOIN follow f ON m.id = f.follow_id OR m.id = f.member_id
-        WHERE m.id = #{memberId}
-        GROUP BY m.id
+        SELECT id, email, hashed, name, followed_count, following_count, created_timestamp
+        FROM member
+        WHERE id = #{memberId}
     </select>
 
     <delete id="deleteById">
@@ -69,5 +53,29 @@
         UPDATE member
         SET hashed = #{request.newHashed}
         WHERE id = #{request.memberId}
+    </update>
+
+    <update id="incrementFollowedCount">
+        UPDATE member
+        SET followed_count = followed_count + #{count}
+        WHERE id = #{followedId}
+    </update>
+
+    <update id="incrementFollowingCount">
+        UPDATE member
+        SET following_count = following_count + #{count}
+        WHERE id = #{followerId}
+    </update>
+
+    <update id="decrementFollowedCount">
+        UPDATE member
+        SET followed_count = followed_count - #{count}
+        WHERE id = #{followedId}
+    </update>
+
+    <update id="decrementFollowingCount">
+        UPDATE member
+        SET following_count = following_count - #{count}
+        WHERE id = #{followerId}
     </update>
 </mapper>

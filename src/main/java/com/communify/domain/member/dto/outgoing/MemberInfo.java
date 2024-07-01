@@ -12,14 +12,13 @@ public class MemberInfo {
 
     private final Long id;
     private final String email;
-
     @JsonIgnore
     private final String hashed;
     private final String name;
+    private final Integer followedCount;
+    private final Integer followingCount;
     private final LocalDateTime createdDateTime;
 
-    private final Integer followed;
-    private final Integer following;
     private final Boolean isFollowing;
 
     @JsonIgnore

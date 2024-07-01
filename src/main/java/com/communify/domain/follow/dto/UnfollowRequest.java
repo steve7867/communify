@@ -8,15 +8,15 @@ import java.util.Objects;
 @Getter
 public class UnfollowRequest {
 
-    private final Long memberId;
-    private final Long followId;
+    private final Long followerId;
+    private final Long followedId;
 
-    public UnfollowRequest(final Long memberId, final Long followId) {
-        if (Objects.equals(memberId, followId)) {
-            throw new SelfUnfollowException(memberId);
+    public UnfollowRequest(final Long followerId, final Long followedId) {
+        if (Objects.equals(followerId, followedId)) {
+            throw new SelfUnfollowException(followerId);
         }
 
-        this.memberId = memberId;
-        this.followId = followId;
+        this.followerId = followerId;
+        this.followedId = followedId;
     }
 }
