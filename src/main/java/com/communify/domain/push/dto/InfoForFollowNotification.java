@@ -7,13 +7,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class InfoForFollowNotification implements InfoForNotification {
 
-    private final Long followedId;
+    private final Long followeeId;
     private final String fcmToken;
     private final String followerName;
 
     @Override
     public Boolean isPushable() {
-        return isFollowedExisting() && isFcmTokenExisting();
+        return isFolloweeExisting() && isFcmTokenExisting();
     }
 
     @Override
@@ -22,8 +22,8 @@ public class InfoForFollowNotification implements InfoForNotification {
         return new PushRequest(fcmToken, messageDto);
     }
 
-    private Boolean isFollowedExisting() {
-        return Objects.nonNull(followedId);
+    private Boolean isFolloweeExisting() {
+        return Objects.nonNull(followeeId);
     }
 
     private Boolean isFcmTokenExisting() {
