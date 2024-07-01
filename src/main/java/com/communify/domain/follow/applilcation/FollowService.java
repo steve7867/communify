@@ -27,6 +27,10 @@ public class FollowService {
     @Transactional
     public void follow(final FollowRequest request) {
         final Integer count = followRepository.insertFollow(request);
+        if (count == 0) {
+            return;
+        }
+
         memberRepository.incrementFollowedCount(request.getFollowedId(), count);
         memberRepository.incrementFollowingCount(request.getFollowerId(), count);
 
@@ -36,6 +40,10 @@ public class FollowService {
     @Transactional
     public void unfollow(final UnfollowRequest request) {
         final Integer count = followRepository.deleteFollow(request);
+        if (count == 0) {
+            return;
+        }
+
         memberRepository.decrementFollowedCount(request.getFollowedId(), count);
         memberRepository.decrementFollowingCount(request.getFollowerId(), count);
     }
