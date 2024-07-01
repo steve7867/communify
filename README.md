@@ -33,7 +33,7 @@
 
 ## 📈 ERD
 
-![ERD](https://github.com/steve7867/Communify/assets/115217247/118ce712-0242-4959-9bc1-70b83b105481)
+![ERD](https://github.com/steve7867/Communify/assets/115217247/d06404d1-d99a-4c3f-b624-5e3f876f6a71)
 
 ## 🏛️ 프로젝트 구조도
 
