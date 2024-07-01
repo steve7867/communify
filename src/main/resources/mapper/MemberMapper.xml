@@ -78,4 +78,12 @@
         SET following_count = following_count - #{count}
         WHERE id = #{followerId}
     </update>
+
+    <update id="decrementFollowingCountOfFollowers">
+        UPDATE member
+        SET following_count = following_count - #{count}
+        WHERE id IN (SELECT follower_id
+                     FROM follow
+                     WHERE followed_id = #{memberId})
+    </update>
 </mapper>

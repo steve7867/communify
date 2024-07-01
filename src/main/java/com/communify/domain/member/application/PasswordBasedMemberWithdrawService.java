@@ -32,6 +32,8 @@ public class PasswordBasedMemberWithdrawService implements MemberWithdrawService
             throw new InvalidPasswordException(password);
         }
 
+        memberRepository.decrementFollowingCountOfFollowers(memberId, 1);
+
         memberRepository.deleteById(memberId);
         loginService.logout();
     }
