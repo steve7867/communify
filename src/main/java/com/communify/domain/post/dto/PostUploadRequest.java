@@ -15,6 +15,6 @@ public class PostUploadRequest {
     private final String content;
     private final List<MultipartFile> fileList;
     private final Long categoryId;
-    private final Long memberId;
-    private final String memberName;
+    private final Long writerId;
+    private final String writerName;
 }

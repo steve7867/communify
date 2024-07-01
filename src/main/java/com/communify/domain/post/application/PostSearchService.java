@@ -3,7 +3,7 @@ package com.communify.domain.post.application;
 import com.communify.domain.hotpost.application.HotPostSearchService;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByCategory;
-import com.communify.domain.post.dto.PostOutlineSearchConditionByMember;
+import com.communify.domain.post.dto.PostOutlineSearchConditionByWriter;
 import com.communify.domain.post.dto.outgoing.PostDetail;
 import com.communify.domain.post.dto.outgoing.PostOutline;
 import com.communify.global.util.CacheNames;
@@ -46,8 +46,8 @@ public class PostSearchService {
         return Collections.unmodifiableList(postOutlineList);
     }
 
-    public List<PostOutline> getPostOutlinesByMember(final PostOutlineSearchConditionByMember searchCond) {
-        final List<PostOutline> postOutlineList = postRepository.findPostOutlineByMember(searchCond);
+    public List<PostOutline> getPostOutlinesByWriter(final PostOutlineSearchConditionByWriter searchCond) {
+        final List<PostOutline> postOutlineList = postRepository.findPostOutlineByWriter(searchCond);
         return Collections.unmodifiableList(postOutlineList);
     }
 

@@ -6,8 +6,8 @@
     <resultMap id="postOutlineResultMap" type="PostOutline">
         <result property="id" column="id"/>
         <result property="title" column="title"/>
-        <result property="memberId" column="member_id"/>
-        <result property="memberName" column="name"/>
+        <result property="writerId" column="writer_id"/>
+        <result property="writerName" column="name"/>
         <result property="categoryId" column="category_id"/>
         <result property="viewCount" column="view_count"/>
         <result property="likeCount" column="like_count"/>
@@ -28,14 +28,14 @@
     </resultMap>
 
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
-        INSERT INTO post(title, content, member_id, category_id)
-        VALUES (#{request.title}, #{request.content}, #{request.memberId}, #{request.categoryId});
+        INSERT INTO post(title, content, writer_id, category_id)
+        VALUES (#{request.title}, #{request.content}, #{request.writerId}, #{request.categoryId});
     </insert>
 
     <select id="findPostOutlineByCategory" resultMap="postOutlineResultMap">
         SELECT p.id,
                p.title,
-               p.member_id,
+               p.writer_id,
                m.name,
                p.category_id,
                p.view_count,
@@ -44,7 +44,7 @@
                p.created_timestamp,
                false as is_hot
         FROM post p
-            LEFT OUTER JOIN member m ON p.member_id = m.id
+            LEFT OUTER JOIN member m ON p.writer_id = m.id
         WHERE p.category_id = #{cond.categoryId}
             <if test="cond.lastPostId != null">
                 AND p.id &lt; #{cond.lastPostId}
@@ -54,10 +54,10 @@
         LIMIT #{cond.searchSize}
     </select>
 
-    <select id="findPostOutlineByMember" resultMap="postOutlineResultMap">
+    <select id="findPostOutlineByWriter" resultMap="postOutlineResultMap">
         SELECT p.id,
                p.title,
-               p.member_id,
+               p.writer_id,
                m.name,
                p.category_id,
                p.view_count,
@@ -66,7 +66,7 @@
                p.created_timestamp,
                false as is_hot
         FROM post p
-            INNER JOIN member m ON p.member_id = m.id
+            INNER JOIN member m ON p.writer_id = m.id
         WHERE m.id = #{cond.memberId}
         <if test="cond.lastPostId != null">
             AND p.id &lt; #{cond.lastPostId}
@@ -127,20 +127,20 @@
             content     = #{request.content},
             category_id = #{request.newCategoryId}
         WHERE id = #{request.postId}
-          AND member_id = #{request.memberId}
+          AND writer_id = #{request.requesterId}
     </update>
 
     <delete id="deletePost">
         DELETE
         FROM post
         WHERE id = #{request.postId}
-          AND member_id = #{request.memberId}
+          AND writer_id = #{request.requesterId}
     </delete>
 
     <select id="isWrittenBy">
         SELECT EXISTS(SELECT *
                       FROM post
                       WHERE id = #{postId}
-                        AND member_id = #{memberId})
+                        AND writer_id = #{memberId})
     </select>
 </mapper>

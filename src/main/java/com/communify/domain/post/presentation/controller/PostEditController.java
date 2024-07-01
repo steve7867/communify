@@ -37,7 +37,7 @@ public class PostEditController {
     @LoginCheck
     public void edit(@PathVariable @NotNull @Positive final Long postId,
                      @ModelAttribute @Valid final PostEditForm form,
-                     @MemberId final Long memberId) {
+                     @MemberId final Long requesterId) {
 
         final PostEditRequest request = PostEditRequest.builder()
                 .postId(postId)
@@ -46,7 +46,7 @@ public class PostEditController {
                 .fileList(Collections.unmodifiableList(form.getFileList()))
                 .currentCategoryId(form.getCurrentCategoryId())
                 .newCategoryId(form.getNewCategoryId())
-                .memberId(memberId)
+                .requesterId(requesterId)
                 .build();
 
         postEditService.editPost(request);

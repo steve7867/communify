@@ -14,11 +14,11 @@
     <select id="findInfoForPostUploadNotificationList" resultType="InfoForPostUploadNotification">
         SELECT f.follower_id,
                ft.fcm_token,
-               #{request.memberName} AS writer_name
+               #{request.writerName} AS writer_name
         FROM follow f
                  INNER JOIN member m1 ON f.follower_id = m1.id
                  LEFT OUTER JOIN fcm_token ft ON m1.id = ft.member_id
-        WHERE f.followee_id = #{request.memberId}
+        WHERE f.followee_id = #{request.writerId}
     </select>
 
     <select id="findInfoForLikeNotificationList" resultMap="InfoForLikeNotificationResultMap">
@@ -48,12 +48,12 @@
     </update>
 
     <select id="findInfoForCommentNotification" resultType="InfoForCommentNotification">
-        SELECT p.member_id AS post_writer_id,
+        SELECT p.writer_id AS post_writer_id,
                ft.fcm_token,
                #{request.content} AS comment_content,
                #{request.writerName} AS comment_writer_name
         FROM post p
-                 LEFT OUTER JOIN member m ON p.member_id = m.id
+                 LEFT OUTER JOIN member m ON p.writer_id = m.id
                  LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id
         WHERE p.id = #{request.postId}
     </select>

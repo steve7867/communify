@@ -13,8 +13,8 @@ public class PostOutline {
 
     private final Long id;
     private final String title;
-    private final Long memberId;
-    private final String memberName;
+    private final Long writerId;
+    private final String writerName;
     private final Long categoryId;
     private final Integer viewCount;
     private final Integer likeCount;

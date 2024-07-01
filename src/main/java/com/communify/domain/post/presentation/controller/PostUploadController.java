@@ -34,16 +34,16 @@ public class PostUploadController {
     @ResponseStatus(CREATED)
     @LoginCheck
     public void upload(@ModelAttribute @Valid final PostUploadForm form,
-                       @MemberId final Long memberId,
-                       @MemberName final String memberName) {
+                       @MemberId final Long writerId,
+                       @MemberName final String writerName) {
 
         final PostUploadRequest request = PostUploadRequest.builder()
                 .title(form.getTitle())
                 .content(form.getContent())
                 .fileList(Collections.unmodifiableList(form.getFileList()))
                 .categoryId(form.getCategoryId())
-                .memberId(memberId)
-                .memberName(memberName)
+                .writerId(writerId)
+                .writerName(writerName)
                 .build();
 
         postUploadService.uploadPost(request);

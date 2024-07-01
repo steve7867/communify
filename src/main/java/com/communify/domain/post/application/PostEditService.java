@@ -37,7 +37,7 @@ public class PostEditService {
         final boolean isEdited = postRepository.editPost(request);
         if (!isEdited) {
             final Long postId = request.getPostId();
-            final Long memberId = request.getMemberId();
+            final Long memberId = request.getRequesterId();
             throw new InvalidPostAccessException(postId, memberId);
         }
 

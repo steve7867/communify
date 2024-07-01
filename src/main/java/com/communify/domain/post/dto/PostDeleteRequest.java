@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 public class PostDeleteRequest {
 
     private final Long postId;
-    private final Long memberId;
+    private final Long requesterId;
 }
