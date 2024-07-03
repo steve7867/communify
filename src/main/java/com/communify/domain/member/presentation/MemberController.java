@@ -3,16 +3,17 @@ package com.communify.domain.member.presentation;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.NotLoginCheck;
-import com.communify.domain.member.application.MemberFindService;
+import com.communify.domain.member.application.MemberSearchService;
 import com.communify.domain.member.application.MemberSignUpService;
 import com.communify.domain.member.application.MemberUpdateService;
 import com.communify.domain.member.application.MemberWithdrawService;
+import com.communify.domain.member.dto.MemberSearchRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
 import com.communify.domain.member.dto.PasswordUpdateRequest;
 import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
 import com.communify.domain.member.dto.incoming.MemberWithdrawForm;
 import com.communify.domain.member.dto.incoming.PasswordUpdateForm;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
+import com.communify.domain.member.dto.outgoing.MemberInfoForSearch;
 import com.communify.domain.verification.application.VerificationService;
 import com.communify.domain.verification.dto.VerificationConfirmRequest;
 import com.communify.domain.verification.error.exception.EmailNotVerifiedException;
@@ -43,7 +44,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class MemberController {
 
     private final MemberSignUpService memberSignUpService;
-    private final MemberFindService memberFindService;
+    private final MemberSearchService memberSearchService;
     private final MemberUpdateService memberUpdateService;
     private final MemberWithdrawService memberWithdrawService;
     private final VerificationService verificationService;
@@ -62,8 +63,12 @@ public class MemberController {
 
     @GetMapping("/{memberId}")
     @LoginCheck
-    public ResponseEntity<MemberInfo> getMemberInfo(@PathVariable @NotNull @Positive final Long memberId) {
-        final Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoById(memberId);
+    public ResponseEntity<MemberInfoForSearch> getMemberInfo(@PathVariable @NotNull @Positive final Long memberId,
+                                                             @MemberId final Long searcherId) {
+
+        final MemberSearchRequest request =  new MemberSearchRequest(memberId, searcherId);
+
+        final Optional<MemberInfoForSearch> memberInfoOpt = memberSearchService.getMemberInfoForSearchById(request);
 
         if (memberInfoOpt.isEmpty()) {
             return ResponseEntity.notFound().build();

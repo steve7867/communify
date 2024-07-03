@@ -3,19 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.follow.dao.FollowRepository">
-    <resultMap id="memberInfoResultMap" type="MemberInfo">
-        <result property="id" column="id"/>
-        <result property="email" column="email"/>
-        <result property="hashed" column="hashed"/>
-        <result property="name" column="name"/>
-        <result property="createdDateTime" column="created_timestamp"/>
-        <result property="modifiedDateTime" column="modified_timestamp"/>
-        <result property="followerCount" column="follower_count"/>
-        <result property="followeeCount" column="followee_count"/>
-        <result property="isFollowing" column="is_following"/>
-        <result property="fcmToken" column="fcm_token"/>
-    </resultMap>
-
     <insert id="insertFollow">
         INSERT INTO follow(follower_id, followee_id)
         VALUES (#{request.followerId}, #{request.followeeId})
@@ -28,7 +15,7 @@
           AND followee_id = #{request.followeeId}
     </delete>
 
-    <select id="findFollowers" resultMap="memberInfoResultMap">
+    <select id="findFollowers">
         SELECT m.id,
                m.name,
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
@@ -43,7 +30,7 @@
         LIMIT #{cond.limit}
     </select>
 
-    <select id="findFollowees" resultMap="memberInfoResultMap">
+    <select id="findFollowees">
         SELECT m.id,
                m.name,
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following

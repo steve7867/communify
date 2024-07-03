@@ -1,10 +1,10 @@
 package com.communify.domain.follow.dao;
 
 import com.communify.domain.follow.dto.FollowRequest;
-import com.communify.domain.follow.dto.FollowerSearchCondition;
 import com.communify.domain.follow.dto.FolloweeSearchCondition;
+import com.communify.domain.follow.dto.FollowerSearchCondition;
+import com.communify.domain.follow.dto.MemberInfoForFollowSearch;
 import com.communify.domain.follow.dto.UnfollowRequest;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,7 +17,7 @@ public interface FollowRepository {
 
     Integer deleteFollow(@Param("request") UnfollowRequest request);
 
-    List<MemberInfo> findFollowers(@Param("cond") FollowerSearchCondition cond);
+    List<MemberInfoForFollowSearch> findFollowers(@Param("cond") FollowerSearchCondition cond);
 
-    List<MemberInfo> findFollowees(@Param("cond") FolloweeSearchCondition cond);
+    List<MemberInfoForFollowSearch> findFollowees(@Param("cond") FolloweeSearchCondition cond);
 }

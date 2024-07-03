@@ -3,31 +3,38 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.member.dao.MemberRepository">
-    <resultMap id="memberInfoResultMap" type="MemberInfo">
-        <result property="id" column="id"/>
-        <result property="email" column="email"/>
-        <result property="hashed" column="hashed"/>
-        <result property="name" column="name"/>
-        <result property="followerCount" column="follower_count"/>
-        <result property="followeeCount" column="followee_count"/>
-        <result property="createdDateTime" column="created_timestamp"/>
-        <result property="modifiedDateTime" column="modified_timestamp"/>
-        <result property="fcmToken" column="fcm_token"/>
-    </resultMap>
-
     <insert id="insert" useGeneratedKeys="true" keyProperty="request.id">
         INSERT INTO member(email, hashed, name)
         VALUES (#{request.email}, #{request.hashed}, #{request.name})
     </insert>
 
-    <select id="findByEmail" resultMap="memberInfoResultMap">
-        SELECT id, email, hashed, name, follower_count, followee_count, created_timestamp
+    <select id="findMemberInfoForLoginByEmail">
+        SELECT id, hashed, name
         FROM member
         WHERE email = #{email}
     </select>
 
-    <select id="findById" resultMap="memberInfoResultMap">
-        SELECT id, email, hashed, name, follower_count, followee_count, created_timestamp
+    <select id="findMemberInfoForSearch">
+        SELECT id,
+               email,
+               name,
+               follower_count,
+               followee_count,
+               IF(f.follower_id IS NOT NULL, TRUE, FALSE) AS is_following,
+               created_timestamp
+        FROM member m
+            LEFT OUTER JOIN follow f ON m.id = f.followee_id AND f.follower_id = #{request.searcherId}
+        WHERE id = #{request.memberId}
+    </select>
+
+    <select id="findMemberInfoForUpdateById">
+        SELECT hashed
+        FROM member
+        WHERE id = #{memberId}
+    </select>
+
+    <select id="findMemberInfoForWithdrawById">
+        SELECT hashed
         FROM member
         WHERE id = #{memberId}
     </select>
@@ -42,12 +49,6 @@
         INSERT INTO fcm_token(member_id, fcm_token)
         VALUES (#{memberId}, #{fcmToken})
     </insert>
-
-    <select id="findFcmTokenById">
-        SELECT fcm_token
-        FROM fcm_token
-        WHERE member_id = #{memberId}
-    </select>
 
     <update id="updatePassword">
         UPDATE member
