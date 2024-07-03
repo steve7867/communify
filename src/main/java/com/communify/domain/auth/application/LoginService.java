@@ -2,8 +2,8 @@ package com.communify.domain.auth.application;
 
 import com.communify.domain.auth.dto.login.LoginRequest;
 import com.communify.domain.auth.error.exception.InvalidPasswordException;
-import com.communify.domain.member.application.MemberFindService;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
+import com.communify.domain.member.dao.MemberRepository;
+import com.communify.domain.member.dto.MemberInfoForLogin;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
 import com.communify.global.application.session.SessionService;
 import com.communify.global.util.PasswordEncryptor;
@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final MemberFindService memberFindService;
+    private final MemberRepository memberRepository;
     private final SessionService sessionService;
 
     public void login(final LoginRequest request) {
         final String email = request.getEmail();
         final String password = request.getPassword();
 
-        final MemberInfo memberInfo = memberFindService.findMemberInfoByEmail(email)
+        final MemberInfoForLogin memberInfo = memberRepository.findMemberInfoForLoginByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(email));
 
         final String hashed = memberInfo.getHashed();

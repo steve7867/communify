@@ -3,11 +3,11 @@ package com.communify.domain.follow.applilcation;
 import com.communify.domain.follow.dao.FollowRepository;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
-import com.communify.domain.follow.dto.FollowerSearchCondition;
 import com.communify.domain.follow.dto.FolloweeSearchCondition;
+import com.communify.domain.follow.dto.FollowerSearchCondition;
+import com.communify.domain.follow.dto.MemberInfoForFollowSearch;
 import com.communify.domain.follow.dto.UnfollowRequest;
 import com.communify.domain.member.dao.MemberRepository;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -49,14 +49,14 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowers(final FollowerSearchCondition searchCond) {
-        final List<MemberInfo> followerList = followRepository.findFollowers(searchCond);
+    public List<MemberInfoForFollowSearch> getFollowers(final FollowerSearchCondition searchCond) {
+        final List<MemberInfoForFollowSearch> followerList = followRepository.findFollowers(searchCond);
         return Collections.unmodifiableList(followerList);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowees(final FolloweeSearchCondition searchCond) {
-        final List<MemberInfo> followeeList = followRepository.findFollowees(searchCond);
+    public List<MemberInfoForFollowSearch> getFollowees(final FolloweeSearchCondition searchCond) {
+        final List<MemberInfoForFollowSearch> followeeList = followRepository.findFollowees(searchCond);
         return Collections.unmodifiableList(followeeList);
     }
 }
