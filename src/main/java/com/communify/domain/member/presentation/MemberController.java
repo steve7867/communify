@@ -22,7 +22,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -63,18 +60,11 @@ public class MemberController {
 
     @GetMapping("/{memberId}")
     @LoginCheck
-    public ResponseEntity<MemberInfoForSearch> getMemberInfo(@PathVariable @NotNull @Positive final Long memberId,
-                                                             @MemberId final Long searcherId) {
+    public MemberInfoForSearch getMemberInfo(@PathVariable @NotNull @Positive final Long memberId,
+                                             @MemberId final Long searcherId) {
 
-        final MemberSearchRequest request =  new MemberSearchRequest(memberId, searcherId);
-
-        final Optional<MemberInfoForSearch> memberInfoOpt = memberSearchService.getMemberInfoForSearchById(request);
-
-        if (memberInfoOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(memberInfoOpt.get());
+        final MemberSearchRequest request = new MemberSearchRequest(memberId, searcherId);
+        return memberSearchService.getMemberInfoForSearchById(request);
     }
 
     @DeleteMapping("/me")
@@ -84,7 +74,6 @@ public class MemberController {
                          @MemberId final Long memberId) {
 
         final MemberWithdrawRequest request = new MemberWithdrawRequest(form.getPassword(), memberId);
-
         memberWithdrawService.withdraw(request);
     }
 
