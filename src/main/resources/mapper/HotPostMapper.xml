@@ -16,7 +16,7 @@
         <result property="isHot" column="is_hot"/>
     </resultMap>
 
-    <select id="findHotPostOutlinesByCategory" resultMap="postOutlineResultMap">
+    <select id="findAllHotPostOutlineList" resultMap="postOutlineResultMap">
         SELECT p.id,
                p.title,
                p.writer_id,
@@ -26,41 +26,33 @@
                p.like_count,
                p.comment_count,
                p.created_timestamp,
-               true             as is_hot
+               TRUE AS is_hot
         FROM hot_post h
                  INNER JOIN post p ON h.post_id = p.id
                  LEFT OUTER JOIN member m on p.writer_id = m.id
-        WHERE p.category_id = #{categoryId}
-        GROUP BY p.id
-        LIMIT #{limit};
+        <if test="cond.lastPostId != null">
+        WHERE p.id &lt; #{cond.lastPostId}
+        </if>
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize}
     </select>
 
-    <select id="findMostViewedPostIdFrom">
-        SELECT id
-        FROM post
-        WHERE category_id = #{categoryId}
-          AND created_timestamp >= NOW() - INTERVAL #{hour} DAY
-        GROUP BY id
-        ORDER BY view_count DESC, created_timestamp DESC
-        LIMIT #{limit}
-    </select>
-
-    <delete id="deleteAllFromHotPost">
-        DELETE
-        FROM hot_post
-    </delete>
-
-    <insert id="insertAllHotPosts">
-        INSERT INTO hot_post
-        VALUES
-        <foreach collection="list" item="id" separator=",">
-            (#{id})
-        </foreach>
-    </insert>
-
-    <select id="isHot">
-        SELECT EXISTS(SELECT *
-                      FROM hot_post
-                      WHERE post_id = #{postId})
+    <select id="findHotPostOutlineByCategoryList" resultMap="postOutlineResultMap">
+        SELECT p.id,
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               TRUE AS is_hot
+        FROM hot_post h
+                 INNER JOIN post p ON h.post_id = p.id
+                 LEFT OUTER JOIN member m on p.writer_id = m.id
+        WHERE p.category_id = #{cond.categoryId}
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize};
     </select>
 </mapper>

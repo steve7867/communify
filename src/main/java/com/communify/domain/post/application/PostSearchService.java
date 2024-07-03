@@ -1,6 +1,7 @@
 package com.communify.domain.post.application;
 
 import com.communify.domain.hotpost.application.HotPostSearchService;
+import com.communify.domain.hotpost.dto.HotPostSearchConditionByCategory;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByCategory;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByWriter;
@@ -34,7 +35,7 @@ public class PostSearchService {
 
         if (searchCond.shouldSearchForHotPosts()) {
             final List<PostOutline> hotPostOutlineList = hotPostSearchService
-                    .getHotPostOutlineListByCategory(searchCond.getCategoryId());
+                    .getHotPostOutlineListByCategory(new HotPostSearchConditionByCategory(searchCond.getCategoryId()));
 
             postOutlineList.addAll(hotPostOutlineList);
         }

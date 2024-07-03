@@ -20,7 +20,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     @Cacheable(value = CacheNames.CATEGORIES, sync = true)
     public List<CategoryInfo> getAllCategories() {
-        final List<CategoryInfo> categoryInfoList = categoryRepository.findAll();
+        final List<CategoryInfo> categoryInfoList = categoryRepository.findAllCategoryList();
         return Collections.unmodifiableList(categoryInfoList);
     }
 }

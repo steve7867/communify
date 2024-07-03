@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface CategoryRepository {
 
-    List<CategoryInfo> findAll();
+    List<CategoryInfo> findAllCategoryList();
 }

@@ -25,7 +25,7 @@
 
 ## 🖼️ Application UI
 
-![Application UI](https://github.com/steve7867/Communify/assets/115217247/d07f70ec-d9d6-424b-a4c2-e642b4dcc2e5)
+![Application UI](https://github.com/steve7867/Communify/assets/115217247/76e5efdc-4106-4fc5-b820-c687abab72bd)
 
 ## 🛠️ 사용한 기술 및 개발 환경
 
@@ -33,7 +33,7 @@
 
 ## 📈 ERD
 
-![ERD](https://github.com/steve7867/Communify/assets/115217247/d06404d1-d99a-4c3f-b624-5e3f876f6a71)
+![ERD](https://github.com/steve7867/Communify/assets/115217247/7c4207f0-2e48-459f-8236-66eea6ae8846)
 
 ## 🏛️ 프로젝트 구조도
 
