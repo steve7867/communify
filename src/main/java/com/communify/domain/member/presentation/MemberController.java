@@ -81,7 +81,7 @@ public class MemberController {
         memberWithdrawService.withdraw(request);
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("/me/password")
     @ResponseStatus(OK)
     @LoginCheck
     public void updatePassword(@RequestBody @Valid final PasswordUpdateForm form,
@@ -96,7 +96,7 @@ public class MemberController {
         memberUpdateService.updatePassword(request);
     }
 
-    @PostMapping("/fcmToken")
+    @PostMapping("/me/fcmToken")
     @ResponseStatus(OK)
     @LoginCheck
     public void setFcmToken(@RequestBody @NotBlank final String fcmToken,
