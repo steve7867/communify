@@ -5,11 +5,9 @@ import com.communify.domain.auth.error.exception.InvalidPasswordException;
 import com.communify.domain.member.dao.MemberRepository;
 import com.communify.domain.member.dto.MemberInfoForWithdraw;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
-import com.communify.domain.member.dto.event.MemberWithdrawEvent;
 import com.communify.domain.member.error.exception.MemberNotFoundException;
 import com.communify.global.util.PasswordEncryptor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +16,6 @@ public class PasswordBasedMemberWithdrawService implements MemberWithdrawService
 
     private final MemberRepository memberRepository;
     private final LoginService loginService;
-    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public void withdraw(final MemberWithdrawRequest request) {
@@ -36,6 +33,8 @@ public class PasswordBasedMemberWithdrawService implements MemberWithdrawService
 
         loginService.logout();
 
-        eventPublisher.publishEvent(new MemberWithdrawEvent(request));
+        memberRepository.decrementFollowerCountOfFollowees(memberId, 1);
+        memberRepository.decrementFolloweeCountOfFollowers(memberId, 1);
+        memberRepository.deleteById(memberId);
     }
 }
