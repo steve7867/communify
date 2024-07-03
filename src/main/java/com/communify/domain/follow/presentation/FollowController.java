@@ -7,7 +7,7 @@ import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.dto.FolloweeSearchCondition;
 import com.communify.domain.follow.dto.FollowerSearchCondition;
-import com.communify.domain.follow.dto.MemberInfoForFollowSearch;
+import com.communify.domain.follow.dto.outgoing.MemberInfoForFollowSearch;
 import com.communify.domain.follow.dto.UnfollowRequest;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

@@ -1,4 +1,4 @@
-package com.communify.domain.follow.dto;
+package com.communify.domain.follow.dto.outgoing;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

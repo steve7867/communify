@@ -5,7 +5,7 @@ import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.dto.FolloweeSearchCondition;
 import com.communify.domain.follow.dto.FollowerSearchCondition;
-import com.communify.domain.follow.dto.MemberInfoForFollowSearch;
+import com.communify.domain.follow.dto.outgoing.MemberInfoForFollowSearch;
 import com.communify.domain.follow.dto.UnfollowRequest;
 import com.communify.domain.member.dao.MemberRepository;
 import lombok.RequiredArgsConstructor;
