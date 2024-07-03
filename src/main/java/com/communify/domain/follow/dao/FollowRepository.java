@@ -3,8 +3,8 @@ package com.communify.domain.follow.dao;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.follow.dto.FolloweeSearchCondition;
 import com.communify.domain.follow.dto.FollowerSearchCondition;
-import com.communify.domain.follow.dto.outgoing.MemberInfoForFollowSearch;
 import com.communify.domain.follow.dto.UnfollowRequest;
+import com.communify.domain.follow.dto.outgoing.MemberInfoForFollowSearch;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
