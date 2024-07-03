@@ -5,7 +5,7 @@ import com.communify.domain.member.dto.MemberInfoForUpdate;
 import com.communify.domain.member.dto.MemberInfoForWithdraw;
 import com.communify.domain.member.dto.MemberSearchRequest;
 import com.communify.domain.member.dto.PasswordUpdateRequest;
-import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
+import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.outgoing.MemberInfoForSearch;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

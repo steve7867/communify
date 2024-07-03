@@ -8,9 +8,10 @@ import com.communify.domain.member.application.MemberSignUpService;
 import com.communify.domain.member.application.MemberUpdateService;
 import com.communify.domain.member.application.MemberWithdrawService;
 import com.communify.domain.member.dto.MemberSearchRequest;
+import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
 import com.communify.domain.member.dto.PasswordUpdateRequest;
-import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
+import com.communify.domain.member.dto.incoming.MemberSignUpForm;
 import com.communify.domain.member.dto.incoming.MemberWithdrawForm;
 import com.communify.domain.member.dto.incoming.PasswordUpdateForm;
 import com.communify.domain.member.dto.outgoing.MemberInfoForSearch;
@@ -49,11 +50,14 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(CREATED)
     @NotLoginCheck
-    public void signUp(@RequestBody @Valid final MemberSignUpRequest request) {
+    public void signUp(@RequestBody @Valid final MemberSignUpForm form) {
         final boolean isEmailVerified = verificationService.isVerified(VerificationConfirmRequest.empty());
         if (!isEmailVerified) {
-            throw new EmailNotVerifiedException(request.getEmail());
+            throw new EmailNotVerifiedException(form.getEmail());
         }
+
+        final MemberSignUpRequest request =
+                new MemberSignUpRequest(form.getEmail(), form.getName(), form.getPassword());
 
         memberSignUpService.signUp(request);
     }
