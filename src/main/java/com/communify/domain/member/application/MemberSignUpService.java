@@ -1,6 +1,6 @@
 package com.communify.domain.member.application;
 
-import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
+import com.communify.domain.member.dto.MemberSignUpRequest;
 
 public interface MemberSignUpService {
 

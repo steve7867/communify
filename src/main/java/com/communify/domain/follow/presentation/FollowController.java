@@ -5,10 +5,10 @@ import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.follow.applilcation.FollowService;
 import com.communify.domain.follow.dto.FollowRequest;
-import com.communify.domain.follow.dto.FollowerSearchCondition;
 import com.communify.domain.follow.dto.FolloweeSearchCondition;
+import com.communify.domain.follow.dto.FollowerSearchCondition;
+import com.communify.domain.follow.dto.outgoing.MemberInfoForFollowSearch;
 import com.communify.domain.follow.dto.UnfollowRequest;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -56,9 +56,9 @@ public class FollowController {
     @GetMapping("/{followeeId}/followers")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowers(@PathVariable @NotNull @Positive final Long followeeId,
-                                         @RequestParam @Positive final Long lastFollowerId,
-                                         @MemberId final Long searcherId) {
+    public List<MemberInfoForFollowSearch> getFollowers(@PathVariable @NotNull @Positive final Long followeeId,
+                                                        @RequestParam @Positive final Long lastFollowerId,
+                                                        @MemberId final Long searcherId) {
 
         final FollowerSearchCondition searchCond = FollowerSearchCondition.builder()
                 .followeeId(followeeId)
@@ -72,9 +72,9 @@ public class FollowController {
     @GetMapping("/{followerId}/followees")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfo> getFollowees(@PathVariable @NotNull @Positive final Long followerId,
-                                         @RequestParam @Positive final Long lastFolloweeId,
-                                         @MemberId final Long searcherId) {
+    public List<MemberInfoForFollowSearch> getFollowees(@PathVariable @NotNull @Positive final Long followerId,
+                                                        @RequestParam @Positive final Long lastFolloweeId,
+                                                        @MemberId final Long searcherId) {
 
         final FolloweeSearchCondition searchCond = FolloweeSearchCondition.builder()
                 .followerId(followerId)

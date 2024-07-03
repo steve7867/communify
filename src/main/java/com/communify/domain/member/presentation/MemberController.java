@@ -3,16 +3,18 @@ package com.communify.domain.member.presentation;
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.NotLoginCheck;
-import com.communify.domain.member.application.MemberFindService;
+import com.communify.domain.member.application.MemberSearchService;
 import com.communify.domain.member.application.MemberSignUpService;
 import com.communify.domain.member.application.MemberUpdateService;
 import com.communify.domain.member.application.MemberWithdrawService;
+import com.communify.domain.member.dto.MemberSearchRequest;
+import com.communify.domain.member.dto.MemberSignUpRequest;
 import com.communify.domain.member.dto.MemberWithdrawRequest;
 import com.communify.domain.member.dto.PasswordUpdateRequest;
-import com.communify.domain.member.dto.incoming.MemberSignUpRequest;
+import com.communify.domain.member.dto.incoming.MemberSignUpForm;
 import com.communify.domain.member.dto.incoming.MemberWithdrawForm;
 import com.communify.domain.member.dto.incoming.PasswordUpdateForm;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
+import com.communify.domain.member.dto.outgoing.MemberInfoForSearch;
 import com.communify.domain.verification.application.VerificationService;
 import com.communify.domain.verification.dto.VerificationConfirmRequest;
 import com.communify.domain.verification.error.exception.EmailNotVerifiedException;
@@ -21,7 +23,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -43,7 +42,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class MemberController {
 
     private final MemberSignUpService memberSignUpService;
-    private final MemberFindService memberFindService;
+    private final MemberSearchService memberSearchService;
     private final MemberUpdateService memberUpdateService;
     private final MemberWithdrawService memberWithdrawService;
     private final VerificationService verificationService;
@@ -51,25 +50,25 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(CREATED)
     @NotLoginCheck
-    public void signUp(@RequestBody @Valid final MemberSignUpRequest request) {
+    public void signUp(@RequestBody @Valid final MemberSignUpForm form) {
         final boolean isEmailVerified = verificationService.isVerified(VerificationConfirmRequest.empty());
         if (!isEmailVerified) {
-            throw new EmailNotVerifiedException(request.getEmail());
+            throw new EmailNotVerifiedException(form.getEmail());
         }
+
+        final MemberSignUpRequest request =
+                new MemberSignUpRequest(form.getEmail(), form.getName(), form.getPassword());
 
         memberSignUpService.signUp(request);
     }
 
     @GetMapping("/{memberId}")
     @LoginCheck
-    public ResponseEntity<MemberInfo> getMemberInfo(@PathVariable @NotNull @Positive final Long memberId) {
-        final Optional<MemberInfo> memberInfoOpt = memberFindService.findMemberInfoById(memberId);
+    public MemberInfoForSearch getMemberInfo(@PathVariable @NotNull @Positive final Long memberId,
+                                             @MemberId final Long searcherId) {
 
-        if (memberInfoOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(memberInfoOpt.get());
+        final MemberSearchRequest request = new MemberSearchRequest(memberId, searcherId);
+        return memberSearchService.getMemberInfoForSearchById(request);
     }
 
     @DeleteMapping("/me")
@@ -79,11 +78,10 @@ public class MemberController {
                          @MemberId final Long memberId) {
 
         final MemberWithdrawRequest request = new MemberWithdrawRequest(form.getPassword(), memberId);
-
         memberWithdrawService.withdraw(request);
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("/me/password")
     @ResponseStatus(OK)
     @LoginCheck
     public void updatePassword(@RequestBody @Valid final PasswordUpdateForm form,
@@ -98,7 +96,7 @@ public class MemberController {
         memberUpdateService.updatePassword(request);
     }
 
-    @PostMapping("/fcmToken")
+    @PostMapping("/me/fcmToken")
     @ResponseStatus(OK)
     @LoginCheck
     public void setFcmToken(@RequestBody @NotBlank final String fcmToken,
