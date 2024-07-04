@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +18,26 @@ public class FCMPushService implements PushService {
 
     @Override
     public void push(final PushRequest request) {
-        final String token = request.getToken();
+        final Message message = buildMessage(request);
+        messaging.sendAsync(message);
+    }
+
+    private Message buildMessage(final PushRequest request) {
         final MessageDto messageDto = request.getMessageDto();
 
-        final Message message = Message.builder()
+        if (Objects.isNull(messageDto.getBody())) {
+            return Message.builder()
+                    .putData("title", messageDto.getTitle())
+                    .putData("created", LocalDateTime.now().toString())
+                    .setToken(request.getToken())
+                    .build();
+        }
+
+        return Message.builder()
                 .putData("title", messageDto.getTitle())
                 .putData("body", messageDto.getBody())
                 .putData("created", LocalDateTime.now().toString())
-                .setToken(token)
+                .setToken(request.getToken())
                 .build();
-
-        messaging.sendAsync(message);
     }
 }
