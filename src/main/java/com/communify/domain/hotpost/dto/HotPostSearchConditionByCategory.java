@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HotPostSearchConditionByCategory {
 
+    public static final Integer BASIC_SEARCH_SIZE = 3;
+
     private final Long categoryId;
-    private final Integer searchSize = 3;
+    private final Integer searchSize = BASIC_SEARCH_SIZE;
 }
