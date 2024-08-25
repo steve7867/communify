@@ -5,7 +5,6 @@ import com.communify.domain.like.dto.LikeEvent;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.global.application.cache.PostLikeCacheService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PostLikeScheduler {
@@ -28,8 +26,6 @@ public class PostLikeScheduler {
             lockAtLeastFor = "5s",
             lockAtMostFor = "7s")
     public void applyPostLikeCacheToDB() {
-        log.info("Applying PostLikeScheduler");
-
         final Map<Long, List<Long>> postLikeMap = postLikeCacheService.getPostLikeCacheAsMapAndClear();
 
         postLikeMap.keySet()
