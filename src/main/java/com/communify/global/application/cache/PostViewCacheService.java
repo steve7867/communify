@@ -23,6 +23,7 @@ public class PostViewCacheService {
 
     public void incrementView(final Long postId) {
         final String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
+
         redisTemplate.opsForValue().increment(key);
     }
 
@@ -35,29 +36,46 @@ public class PostViewCacheService {
         try (final Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
             final List<String> keyList = cursor.stream().toList();
 
-            final Map<Long, Integer> viewMap = new TreeMap<>();
+            final List<Object> result = executePipelined(keyList);
 
-            for (String cacheKey : keyList) {
-                final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
-
-                    @Override
-                    public List<Object> execute(final RedisOperations operations) throws DataAccessException {
-                        operations.multi();
-
-                        operations.opsForValue().get(cacheKey);
-                        operations.delete(cacheKey);
-
-                        return operations.exec();
-                    }
-                });
-
-                final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
-                final Integer viewCount = (Integer) result.get(0);
-
-                viewMap.put(postId, viewCount);
-            }
-
-            return viewMap;
+            return generatePostViewMap(keyList, result);
         }
+    }
+
+    private List<Object> executePipelined(final List<String> keyList) {
+        return redisTemplate.executePipelined(new SessionCallback<>() {
+
+            @Override
+            public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                for (String cacheKey : keyList) {
+                    operations.multi();
+
+                    operations.opsForValue().get(cacheKey);
+                    operations.delete(cacheKey);
+
+                    operations.exec();
+                }
+
+                return null;
+            }
+        });
+    }
+
+    private Map<Long, Integer> generatePostViewMap(final List<String> keyList,
+                                                   final List<Object> result) {
+
+        final Map<Long, Integer> postViewMap = new TreeMap<>();
+
+        for (int i = 0; i < keyList.size(); i++) {
+            final String cacheKey = keyList.get(i);
+            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+
+            final List<Object> txResultList = (List<Object>) result.get(i);
+            final Integer viewCount = (Integer) txResultList.get(0);
+
+            postViewMap.put(postId, viewCount);
+        }
+
+        return postViewMap;
     }
 }
