@@ -23,9 +23,7 @@ public class PostLikeScheduler {
     private final ApplicationEventPublisher eventPublisher;
 
     @Scheduled(cron = "*/5 * * * * *")
-    @SchedulerLock(name = "PostLikeScheduler_applyPostLikeCacheToDB",
-            lockAtLeastFor = "5s",
-            lockAtMostFor = "7s")
+    @SchedulerLock(name = "PostLikeScheduler_applyPostLikeCacheToDB", lockAtMostFor = "4s")
     public void applyPostLikeCacheToDB() {
         final Map<Long, List<Long>> postLikeMap = postLikeCacheService.getPostLikeCacheAsMapAndClear();
 
@@ -48,6 +46,4 @@ public class PostLikeScheduler {
                     eventPublisher.publishEvent(new LikeEvent(postId, likeRequestList));
                 });
     }
-
-
 }

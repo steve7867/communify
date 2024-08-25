@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-@EnableSchedulerLock(defaultLockAtLeastFor = "5s", defaultLockAtMostFor = "5s")
+@EnableSchedulerLock(defaultLockAtLeastFor = "3s", defaultLockAtMostFor = "10s")
 public class SchedulerConfig {
 
     @Bean

@@ -19,7 +19,7 @@ public class PostViewScheduler {
     private final PostRepository postRepository;
 
     @Scheduled(cron = "*/30 * * * * *")
-    @SchedulerLock(name = "PostViewScheduler_applyPostViewToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
+    @SchedulerLock(name = "PostViewScheduler_applyPostViewToDB")
     public void applyPostViewToDB() {
         final Map<Long, Integer> map = postViewCacheService.getPostViewCacheAsMapAndClear();
 
