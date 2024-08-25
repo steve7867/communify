@@ -19,6 +19,7 @@ public class PostLikeScheduler {
 
     private final PostLikeCacheService postLikeCacheService;
     private final LikeSaveService likeSaveService;
+
     private final ApplicationEventPublisher eventPublisher;
 
     @Scheduled(cron = "*/5 * * * * *")
@@ -38,6 +39,10 @@ public class PostLikeScheduler {
                             .stream()
                             .map(likerId -> LikeRequest.builder().postId(postId).likerId(likerId).build())
                             .toList();
+
+                    if (likeRequestList.isEmpty()) {
+                        return;
+                    }
 
                     likeSaveService.savePostLike(postId, likeRequestList);
                     eventPublisher.publishEvent(new LikeEvent(postId, likeRequestList));

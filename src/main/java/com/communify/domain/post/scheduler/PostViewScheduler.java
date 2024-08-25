@@ -21,12 +21,16 @@ public class PostViewScheduler {
     @Scheduled(cron = "*/30 * * * * *")
     @SchedulerLock(name = "PostViewScheduler_applyPostViewToDB", lockAtLeastFor = "5s", lockAtMostFor = "7s")
     public void applyPostViewToDB() {
-        final Map<Long, Integer> map = postViewCacheService.getAllOfPostViewCountAndClear();
+        final Map<Long, Integer> map = postViewCacheService.getPostViewCacheAsMapAndClear();
 
         final List<PostViewIncrementRequest> list = map.entrySet()
                 .stream()
                 .map(entry -> new PostViewIncrementRequest(entry.getKey(), entry.getValue()))
                 .toList();
+
+        if (list.isEmpty()) {
+            return;
+        }
 
         postRepository.incrementViewCount(list);
     }
