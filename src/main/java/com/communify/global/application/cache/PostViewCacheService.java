@@ -4,15 +4,15 @@ import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.TreeMap;
 
 @Service
@@ -26,31 +26,38 @@ public class PostViewCacheService {
         redisTemplate.opsForValue().increment(key);
     }
 
-    public Map<Long, Integer> getAllOfPostViewCountAndClear() {
-        final Set<String> keySet = redisTemplate.keys(CacheNames.POST_VIEW + "*");
+    public Map<Long, Integer> getPostViewCacheAsMapAndClear() {
+        final ScanOptions scanOptions = ScanOptions.scanOptions()
+                .match(CacheNames.POST_VIEW + "*")
+                .count(300)
+                .build();
 
-        final Map<Long, Integer> map = new TreeMap<>();
+        try (final Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
+            final List<String> keyList = cursor.stream().toList();
 
-        for (String cacheKey : Objects.requireNonNull(keySet)) {
-            final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
+            final Map<Long, Integer> viewMap = new TreeMap<>();
 
-                @Override
-                public List<Object> execute(final RedisOperations operations) throws DataAccessException {
-                    operations.multi();
+            for (String cacheKey : keyList) {
+                final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
 
-                    operations.opsForValue().get(cacheKey);
-                    operations.delete(cacheKey);
+                    @Override
+                    public List<Object> execute(final RedisOperations operations) throws DataAccessException {
+                        operations.multi();
 
-                    return operations.exec();
-                }
-            });
+                        operations.opsForValue().get(cacheKey);
+                        operations.delete(cacheKey);
 
-            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
-            final Integer viewCount = (Integer) result.get(0);
+                        return operations.exec();
+                    }
+                });
 
-            map.put(postId, viewCount);
+                final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+                final Integer viewCount = (Integer) result.get(0);
+
+                viewMap.put(postId, viewCount);
+            }
+
+            return viewMap;
         }
-
-        return map;
     }
 }

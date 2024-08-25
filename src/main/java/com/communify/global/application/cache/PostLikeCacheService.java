@@ -5,15 +5,16 @@ import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -29,34 +30,40 @@ public class PostLikeCacheService {
     }
 
     public Map<Long, List<Long>> getPostLikeCacheAsMapAndClear() {
-        final Set<String> keySet = redisTemplate.keys(CacheNames.POST_LIKE + "*");
+        final ScanOptions scanOptions = ScanOptions.scanOptions()
+                .match(CacheNames.POST_LIKE + "*")
+                .count(300)
+                .build();
 
-        final Map<Long, List<Long>> postLikeMap = new HashMap<>(keySet.size());
+        try (final Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
+            final List<String> keyList = cursor.stream().toList();
 
-        for (String cacheKey : Objects.requireNonNull(keySet)) {
-            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+            final Map<Long, List<Long>> postLikeMap = new HashMap<>(keyList.size());
 
-            final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
+            for (String cacheKey : keyList) {
+                final List<Object> result = redisTemplate.execute(new SessionCallback<>() {
 
-                @Override
-                public List<Object> execute(final RedisOperations operations) throws DataAccessException {
-                    operations.multi();
+                    @Override
+                    public List<Object> execute(final RedisOperations operations) throws DataAccessException {
+                        operations.multi();
 
-                    operations.opsForZSet().range(cacheKey, 0L, Long.MAX_VALUE);
-                    operations.delete(cacheKey);
+                        operations.opsForZSet().range(cacheKey, 0L, Long.MAX_VALUE);
+                        operations.delete(cacheKey);
 
-                    return operations.exec();
-                }
-            });
+                        return operations.exec();
+                    }
+                });
 
-            final List<Long> likerIdList = ((Set<Integer>) result.get(0))
-                    .stream()
-                    .map(Integer::longValue)
-                    .toList();
+                final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+                final List<Long> likerIdList = ((Set<Integer>) result.get(0))
+                        .stream()
+                        .map(Integer::longValue)
+                        .toList();
 
-            postLikeMap.put(postId, likerIdList);
+                postLikeMap.put(postId, likerIdList);
+            }
+
+            return postLikeMap;
         }
-
-        return postLikeMap;
     }
 }
