@@ -1,10 +1,11 @@
 package com.communify.domain.push.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 public class MessageDto {
 
     public static final String POST_UPLOAD_MESSAGE_TITLE_FORMAT = "%s님이 새로운 게시글을 작성했습니다.";

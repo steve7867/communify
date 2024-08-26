@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(force = true)
-public class InfoForLikeNotification implements InfoForNotification {
+public class InfoForLikeNotification extends InfoForNotification {
 
     private final Long postWriterId;
     private final String fcmToken;
@@ -24,7 +24,7 @@ public class InfoForLikeNotification implements InfoForNotification {
     }
 
     @Override
-    public PushRequest generatePushRequest() {
+    PushRequest makePushRequest() {
         final MessageDto messageDto = MessageDto.forPostLike(likerName);
         return new PushRequest(fcmToken, messageDto);
     }

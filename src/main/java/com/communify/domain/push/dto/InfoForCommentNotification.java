@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
-public class InfoForCommentNotification implements InfoForNotification {
+public class InfoForCommentNotification extends InfoForNotification {
 
     private final Long postWriterId;
     private final String fcmToken;
@@ -20,7 +20,7 @@ public class InfoForCommentNotification implements InfoForNotification {
     }
 
     @Override
-    public PushRequest generatePushRequest() {
+    PushRequest makePushRequest() {
         final MessageDto messageDto = MessageDto.forComment(commentWriterName, commentContent);
         return new PushRequest(fcmToken, messageDto);
     }

@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
-public class InfoForPostUploadNotification implements InfoForNotification {
+public class InfoForPostUploadNotification extends InfoForNotification {
 
     private final Long followerId;
     private final String fcmToken;
@@ -19,7 +19,7 @@ public class InfoForPostUploadNotification implements InfoForNotification {
     }
 
     @Override
-    public PushRequest generatePushRequest() {
+    PushRequest makePushRequest() {
         final MessageDto messageDto = MessageDto.forPostUpload(writerName);
         return new PushRequest(fcmToken, messageDto);
     }

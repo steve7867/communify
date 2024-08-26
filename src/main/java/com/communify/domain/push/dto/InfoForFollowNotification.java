@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class InfoForFollowNotification implements InfoForNotification {
+public class InfoForFollowNotification extends InfoForNotification {
 
     private final Long followeeId;
     private final String fcmToken;
@@ -17,7 +17,7 @@ public class InfoForFollowNotification implements InfoForNotification {
     }
 
     @Override
-    public PushRequest generatePushRequest() {
+    PushRequest makePushRequest() {
         final MessageDto messageDto = MessageDto.forFollow(followerName);
         return new PushRequest(fcmToken, messageDto);
     }
