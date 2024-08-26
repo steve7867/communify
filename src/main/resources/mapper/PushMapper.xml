@@ -8,7 +8,7 @@
         <result property="fcmToken" column="fcm_token"/>
         <result property="likerId" column="liker_id"/>
         <result property="likerName" column="liker_name"/>
-        <result property="state" column="state"/>
+        <result property="pushState" column="push_state"/>
     </resultMap>
 
     <select id="findInfoForPostUploadNotificationList" resultType="InfoForPostUploadNotification">
@@ -26,7 +26,7 @@
                ft.fcm_token,
                liker.id AS liker_id,
                liker.name AS liker_name,
-               l.state
+               l.push_state
         FROM likes l
             INNER JOIN post p ON l.post_id = p.id
             LEFT OUTER JOIN member writer ON p.member_id = writer.id
@@ -38,9 +38,9 @@
         </foreach>
     </select>
 
-    <update id="setNotified">
+    <update id="setPushStateAsSent">
         UPDATE likes
-        SET state = 'notified'
+        SET push_state = 'sent'
         WHERE
         <foreach collection="list" item="info" open="(" separator="OR" close=")">
             post_id = #{info.postId} AND liker_id = #{info.likerId}

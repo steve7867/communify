@@ -17,7 +17,7 @@ public interface PushRepository {
 
     List<InfoForNotification> findInfoForLikeNotificationList(List<LikeRequest> likeRequestList);
 
-    void setNotified(List<LikeRequest> likeRequestList);
+    void setPushStateAsSent(List<LikeRequest> likeRequestList);
 
     InfoForNotification findInfoForCommentNotification(@Param("request") CommentUploadRequest request);
 

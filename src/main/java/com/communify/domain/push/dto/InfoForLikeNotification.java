@@ -13,14 +13,14 @@ public class InfoForLikeNotification extends InfoForNotification {
     private final String fcmToken;
     private final Long likerId;
     private final String likerName;
-    private final String state;
+    private final String pushState;
 
     @Override
     public Boolean isPushable() {
         return isPostWriterExist()
                 && isFcmTokenExist()
                 && !isPostWriterEqualToLiker()
-                && isFresh();
+                && !isAlreadySent();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class InfoForLikeNotification extends InfoForNotification {
         return Objects.equals(postWriterId, likerId);
     }
 
-    private Boolean isFresh() {
-        return Objects.equals(state, "fresh");
+    private Boolean isAlreadySent() {
+        return Objects.equals(pushState, "sent");
     }
 }

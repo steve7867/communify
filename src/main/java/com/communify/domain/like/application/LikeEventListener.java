@@ -34,6 +34,6 @@ public class LikeEventListener {
                 .map(InfoForNotification::generatePushRequest)
                 .forEach(pushService::push);
 
-        pushRepository.setNotified(likeRequestList);
+        pushRepository.setPushStateAsSent(likeRequestList);
     }
 }
