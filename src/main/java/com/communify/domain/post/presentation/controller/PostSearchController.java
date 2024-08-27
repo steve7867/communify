@@ -34,7 +34,7 @@ public class PostSearchController {
     @ResponseStatus(OK)
     @LoginCheck
     public List<PostOutline> getPostOutlinesByCategory(@PathVariable @Positive @NotNull final Long categoryId,
-                                                       @RequestParam @Positive @NotNull final Long lastPostId) {
+                                                       @RequestParam(required = false) @Positive final Long lastPostId) {
 
         final PostOutlineSearchConditionByCategory searchCond =
                 new PostOutlineSearchConditionByCategory(categoryId, lastPostId);
@@ -46,7 +46,7 @@ public class PostSearchController {
     @ResponseStatus(OK)
     @LoginCheck
     public List<PostOutline> getPostOutlinesByMember(@PathVariable @Positive @NotNull final Long writerId,
-                                                     @RequestParam @Positive @NotNull final Long lastPostId) {
+                                                     @RequestParam(required = false) @Positive final Long lastPostId) {
 
         final PostOutlineSearchConditionByWriter searchCond =
                 new PostOutlineSearchConditionByWriter(writerId, lastPostId);

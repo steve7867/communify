@@ -57,7 +57,7 @@ public class FollowController {
     @ResponseStatus(OK)
     @LoginCheck
     public List<MemberInfoForFollowSearch> getFollowers(@PathVariable @NotNull @Positive final Long followeeId,
-                                                        @RequestParam @Positive final Long lastFollowerId,
+                                                        @RequestParam(required = false) @Positive final Long lastFollowerId,
                                                         @MemberId final Long searcherId) {
 
         final FollowerSearchCondition searchCond = FollowerSearchCondition.builder()
@@ -73,7 +73,7 @@ public class FollowController {
     @ResponseStatus(OK)
     @LoginCheck
     public List<MemberInfoForFollowSearch> getFollowees(@PathVariable @NotNull @Positive final Long followerId,
-                                                        @RequestParam @Positive final Long lastFolloweeId,
+                                                        @RequestParam(required = false) @Positive final Long lastFolloweeId,
                                                         @MemberId final Long searcherId) {
 
         final FolloweeSearchCondition searchCond = FolloweeSearchCondition.builder()
