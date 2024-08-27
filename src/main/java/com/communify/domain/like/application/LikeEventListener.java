@@ -4,12 +4,11 @@ import com.communify.domain.like.dto.LikeEvent;
 import com.communify.domain.like.dto.LikeRequest;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dao.PushRepository;
-import com.communify.domain.push.dto.InfoForNotification;
+import com.communify.domain.push.dto.PushInfoForLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,19 +20,17 @@ public class LikeEventListener {
     private final PushService pushService;
 
     @Async
-    @Transactional
     @EventListener
     public void pushLikeNotification(final LikeEvent event) {
         final List<LikeRequest> likeRequestList = event.getLikeRequestList();
 
-        final List<InfoForNotification> infoList = pushRepository
-                .findInfoForLikeNotificationList(likeRequestList);
+        final List<PushInfoForLike> infoList = pushRepository
+                .findPushInfoForLikeList(likeRequestList);
 
-        infoList.stream()
-                .filter(InfoForNotification::isPushable)
-                .map(InfoForNotification::generatePushRequest)
-                .forEach(pushService::push);
+        final List<PushInfoForLike> sentInfoList = infoList.stream()
+                .filter(pushService::push)
+                .toList();
 
-        pushRepository.setPushStateAsSent(likeRequestList);
+        pushRepository.setPushStateAsSent(sentInfoList);
     }
 }

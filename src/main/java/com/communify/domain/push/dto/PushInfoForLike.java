@@ -7,30 +7,22 @@ import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(force = true)
-public class InfoForLikeNotification extends InfoForNotification {
+public class PushInfoForLike extends PushInfo {
 
+    private final Long postId;
     private final Long postWriterId;
     private final String fcmToken;
+
     private final Long likerId;
     private final String likerName;
+
     private final String pushState;
 
     @Override
     public Boolean isPushable() {
-        return isPostWriterExist()
-                && isFcmTokenExist()
+        return isFcmTokenExist()
                 && !isPostWriterEqualToLiker()
                 && !isAlreadySent();
-    }
-
-    @Override
-    PushRequest makePushRequest() {
-        final MessageDto messageDto = MessageDto.forPostLike(likerName);
-        return new PushRequest(fcmToken, messageDto);
-    }
-
-    private Boolean isPostWriterExist() {
-        return Objects.nonNull(postWriterId);
     }
 
     private Boolean isFcmTokenExist() {
@@ -43,5 +35,10 @@ public class InfoForLikeNotification extends InfoForNotification {
 
     private Boolean isAlreadySent() {
         return Objects.equals(pushState, "sent");
+    }
+
+    @Override
+    MessageDto makeMessageDto() {
+        return MessageDto.forPostLike(fcmToken, likerName);
     }
 }

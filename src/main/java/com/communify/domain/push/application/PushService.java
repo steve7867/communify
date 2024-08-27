@@ -1,8 +1,8 @@
 package com.communify.domain.push.application;
 
-import com.communify.domain.push.dto.PushRequest;
+import com.communify.domain.push.dto.PushInfo;
 
 public interface PushService {
 
-    void push(PushRequest request);
+    boolean push(PushInfo info);
 }

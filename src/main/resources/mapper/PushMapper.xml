@@ -3,7 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.push.dao.PushRepository">
-    <resultMap id="InfoForLikeNotificationResultMap" type="InfoForLikeNotification">
+    <resultMap id="PushInfoForLikeResultMap" type="PushInfoForLike">
+        <result property="postId" column="post_id"/>
         <result property="postWriterId" column="post_writer_id"/>
         <result property="fcmToken" column="fcm_token"/>
         <result property="likerId" column="liker_id"/>
@@ -11,9 +12,8 @@
         <result property="pushState" column="push_state"/>
     </resultMap>
 
-    <select id="findInfoForPostUploadNotificationList" resultType="InfoForPostUploadNotification">
-        SELECT f.follower_id,
-               ft.fcm_token,
+    <select id="findPushInfoForPostUploadList" resultType="PushInfoForPostUpload">
+        SELECT ft.fcm_token,
                #{request.writerName} AS writer_name
         FROM follow f
                  INNER JOIN member m1 ON f.follower_id = m1.id
@@ -21,8 +21,9 @@
         WHERE f.followee_id = #{request.writerId}
     </select>
 
-    <select id="findInfoForLikeNotificationList" resultMap="InfoForLikeNotificationResultMap">
-        SELECT writer.id AS post_writer_id,
+    <select id="findPushInfoForLikeList" resultMap="PushInfoForLikeResultMap">
+        SELECT l.post_id
+               writer.id AS post_writer_id,
                ft.fcm_token,
                liker.id AS liker_id,
                liker.name AS liker_name,
@@ -47,9 +48,8 @@
         </foreach>
     </update>
 
-    <select id="findInfoForCommentNotification" resultType="InfoForCommentNotification">
-        SELECT p.writer_id AS post_writer_id,
-               ft.fcm_token,
+    <select id="findPushInfoForComment" resultType="PushInfoForComment">
+        SELECT ft.fcm_token,
                #{request.content} AS comment_content,
                #{request.writerName} AS comment_writer_name
         FROM post p
@@ -58,11 +58,10 @@
         WHERE p.id = #{request.postId}
     </select>
 
-    <select id="findInfoForFollowNotification" resultType="InfoForFollowNotification">
-        SELECT #{request.followeeId} AS followee_id,
-               fcm_token,
+    <select id="findPushInfoForFollow" resultType="PushInfoForFollow">
+        SELECT fcm_token,
                #{request.followerName} AS follower_name
         FROM fcm_token
-        WHERE member_id = #{request.followeeId}
+        WHERE member_id = #{request.followeeId} AND fcm_token IS NOT NULL
     </select>
 </mapper>

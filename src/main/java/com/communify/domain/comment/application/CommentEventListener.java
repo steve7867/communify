@@ -4,7 +4,7 @@ import com.communify.domain.comment.dto.CommentUploadRequest;
 import com.communify.domain.comment.dto.event.CommentUploadEvent;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dao.PushRepository;
-import com.communify.domain.push.dto.InfoForNotification;
+import com.communify.domain.push.dto.PushInfoForComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -22,15 +22,11 @@ public class CommentEventListener {
     @Transactional(readOnly = true)
     @EventListener
     public void pushCommentUploadNotification(final CommentUploadEvent event) {
-        final CommentUploadRequest commentUploadRequest = event.getCommentUploadRequest();
+        final CommentUploadRequest request = event.getCommentUploadRequest();
 
-        final InfoForNotification info = pushRepository
-                .findInfoForCommentNotification(commentUploadRequest);
+        final PushInfoForComment info = pushRepository
+                .findPushInfoForComment(request);
 
-        if (!info.isPushable()) {
-            return;
-        }
-
-        pushService.push(info.generatePushRequest());
+        pushService.push(info);
     }
 }

@@ -4,7 +4,7 @@ import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dao.PushRepository;
-import com.communify.domain.push.dto.InfoForNotification;
+import com.communify.domain.push.dto.PushInfoForFollow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -22,14 +22,10 @@ public class FollowEventListener {
     @Transactional(readOnly = true)
     @EventListener
     public void pushFollowNotification(final FollowEvent event) {
-        final FollowRequest followRequest = event.getFollowRequest();
+        final FollowRequest request = event.getFollowRequest();
 
-        final InfoForNotification info = pushRepository.findInfoForFollowNotification(followRequest);
+        final PushInfoForFollow info = pushRepository.findPushInfoForFollow(request);
 
-        if (!info.isPushable()) {
-            return;
-        }
-
-        pushService.push(info.generatePushRequest());
+        pushService.push(info);
     }
 }

@@ -7,10 +7,10 @@ import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
-public class InfoForPostUploadNotification extends InfoForNotification {
+public class PushInfoForPostUpload extends PushInfo {
 
-    private final Long followerId;
     private final String fcmToken;
+
     private final String writerName;
 
     @Override
@@ -18,13 +18,12 @@ public class InfoForPostUploadNotification extends InfoForNotification {
         return isFcmTokenExisting();
     }
 
-    @Override
-    PushRequest makePushRequest() {
-        final MessageDto messageDto = MessageDto.forPostUpload(writerName);
-        return new PushRequest(fcmToken, messageDto);
-    }
-
     private Boolean isFcmTokenExisting() {
         return Objects.nonNull(fcmToken);
+    }
+
+    @Override
+    MessageDto makeMessageDto() {
+        return MessageDto.forPostUpload(fcmToken, writerName);
     }
 }

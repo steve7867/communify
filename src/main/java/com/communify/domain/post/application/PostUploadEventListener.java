@@ -4,7 +4,7 @@ import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.dto.event.PostUploadEvent;
 import com.communify.domain.push.application.PushService;
 import com.communify.domain.push.dao.PushRepository;
-import com.communify.domain.push.dto.InfoForNotification;
+import com.communify.domain.push.dto.PushInfoForPostUpload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -24,14 +24,11 @@ public class PostUploadEventListener {
     @Transactional(readOnly = true)
     @EventListener
     public void pushPostUploadNotification(final PostUploadEvent event) {
-        final PostUploadRequest postUploadRequest = event.getPostUploadRequest();
+        final PostUploadRequest request = event.getPostUploadRequest();
 
-        final List<InfoForNotification> infoList = pushRepository
-                .findInfoForPostUploadNotificationList(postUploadRequest);
+        final List<PushInfoForPostUpload> infoList = pushRepository
+                .findPushInfoForPostUploadList(request);
 
-        infoList.stream()
-                .filter(InfoForNotification::isPushable)
-                .map(InfoForNotification::generatePushRequest)
-                .forEach(pushService::push);
+        infoList.forEach(pushService::push);
     }
 }
