@@ -1,5 +1,6 @@
 package com.communify.global.resolver;
 
+import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.error.exception.NotLoggedInException;
 import com.communify.global.application.session.SessionService;
@@ -20,7 +21,8 @@ public class MemberNameArgumentResolver implements HandlerMethodArgumentResolver
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(MemberName.class);
+        return parameter.hasMethodAnnotation(LoginCheck.class)
+                && parameter.hasParameterAnnotation(MemberName.class);
     }
 
     @Override
