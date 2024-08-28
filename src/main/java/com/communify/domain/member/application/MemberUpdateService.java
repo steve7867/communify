@@ -29,7 +29,7 @@ public class MemberUpdateService {
         memberRepository.updatePassword(request);
     }
 
-    public void setFcmToken(final String fcmToken, final Long memberId) {
-        memberRepository.setFcmToken(fcmToken, memberId);
+    public void setToken(final Long memberId, final String token) {
+        memberRepository.setToken(memberId, token);
     }
 }

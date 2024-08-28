@@ -9,21 +9,21 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PushInfoForPostUpload extends PushInfo {
 
-    private final String fcmToken;
+    private final String token;
 
     private final String writerName;
 
     @Override
     public Boolean isPushable() {
-        return isFcmTokenExisting();
+        return isTokenExisting();
     }
 
-    private Boolean isFcmTokenExisting() {
-        return Objects.nonNull(fcmToken);
+    private Boolean isTokenExisting() {
+        return Objects.nonNull(token);
     }
 
     @Override
     MessageDto makeMessageDto() {
-        return MessageDto.forPostUpload(fcmToken, writerName);
+        return MessageDto.forPostUpload(token, writerName);
     }
 }

@@ -7,21 +7,21 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PushInfoForFollow extends PushInfo {
 
-    private final String fcmToken;
+    private final String token;
 
     private final String followerName;
 
     @Override
     public Boolean isPushable() {
-        return isFcmTokenExisting();
+        return isTokenExisting();
     }
 
-    private Boolean isFcmTokenExisting() {
-        return Objects.nonNull(fcmToken);
+    private Boolean isTokenExisting() {
+        return Objects.nonNull(token);
     }
 
     @Override
     MessageDto makeMessageDto() {
-        return MessageDto.forFollow(fcmToken, followerName);
+        return MessageDto.forFollow(token, followerName);
     }
 }

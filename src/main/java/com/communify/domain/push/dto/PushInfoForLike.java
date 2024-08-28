@@ -11,7 +11,7 @@ public class PushInfoForLike extends PushInfo {
 
     private final Long postId;
     private final Long postWriterId;
-    private final String fcmToken;
+    private final String token;
 
     private final Long likerId;
     private final String likerName;
@@ -20,13 +20,13 @@ public class PushInfoForLike extends PushInfo {
 
     @Override
     public Boolean isPushable() {
-        return isFcmTokenExist()
+        return isTokenExist()
                 && !isPostWriterEqualToLiker()
                 && !isAlreadySent();
     }
 
-    private Boolean isFcmTokenExist() {
-        return Objects.nonNull(fcmToken);
+    private Boolean isTokenExist() {
+        return Objects.nonNull(token);
     }
 
     private Boolean isPostWriterEqualToLiker() {
@@ -39,6 +39,6 @@ public class PushInfoForLike extends PushInfo {
 
     @Override
     MessageDto makeMessageDto() {
-        return MessageDto.forPostLike(fcmToken, likerName);
+        return MessageDto.forPostLike(token, likerName);
     }
 }

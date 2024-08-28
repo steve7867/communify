@@ -96,12 +96,12 @@ public class MemberController {
         memberUpdateService.updatePassword(request);
     }
 
-    @PostMapping("/me/fcmToken")
+    @PostMapping("/me/token")
     @ResponseStatus(OK)
     @LoginCheck
-    public void setFcmToken(@RequestBody @NotBlank final String fcmToken,
-                            @MemberId final Long memberId) {
+    public void setToken(@RequestBody @NotBlank final String token,
+                         @MemberId final Long memberId) {
 
-        memberUpdateService.setFcmToken(fcmToken, memberId);
+        memberUpdateService.setToken(memberId, token);
     }
 }

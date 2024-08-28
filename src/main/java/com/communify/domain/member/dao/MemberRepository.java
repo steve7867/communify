@@ -27,7 +27,7 @@ public interface MemberRepository {
 
     void deleteById(Long memberId);
 
-    void setFcmToken(String fcmToken, Long memberId);
+    void setToken(Long memberId, String token);
 
     void updatePassword(@Param("request") PasswordUpdateRequest request);
 

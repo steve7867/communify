@@ -45,9 +45,9 @@
         WHERE id = #{memberId}
     </delete>
 
-    <insert id="setFcmToken">
-        INSERT INTO fcm_token(member_id, fcm_token)
-        VALUES (#{memberId}, #{fcmToken})
+    <insert id="setToken">
+        INSERT INTO token(member_id, token)
+        VALUES (#{memberId}, #{token})
     </insert>
 
     <update id="updatePassword">

@@ -9,22 +9,22 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PushInfoForComment extends PushInfo {
 
-    private final String fcmToken;
+    private final String token;
 
     private final String commentContent;
     private final String commentWriterName;
 
     @Override
     public Boolean isPushable() {
-        return isFcmTokenExisting();
+        return isTokenExisting();
     }
 
-    private Boolean isFcmTokenExisting() {
-        return Objects.nonNull(fcmToken);
+    private Boolean isTokenExisting() {
+        return Objects.nonNull(token);
     }
 
     @Override
     MessageDto makeMessageDto() {
-        return MessageDto.forComment(fcmToken, commentWriterName, commentContent);
+        return MessageDto.forComment(token, commentWriterName, commentContent);
     }
 }
