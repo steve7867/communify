@@ -10,7 +10,5 @@ public interface StorageService {
 
     List<FileInfo> saveInFileSystem(FileUploadRequest request);
 
-    Resource toResource(FileInfo fileInfo);
-
     void deleteAllFiles(List<FileInfo> fileInfoList);
 }

@@ -14,16 +14,9 @@
     <insert id="insertFileInfoList" keyProperty="storedFilename">
         INSERT INTO file(stored_filename, original_filename, extension, post_id, sequence) VALUES
         <foreach collection="list" item="fileInfo" index="idx" separator=",">
-            (#{fileInfo.storedFilename}, #{fileInfo.originalFilename}, #{fileInfo.extension}, #{fileInfo.postId},
-            #{fileInfo.sequence})
+            (#{fileInfo.storedFilename}, #{fileInfo.originalFilename}, #{fileInfo.extension}, #{fileInfo.postId}, #{fileInfo.sequence})
         </foreach>
     </insert>
-
-    <select id="findByStoredFilename" resultMap="fileInfoResultMap">
-        SELECT *
-        FROM file
-        WHERE stored_filename = #{storedFilename}
-    </select>
 
     <select id="findAllByPostId" resultMap="fileInfoResultMap">
         SELECT *

@@ -7,8 +7,6 @@ import com.communify.global.error.exception.InternalServerException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +18,6 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 public class LocalStorageService implements StorageService {
-
-    private final ResourceLoader resourceLoader;
 
     @Value("${local.file.dir}")
     private String localDir;
@@ -51,13 +47,6 @@ public class LocalStorageService implements StorageService {
 
                     return fileInfo;
                 }).toList();
-    }
-
-    @Override
-    public Resource toResource(final FileInfo fileInfo) {
-        final String filePath = resolveFilePath(fileInfo);
-        final String fileUri = "file:///" + filePath;
-        return resourceLoader.getResource(fileUri);
     }
 
     @Override
