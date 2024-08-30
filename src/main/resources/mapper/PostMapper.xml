@@ -76,6 +76,46 @@
         LIMIT #{cond.searchSize}
     </select>
 
+    <select id="findAllHotPostOutlineList" resultMap="postOutlineResultMap">
+        SELECT p.id,
+        p.title,
+        p.writer_id,
+        m.name,
+        p.category_id,
+        p.view_count,
+        p.like_count,
+        p.comment_count,
+        p.created_timestamp,
+        TRUE AS is_hot
+        FROM hot_post h
+        INNER JOIN post p ON h.post_id = p.id
+        LEFT OUTER JOIN member m on p.writer_id = m.id
+        <if test="cond.lastPostId != null">
+            WHERE p.id &lt; #{cond.lastPostId}
+        </if>
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize}
+    </select>
+
+    <select id="findHotPostOutlineByCategoryList" resultMap="postOutlineResultMap">
+        SELECT p.id,
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               TRUE AS is_hot
+        FROM hot_post h
+                 INNER JOIN post p ON h.post_id = p.id
+                 LEFT OUTER JOIN member m on p.writer_id = m.id
+        WHERE p.category_id = #{cond.categoryId}
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize};
+    </select>
+
     <select id="findPostDetail" resultMap="postDetailResultMap">
         SELECT p.content,
                f.stored_filename,

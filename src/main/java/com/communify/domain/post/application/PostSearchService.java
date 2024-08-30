@@ -1,7 +1,6 @@
 package com.communify.domain.post.application;
 
-import com.communify.domain.hotpost.application.HotPostSearchService;
-import com.communify.domain.hotpost.dto.HotPostSearchConditionByCategory;
+import com.communify.domain.post.dto.HotPostSearchConditionByCategory;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByCategory;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByWriter;

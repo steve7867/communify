@@ -1,8 +1,8 @@
-package com.communify.domain.hotpost.application;
+package com.communify.domain.post.application;
 
-import com.communify.domain.hotpost.dao.HotPostRepository;
-import com.communify.domain.hotpost.dto.AllHotPostSearchCondition;
-import com.communify.domain.hotpost.dto.HotPostSearchConditionByCategory;
+import com.communify.domain.post.dao.PostRepository;
+import com.communify.domain.post.dto.AllHotPostSearchCondition;
+import com.communify.domain.post.dto.HotPostSearchConditionByCategory;
 import com.communify.domain.post.dto.outgoing.PostOutline;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +18,17 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class HotPostSearchService {
 
-    private final HotPostRepository hotPostRepository;
+    private final PostRepository postRepository;
 
     @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, sync = true)
     public List<PostOutline> getAllHotPostOutlineList(final AllHotPostSearchCondition searchCond) {
-        final List<PostOutline> allHotPostOutlineList = hotPostRepository.findAllHotPostOutlineList(searchCond);
+        final List<PostOutline> allHotPostOutlineList = postRepository.findAllHotPostOutlineList(searchCond);
         return Collections.unmodifiableList(allHotPostOutlineList);
     }
 
     @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, key = "#searchCond.categoryId", sync = true)
     public List<PostOutline> getHotPostOutlineListByCategory(final HotPostSearchConditionByCategory searchCond) {
-        final List<PostOutline> hotPostOutlineList = hotPostRepository.findHotPostOutlineByCategoryList(searchCond);
+        final List<PostOutline> hotPostOutlineList = postRepository.findHotPostOutlineByCategoryList(searchCond);
         return Collections.unmodifiableList(hotPostOutlineList);
     }
 }

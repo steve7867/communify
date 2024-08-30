@@ -2,6 +2,8 @@ package com.communify.domain.post.presentation.controller;
 
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.post.dto.AllHotPostSearchCondition;
+import com.communify.domain.post.application.HotPostSearchService;
 import com.communify.domain.post.application.PostEditService;
 import com.communify.domain.post.application.PostSearchService;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByCategory;
@@ -29,6 +31,7 @@ public class PostSearchController {
 
     private final PostSearchService postSearchService;
     private final PostEditService postEditService;
+    private final HotPostSearchService hotPostSearchService;
 
     @GetMapping("/categories/{categoryId}/posts")
     @ResponseStatus(OK)
@@ -67,5 +70,13 @@ public class PostSearchController {
         postEditService.incrementView(postId);
 
         return ResponseEntity.ok(postDetailOpt.get());
+    }
+
+    @GetMapping("/posts/hot")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public List<PostOutline> getAllHotPostOutlineList(@RequestParam @Positive final Long lastPostId) {
+        final AllHotPostSearchCondition searchCond = new AllHotPostSearchCondition(lastPostId);
+        return hotPostSearchService.getAllHotPostOutlineList(searchCond);
     }
 }
