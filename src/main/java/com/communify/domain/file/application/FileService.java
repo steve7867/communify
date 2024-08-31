@@ -1,12 +1,10 @@
 package com.communify.domain.file.application;
 
 import com.communify.domain.file.dao.FileRepository;
-import com.communify.domain.file.dto.FileInfo;
+import com.communify.domain.file.dto.FileUpdateRequest;
 import com.communify.domain.file.dto.FileUploadRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,20 +13,22 @@ public class FileService {
     private final FileRepository fileRepository;
     private final StorageService storageService;
 
-    public void uploadFile(final FileUploadRequest request) {
-        if (request.isMultipartFileListNull() || request.isMultipartFileListEmpty()) {
+    public void uploadFiles(final FileUploadRequest request) {
+        if (request.isUploadFileListNull() || request.isUploadFileListEmpty()) {
             return;
         }
 
-        final List<FileInfo> fileInfoList = storageService.saveInFileSystem(request);
+        storageService.uploadFiles(request);
+        fileRepository.insertFiles(request);
+    }
 
-        fileRepository.insertFileInfoList(fileInfoList);
+    public void updateFiles(final FileUpdateRequest request) {
+        deleteFiles(request.getPostId());
+        uploadFiles(new FileUploadRequest(request.getPostId(), request.getMultipartFileList()));
     }
 
     public void deleteFiles(final Long postId) {
-        final List<FileInfo> fileInfoList = fileRepository.findAllByPostId(postId);
-        storageService.deleteAllFiles(fileInfoList);
-
+        storageService.deleteFiles(postId);
         fileRepository.deleteAll(postId);
     }
 }

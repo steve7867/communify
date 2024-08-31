@@ -43,7 +43,7 @@ public class PostEditController {
                 .postId(postId)
                 .title(form.getTitle())
                 .content(form.getContent())
-                .fileList(Collections.unmodifiableList(form.getFileList()))
+                .multipartFileList(Collections.unmodifiableList(form.getFileList()))
                 .currentCategoryId(form.getCurrentCategoryId())
                 .newCategoryId(form.getNewCategoryId())
                 .requesterId(requesterId)

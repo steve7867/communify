@@ -22,7 +22,6 @@
             <id property="storedFilename" column="stored_filename"/>
             <result property="originalFilename" column="original_filename"/>
             <result property="extension" column="extension"/>
-            <result property="postId" column="post_id"/>
             <result property="sequence" column="sequence"/>
         </collection>
     </resultMap>
@@ -46,9 +45,9 @@
         FROM post p
             LEFT OUTER JOIN member m ON p.writer_id = m.id
         WHERE p.category_id = #{cond.categoryId}
-            <if test="cond.lastPostId != null">
-                AND p.id &lt; #{cond.lastPostId}
-            </if>
+        <if test="cond.lastPostId != null">
+            AND p.id &lt; #{cond.lastPostId}
+        </if>
         GROUP BY p.id
         ORDER BY p.id DESC
         LIMIT #{cond.searchSize}
@@ -78,17 +77,17 @@
 
     <select id="findAllHotPostOutlineList" resultMap="postOutlineResultMap">
         SELECT p.id,
-        p.title,
-        p.writer_id,
-        m.name,
-        p.category_id,
-        p.view_count,
-        p.like_count,
-        p.comment_count,
-        p.created_timestamp,
-        TRUE AS is_hot
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               TRUE AS is_hot
         FROM hot_post h
-        INNER JOIN post p ON h.post_id = p.id
+            INNER JOIN post p ON h.post_id = p.id
         LEFT OUTER JOIN member m on p.writer_id = m.id
         <if test="cond.lastPostId != null">
             WHERE p.id &lt; #{cond.lastPostId}
@@ -121,7 +120,6 @@
                f.stored_filename,
                f.original_filename,
                f.extension,
-               f.post_id,
                f.sequence
         FROM post p
                  LEFT OUTER JOIN file f ON p.id = f.post_id

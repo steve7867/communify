@@ -1,11 +1,10 @@
 package com.communify.domain.post.presentation.controller;
 
 import com.communify.domain.auth.annotation.LoginCheck;
-import com.communify.domain.auth.annotation.MemberId;
-import com.communify.domain.post.dto.AllHotPostSearchCondition;
 import com.communify.domain.post.application.HotPostSearchService;
 import com.communify.domain.post.application.PostEditService;
 import com.communify.domain.post.application.PostSearchService;
+import com.communify.domain.post.dto.AllHotPostSearchCondition;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByCategory;
 import com.communify.domain.post.dto.PostOutlineSearchConditionByWriter;
 import com.communify.domain.post.dto.outgoing.PostDetail;
@@ -59,10 +58,8 @@ public class PostSearchController {
 
     @GetMapping("/posts/{postId}")
     @LoginCheck
-    public ResponseEntity<PostDetail> getPostDetail(@PathVariable @NotNull @Positive final Long postId,
-                                                    @MemberId final Long memberId) {
-
-        final Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId, memberId);
+    public ResponseEntity<PostDetail> getPostDetail(@PathVariable @NotNull @Positive final Long postId) {
+        final Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId);
         if (postDetailOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

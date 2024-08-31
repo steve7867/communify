@@ -1,7 +1,7 @@
 package com.communify.domain.file.application;
 
-import com.communify.domain.file.dto.FileInfo;
 import com.communify.domain.file.dto.FileUploadRequest;
+import com.communify.domain.file.dto.UploadFile;
 import com.communify.domain.file.error.exception.FileUploadFailException;
 import com.communify.global.error.exception.InternalServerException;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -23,54 +22,50 @@ public class LocalStorageService implements StorageService {
     private String localDir;
 
     @Override
-    public List<FileInfo> saveInFileSystem(final FileUploadRequest request) {
+    public void uploadFiles(final FileUploadRequest request) {
+        makeLocalDirectoryIfNotExisting();
+
+        final Long postId = request.getPostId();
+        final List<UploadFile> uploadFileList = request.getUploadFileList();
+
+        uploadFileList.forEach(uploadFile -> {
+            final String storedFilename = uploadFile.getStoredFilename();
+            final String extension = uploadFile.getExtension();
+            final MultipartFile multipartFile = uploadFile.getMultipartFile();
+
+            final String filePath = resolveFilePath(postId, storedFilename, extension);
+            try {
+                multipartFile.transferTo(new File(filePath));
+            } catch (IOException e) {
+                throw new FileUploadFailException(uploadFile, e);
+            }
+        });
+    }
+
+    private void makeLocalDirectoryIfNotExisting() {
         final File dir = new File(localDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-
-        final Long postId = request.getPostId();
-        final List<MultipartFile> multipartFileList = request.getMultipartFileList();
-
-        return IntStream.range(0, multipartFileList.size())
-                .boxed()
-                .map(i -> {
-                    final MultipartFile multipartFile = multipartFileList.get(i);
-                    final FileInfo fileInfo = new FileInfo(multipartFile.getOriginalFilename(), postId, i);
-
-                    try {
-                        final String filePath = resolveFilePath(fileInfo);
-                        multipartFile.transferTo(new File(filePath));
-                    } catch (IOException e) {
-                        throw new FileUploadFailException(multipartFile, fileInfo, e);
-                    }
-
-                    return fileInfo;
-                }).toList();
     }
 
     @Override
-    public void deleteAllFiles(final List<FileInfo> fileInfoList) {
-        fileInfoList.forEach(fileInfo -> {
-            final String filePath = resolveFilePath(fileInfo);
-            final File file = new File(filePath);
+    public void deleteFiles(final Long postId) {
+        final String directoryPath = resolveDirectoryPath(postId);
+        final File dir = new File(directoryPath);
 
-            deleteFile(file);
-        });
-    }
-
-    private void deleteFile(final File file) {
         try {
-            FileUtils.forceDelete(file);
+            FileUtils.forceDelete(dir);
         } catch (IOException e) {
             throw new InternalServerException("파일 삭제에 실패했습니다.", e);
         }
     }
 
-    private String resolveFilePath(final FileInfo fileInfo) {
-        final String storedFilename = fileInfo.getStoredFilename();
-        final String extension = fileInfo.getExtension();
+    private String resolveDirectoryPath(final Long postId) {
+        return localDir + File.separator + postId;
+    }
 
-        return localDir + File.separator + storedFilename + "." + extension;
+    private String resolveFilePath(final Long postId, final String storedFilename, final String extension) {
+        return resolveDirectoryPath(postId) + File.separator + storedFilename + "." + extension;
     }
 }

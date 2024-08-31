@@ -1,16 +1,12 @@
 package com.communify.domain.file.dao;
 
-import com.communify.domain.file.dto.FileInfo;
+import com.communify.domain.file.dto.FileUploadRequest;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 @Mapper
 public interface FileRepository {
 
-    void insertFileInfoList(List<FileInfo> fileInfoList);
-
-    List<FileInfo> findAllByPostId(Long postId);
+    void insertFiles(FileUploadRequest request);
 
     void deleteAll(Long postId);
 }

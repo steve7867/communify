@@ -29,7 +29,7 @@ public interface PostRepository {
 
     List<PostOutline> findHotPostOutlineByCategoryList(@Param("cond") HotPostSearchConditionByCategory searchCond);
 
-    Optional<PostDetail> findPostDetail(Long postId, Long memberId);
+    Optional<PostDetail> findPostDetail(Long postId);
 
     void incrementViewCount(List<PostViewIncrementRequest> list);
 

@@ -1,7 +1,7 @@
 package com.communify.domain.post.application;
 
 import com.communify.domain.file.application.FileService;
-import com.communify.domain.file.dto.FileUploadRequest;
+import com.communify.domain.file.dto.FileUpdateRequest;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
@@ -29,14 +29,9 @@ public class PostEditService {
     public void editPost(final PostEditRequest request) {
         final boolean isEdited = postRepository.editPost(request);
         if (!isEdited) {
-            final Long postId = request.getPostId();
-            final Long memberId = request.getRequesterId();
-            throw new InvalidPostAccessException(postId, memberId);
+            throw new InvalidPostAccessException(request.getPostId(), request.getRequesterId());
         }
 
-        final Long postId = request.getPostId();
-        fileService.deleteFiles(postId);
-
-        fileService.uploadFile(new FileUploadRequest(postId, request.getFileList()));
+        fileService.updateFiles(new FileUpdateRequest(request.getPostId(), request.getMultipartFileList()));
     }
 }

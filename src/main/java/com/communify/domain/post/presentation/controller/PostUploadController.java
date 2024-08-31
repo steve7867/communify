@@ -40,7 +40,7 @@ public class PostUploadController {
         final PostUploadRequest request = PostUploadRequest.builder()
                 .title(form.getTitle())
                 .content(form.getContent())
-                .fileList(Collections.unmodifiableList(form.getFileList()))
+                .multipartFileList(Collections.unmodifiableList(form.getFileList()))
                 .categoryId(form.getCategoryId())
                 .writerId(writerId)
                 .writerName(writerName)

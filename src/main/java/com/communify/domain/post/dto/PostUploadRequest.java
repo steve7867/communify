@@ -13,7 +13,7 @@ public class PostUploadRequest {
     private final Long id;
     private final String title;
     private final String content;
-    private final List<MultipartFile> fileList;
+    private final List<MultipartFile> multipartFileList;
     private final Long categoryId;
     private final Long writerId;
     private final String writerName;

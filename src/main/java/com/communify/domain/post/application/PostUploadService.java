@@ -22,7 +22,7 @@ public class PostUploadService {
     public void uploadPost(final PostUploadRequest request) {
         postRepository.insertPost(request);
 
-        fileService.uploadFile(new FileUploadRequest(request.getId(), request.getFileList()));
+        fileService.uploadFiles(new FileUploadRequest(request.getId(), request.getMultipartFileList()));
 
         eventPublisher.publishEvent(new PostUploadEvent(request));
     }

@@ -1,24 +1,31 @@
 package com.communify.domain.file.dto;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 @Getter
-@RequiredArgsConstructor
 public class FileUploadRequest {
 
     private final Long postId;
-    private final List<MultipartFile> multipartFileList;
+    private final List<UploadFile> uploadFileList;
 
-    public Boolean isMultipartFileListNull() {
-        return Objects.isNull(multipartFileList);
+    public FileUploadRequest(final Long postId, final List<MultipartFile> multipartFileList) {
+        this.postId = postId;
+        this.uploadFileList = IntStream.range(0, multipartFileList.size())
+                .boxed()
+                .map(i -> new UploadFile(multipartFileList.get(i), i))
+                .toList();
     }
 
-    public Boolean isMultipartFileListEmpty() {
-        return multipartFileList.isEmpty();
+    public Boolean isUploadFileListNull() {
+        return Objects.isNull(uploadFileList);
+    }
+
+    public Boolean isUploadFileListEmpty() {
+        return uploadFileList.isEmpty();
     }
 }
