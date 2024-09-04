@@ -1,7 +1,5 @@
 package com.communify.domain.post.application;
 
-import com.communify.domain.file.application.FileService;
-import com.communify.domain.file.dto.FileUpdateRequest;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
@@ -17,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostEditService {
 
     private final PostRepository postRepository;
-    private final FileService fileService;
+    private final PostAttachmentService postAttachmentService;
     private final PostViewCacheService postViewCacheService;
 
     public void incrementView(final Long postId) {
@@ -32,6 +30,6 @@ public class PostEditService {
             throw new InvalidPostAccessException(request.getPostId(), request.getRequesterId());
         }
 
-        fileService.updateFiles(new FileUpdateRequest(request.getPostId(), request.getMultipartFileList()));
+        postAttachmentService.updateFiles(request.getPostId(), request.getMultipartFileList());
     }
 }
