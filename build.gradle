@@ -58,6 +58,9 @@ dependencies {
     // Email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    // AWS S3
+    implementation 'software.amazon.awssdk:s3:2.27.16'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
