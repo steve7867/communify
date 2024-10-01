@@ -6,13 +6,14 @@
     <resultMap id="postOutlineResultMap" type="PostOutline">
         <result property="id" column="id"/>
         <result property="title" column="title"/>
-        <result property="memberId" column="member_id"/>
-        <result property="memberName" column="name"/>
+        <result property="writerId" column="writer_id"/>
+        <result property="writerName" column="name"/>
         <result property="categoryId" column="category_id"/>
-        <result property="view" column="view"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="isHot" column="is_hot"/>
         <result property="createdDateTime" column="created_timestamp"/>
-        <result property="likes" column="likes"/>
-        <result property="hot" column="hot"/>
     </resultMap>
 
     <resultMap id="postDetailResultMap" type="PostDetail">
@@ -21,45 +22,97 @@
             <id property="storedFilename" column="stored_filename"/>
             <result property="originalFilename" column="original_filename"/>
             <result property="extension" column="extension"/>
-            <result property="postId" column="post_id"/>
             <result property="sequence" column="sequence"/>
         </collection>
     </resultMap>
 
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
-        INSERT INTO post(title, content, member_id, category_id)
-        VALUES (#{request.title}, #{request.content}, #{request.memberId}, #{request.categoryId});
+        INSERT INTO post(title, content, writer_id, category_id)
+        VALUES (#{request.title}, #{request.content}, #{request.writerId}, #{request.categoryId});
     </insert>
 
-    <insert id="insertAllPost">
-        INSERT INTO post(title, content, member_id, category_id)
-        VALUES
-        <foreach collection="list" item="request" separator=",">
-            (#{request.title}, #{request.content}, #{request.memberId}, #{request.categoryId})
-        </foreach>
-    </insert>
-
-    <select id="findAllPostOutlineBySearchCond" parameterType="PostOutlineSearchCondition"
-            resultMap="postOutlineResultMap">
+    <select id="findPostOutlineByCategory" resultMap="postOutlineResultMap">
         SELECT p.id,
-            p.title,
-            p.member_id,
-            m.name,
-            p.category_id,
-            p.view,
-            p.created_timestamp,
-            count(l.post_id) AS likes,
-            false as hot
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               false as is_hot
         FROM post p
-            LEFT OUTER JOIN member m ON p.member_id = m.id
-            LEFT OUTER JOIN likes l ON p.id = l.post_id
-        WHERE p.category_id = #{searchCond.categoryId}
-        <if test="searchCond.lastPostId != null">
-            AND p.id &lt; #{searchCond.lastPostId}
+            LEFT OUTER JOIN member m ON p.writer_id = m.id
+        WHERE p.category_id = #{cond.categoryId}
+        <if test="cond.lastPostId != null">
+            AND p.id &lt; #{cond.lastPostId}
         </if>
         GROUP BY p.id
         ORDER BY p.id DESC
-        LIMIT #{limit}
+        LIMIT #{cond.searchSize}
+    </select>
+
+    <select id="findPostOutlineByWriter" resultMap="postOutlineResultMap">
+        SELECT p.id,
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               false as is_hot
+        FROM post p
+            INNER JOIN member m ON p.writer_id = m.id
+        WHERE m.id = #{cond.memberId}
+        <if test="cond.lastPostId != null">
+            AND p.id &lt; #{cond.lastPostId}
+        </if>
+        GROUP BY p.id
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize}
+    </select>
+
+    <select id="findAllHotPostOutlineList" resultMap="postOutlineResultMap">
+        SELECT p.id,
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               TRUE AS is_hot
+        FROM hot_post h
+            INNER JOIN post p ON h.post_id = p.id
+        LEFT OUTER JOIN member m on p.writer_id = m.id
+        <if test="cond.lastPostId != null">
+            WHERE p.id &lt; #{cond.lastPostId}
+        </if>
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize}
+    </select>
+
+    <select id="findHotPostOutlineByCategoryList" resultMap="postOutlineResultMap">
+        SELECT p.id,
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+               TRUE AS is_hot
+        FROM hot_post h
+                 INNER JOIN post p ON h.post_id = p.id
+                 LEFT OUTER JOIN member m on p.writer_id = m.id
+        WHERE p.category_id = #{cond.categoryId}
+        ORDER BY p.id DESC
+        LIMIT #{cond.searchSize};
     </select>
 
     <select id="findPostDetail" resultMap="postDetailResultMap">
@@ -67,17 +120,42 @@
                f.stored_filename,
                f.original_filename,
                f.extension,
-               f.post_id,
                f.sequence
         FROM post p
                  LEFT OUTER JOIN file f ON p.id = f.post_id
         WHERE p.id = #{postId}
-        ORDER BY f.sequence ASC
+        ORDER BY f.sequence
     </select>
 
-    <update id="incrementView">
+    <update id="incrementViewCount">
         UPDATE post
-        SET view = view + #{view}
+        SET view_count = CASE
+        <foreach collection="list" item="request" separator="">
+            WHEN id = #{request.postId} THEN view_count + #{request.viewCount}
+        </foreach>
+        ELSE view_count
+        END
+        WHERE id IN
+        <foreach collection="list" item="request" open="(" separator="," close=")">
+            #{request.postId}
+        </foreach>
+    </update>
+
+    <update id="incrementLikeCount">
+        UPDATE post
+        SET like_count = like_count + #{likeCount}
+        WHERE id = #{postId}
+    </update>
+
+    <update id="incrementCommentCount">
+        UPDATE post
+        SET comment_count = comment_count + #{count}
+        WHERE id = #{postId}
+    </update>
+
+    <update id="decrementCommentCount">
+        UPDATE post
+        SET comment_count = comment_count - #{count}
         WHERE id = #{postId}
     </update>
 
@@ -85,28 +163,22 @@
         UPDATE post
         SET title       = #{request.title},
             content     = #{request.content},
-            category_id = #{request.categoryId}
+            category_id = #{request.newCategoryId}
         WHERE id = #{request.postId}
-          AND member_id = #{request.memberId}
+          AND writer_id = #{request.requesterId}
     </update>
 
     <delete id="deletePost">
         DELETE
         FROM post
         WHERE id = #{request.postId}
-          AND member_id = #{request.memberId}
+          AND writer_id = #{request.requesterId}
     </delete>
 
     <select id="isWrittenBy">
         SELECT EXISTS(SELECT *
                       FROM post
                       WHERE id = #{postId}
-                        AND member_id = #{memberId})
-    </select>
-
-    <select id="findWriterId">
-        SELECT member_id
-        FROM post
-        WHERE id = #{postId}
+                        AND writer_id = #{memberId})
     </select>
 </mapper>

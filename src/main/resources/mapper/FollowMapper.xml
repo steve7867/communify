@@ -3,42 +3,45 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.follow.dao.FollowRepository">
-    <resultMap id="memberInfoResultMap" type="MemberInfo">
-        <result property="id" column="id"/>
-        <result property="email" column="email"/>
-        <result property="hashed" column="hashed"/>
-        <result property="name" column="name"/>
-        <result property="createdDateTime" column="created_timestamp"/>
-        <result property="modifiedDateTime" column="modified_timestamp"/>
-        <result property="followed" column="followed"/>
-        <result property="following" column="following"/>
-        <result property="fcmToken" column="fcm_token"/>
-    </resultMap>
-
     <insert id="insertFollow">
-        INSERT INTO follow(member_id, follow_id)
-        VALUES (#{memberId}, #{followId})
+        INSERT INTO follow(follower_id, followee_id)
+        VALUES (#{request.followerId}, #{request.followeeId})
     </insert>
 
     <delete id="deleteFollow">
         DELETE
         FROM follow
-        WHERE member_id = #{memberId}
-          AND follow_id = #{followId}
+        WHERE follower_id = #{request.followerId}
+          AND followee_id = #{request.followeeId}
     </delete>
 
-    <select id="findFollowers" resultMap="memberInfoResultMap">
-        SELECT m.id, m.name, ft.fcm_token
-        FROM member m
-                 INNER JOIN follow f ON m.id = f.member_id
-                 LEFT OUTER JOIN fcm_token ft ON m.id = ft.member_id AND f.member_id = ft.member_id
-        WHERE f.follow_id = #{memberId}
+    <select id="findFollowers">
+        SELECT m.id,
+               m.name,
+               IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
+        FROM follow f1
+                 INNER JOIN member m ON f1.follower_id = m.id
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{cond.searcherId}
+        WHERE f1.followee_id = #{cond.followeeId}
+        <if test="cond.lastFollowerId != null">
+            AND m.id > #{cond.lastFollowerId}
+        </if>
+        ORDER BY m.id
+        LIMIT #{cond.limit}
     </select>
 
-    <select id="findFollowings" resultMap="memberInfoResultMap">
-        SELECT m.id, m.name
-        FROM member m
-                 INNER JOIN follow f ON m.id = f.follow_id
-        WHERE f.member_id = #{memberId}
+    <select id="findFollowees">
+        SELECT m.id,
+               m.name,
+               IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
+        FROM follow f1
+                 INNER JOIN member m ON f1.followee_id = m.id
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{cond.searcherId}
+        WHERE f1.follower_id = #{followerId}
+        <if test="cond.lastFollowingId != null">
+            AND m.id > #{cond.lastFolloweeId}
+        </if>
+        ORDER BY m.id
+        LIMIT #{cond.limit}
     </select>
 </mapper>

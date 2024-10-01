@@ -1,21 +1,16 @@
 package com.communify.domain.like.dao;
 
 import com.communify.domain.like.dto.LikeRequest;
-import com.communify.global.dao.BulkInsertable;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
+import java.util.List;
 
 @Mapper
 @Repository
-public interface LikeRepository extends BulkInsertable<LikeRequest> {
+public interface LikeRepository {
 
-    void insert(@Param("request") LikeRequest request);
+    Integer insertLikeBulk(List<LikeRequest> likeRequestList);
 
-    void bulkInsert(Collection<LikeRequest> likeCollection);
-
-    void deleteLike(@Param("postId") Long postId,
-                    @Param("memberId") Long memberId);
+    Boolean findLiking(Long postId, Long likerId);
 }

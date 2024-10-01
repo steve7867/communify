@@ -1,10 +1,10 @@
 package com.communify.domain.post.application;
 
-import com.communify.domain.follow.applilcation.FollowService;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
+import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.dto.event.PostUploadEvent;
 import com.communify.domain.push.application.PushService;
-import com.communify.domain.push.dto.MessageDto;
+import com.communify.domain.push.dao.PushRepository;
+import com.communify.domain.push.dto.PushInfoForPostUpload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -12,31 +12,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class PostUploadEventListener {
 
-    private final FollowService followService;
+    private final PushRepository pushRepository;
     private final PushService pushService;
 
     @Async
     @Transactional(readOnly = true)
     @EventListener
-    public void pushPostUploadNotification(PostUploadEvent event) {
-        Long memberId = event.getMemberId();
-        String memberName = event.getMemberName();
+    public void pushPostUploadNotification(final PostUploadEvent event) {
+        final PostUploadRequest request = event.getPostUploadRequest();
 
-        List<MemberInfo> followerList = followService.getFollowers(memberId);
+        final List<PushInfoForPostUpload> infoList = pushRepository
+                .findPushInfoForPostUploadList(request);
 
-        MessageDto messageDto = MessageDto.builder()
-                .title(String.format("%s님이 새로운 게시글을 작성했습니다.", memberName))
-                .build();
-
-        followerList.stream()
-                .map(MemberInfo::getFcmToken)
-                .filter(Objects::nonNull)
-                .forEach(token -> pushService.push(token, messageDto));
+        infoList.forEach(pushService::push);
     }
 }

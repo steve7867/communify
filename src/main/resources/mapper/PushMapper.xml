@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.communify.domain.push.dao.PushRepository">
+    <resultMap id="PushInfoForLikeResultMap" type="PushInfoForLike">
+        <result property="postId" column="post_id"/>
+        <result property="postWriterId" column="post_writer_id"/>
+        <result property="token" column="token"/>
+        <result property="likerId" column="liker_id"/>
+        <result property="likerName" column="liker_name"/>
+        <result property="pushState" column="push_state"/>
+    </resultMap>
+
+    <select id="findPushInfoForPostUploadList" resultType="PushInfoForPostUpload">
+        SELECT t.token,
+               #{request.writerName} AS writer_name
+        FROM follow f
+                 INNER JOIN member m1 ON f.follower_id = m1.id
+                 LEFT OUTER JOIN token t ON m1.id = t.member_id
+        WHERE f.followee_id = #{request.writerId}
+    </select>
+
+    <select id="findPushInfoForLikeList" resultMap="PushInfoForLikeResultMap">
+        SELECT l.post_id
+               writer.id AS post_writer_id,
+               t.token,
+               liker.id AS liker_id,
+               liker.name AS liker_name,
+               l.push_state
+        FROM likes l
+            INNER JOIN post p ON l.post_id = p.id
+            LEFT OUTER JOIN member writer ON p.member_id = writer.id
+            LEFT OUTER JOIN token t ON writer.id = t.member_id
+            INNER JOIN member liker ON l.liker_id = liker.id
+        WHERE
+        <foreach collection="list" item="request" open="(" separator="OR" close=")">
+            l.post_id = #{request.postId} AND l.liker_id = #{request.likerId}
+        </foreach>
+    </select>
+
+    <update id="setPushStateAsSent">
+        UPDATE likes
+        SET push_state = 'sent'
+        WHERE
+        <foreach collection="list" item="info" open="(" separator="OR" close=")">
+            post_id = #{info.postId} AND liker_id = #{info.likerId}
+        </foreach>
+    </update>
+
+    <select id="findPushInfoForComment" resultType="PushInfoForComment">
+        SELECT t.token,
+               #{request.content} AS comment_content,
+               #{request.writerName} AS comment_writer_name
+        FROM post p
+                 LEFT OUTER JOIN member m ON p.writer_id = m.id
+                 LEFT OUTER JOIN token t ON m.id = t.member_id
+        WHERE p.id = #{request.postId}
+    </select>
+
+    <select id="findPushInfoForFollow" resultType="PushInfoForFollow">
+        SELECT token,
+               #{request.followerName} AS follower_name
+        FROM token
+        WHERE member_id = #{request.followeeId} AND token IS NOT NULL
+    </select>
+</mapper>

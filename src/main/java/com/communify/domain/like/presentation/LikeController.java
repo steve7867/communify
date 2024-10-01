@@ -1,12 +1,13 @@
 package com.communify.domain.like.presentation;
 
-import com.communify.domain.auth.annotation.MemberId;
-import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.like.application.LikeService;
 import com.communify.domain.like.dto.LikeRequest;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,25 +26,23 @@ public class LikeController {
     @PostMapping("/{postId}/like")
     @ResponseStatus(OK)
     @LoginCheck
-    public void like(@PathVariable Long postId,
-                     @MemberId Long memberId,
-                     @MemberName String memberName) {
+    public void like(@PathVariable @NotNull @Positive final Long postId,
+                     @MemberId final Long likerId) {
 
-        LikeRequest request = LikeRequest.builder()
+        final LikeRequest request = LikeRequest.builder()
                 .postId(postId)
-                .memberId(memberId)
-                .memberName(memberName)
+                .likerId(likerId)
                 .build();
 
         likeService.like(request);
     }
 
-    @DeleteMapping("/{postId}/like")
+    @GetMapping("/{postId}/isLiking")
     @ResponseStatus(OK)
     @LoginCheck
-    public void cancelLike(@PathVariable Long postId,
-                           @MemberId Long memberId) {
+    public Boolean isLiking(@PathVariable @NotNull @Positive final Long postId,
+                            @MemberId final Long likerId) {
 
-        likeService.cancelLike(postId, memberId);
+        return likeService.isLiking(postId, likerId);
     }
 }

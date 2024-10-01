@@ -24,7 +24,7 @@ public class LoginController {
     @PostMapping("/login")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void login(@RequestBody @Valid LoginRequest request) {
+    public void login(@RequestBody @Valid final LoginRequest request) {
         loginService.login(request);
     }
 

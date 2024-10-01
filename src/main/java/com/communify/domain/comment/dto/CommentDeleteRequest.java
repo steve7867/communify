@@ -1,13 +1,13 @@
 package com.communify.domain.comment.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@Builder
 public class CommentDeleteRequest {
 
     private final Long postId;
     private final Long commentId;
-    private final Long memberId;
+    private final Long requesterId;
 }

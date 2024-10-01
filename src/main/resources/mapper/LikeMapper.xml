@@ -3,23 +3,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.like.dao.LikeRepository">
-    <insert id="insert" parameterType="LikeRequest">
-        INSERT INTO likes(post_id, member_id)
-            VALUE (#{request.postId}, #{request.memberId})
-    </insert>
-
-    <insert id="bulkInsert" parameterType="java.util.Collection">
-        INSERT INTO likes(post_id, member_id)
+    <insert id="insertLikeBulk">
+        INSERT IGNORE INTO likes(post_id, liker_id)
         VALUES
-        <foreach collection="collection" item="request" index="idx" separator=",">
-            (#{request.postId}, #{request.memberId})
+        <foreach collection="list" item="request" index="idx" separator=",">
+            (#{request.postId}, #{request.likerId})
         </foreach>
     </insert>
 
-    <delete id="deleteLike">
-        DELETE
-        FROM likes
-        WHERE post_id = #{postId}
-          AND member_id = #{memberId}
-    </delete>
+    <select id="findLiking">
+        SELECT EXISTS(SELECT *
+                      FROM likes
+                      WHERE post_id = #{postId} AND liker_id = #{likerId})
+    </select>
 </mapper>

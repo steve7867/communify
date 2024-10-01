@@ -1,13 +1,24 @@
 package com.communify.domain.follow.dto;
 
+import com.communify.domain.follow.error.exception.SelfFollowException;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+
+import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor
 public class FollowRequest {
 
-    private final Long memberId;
-    private final String memberName;
-    private final Long followId;
+    private final Long followerId;
+    private final String followerName;
+    private final Long followeeId;
+
+    public FollowRequest(final Long followerId, final String followerName, final Long followeeId) {
+        if (Objects.equals(followerId, followeeId)) {
+            throw new SelfFollowException(followerId);
+        }
+
+        this.followerId = followerId;
+        this.followerName = followerName;
+        this.followeeId = followeeId;
+    }
 }

@@ -39,20 +39,20 @@ public class DatasourceConfig {
     }
 
     @Bean("routingDataSource")
-    public DataSource routingDataSource(@Qualifier("sourceDataSource") DataSource sourceDataSource,
-                                        @Qualifier("replicaDataSource") DataSource replicaDataSource) {
+    public DataSource routingDataSource(@Qualifier("sourceDataSource") final DataSource sourceDataSource,
+                                        @Qualifier("replicaDataSource") final DataSource replicaDataSource) {
 
-        AbstractRoutingDataSource routingDatasource = new AbstractRoutingDataSource() {
+        final AbstractRoutingDataSource routingDatasource = new AbstractRoutingDataSource() {
 
             @Override
             protected Object determineCurrentLookupKey() {
-                boolean isCurrentTransactionReadOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+                final boolean isCurrentTransactionReadOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
 
                 return isCurrentTransactionReadOnly ? DataSourceType.REPLICA : DataSourceType.SOURCE;
             }
         };
 
-        Map<Object, Object> targetDatasourceMap = new HashMap<>(2);
+        final Map<Object, Object> targetDatasourceMap = new HashMap<>(2);
         targetDatasourceMap.put(DataSourceType.SOURCE, sourceDataSource);
         targetDatasourceMap.put(DataSourceType.REPLICA, replicaDataSource);
 
@@ -64,12 +64,12 @@ public class DatasourceConfig {
 
     @Primary
     @Bean
-    public DataSource proxyDataSource(@Qualifier("routingDataSource") DataSource routingDataSource) {
+    public DataSource proxyDataSource(@Qualifier("routingDataSource") final DataSource routingDataSource) {
         return new LazyConnectionDataSourceProxy(routingDataSource);
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+    public PlatformTransactionManager transactionManager(final DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 

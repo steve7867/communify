@@ -34,15 +34,15 @@ public class CacheConfig {
 
     @Bean("cacheConnectionFactory")
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(host, port);
+        final RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(host, port);
         return new LettuceConnectionFactory(standaloneConfiguration);
     }
 
     @Bean
     public CacheManager cacheManager(
-            @Qualifier("cacheConnectionFactory") RedisConnectionFactory redisConnectionFactory) {
+            @Qualifier("cacheConnectionFactory") final RedisConnectionFactory redisConnectionFactory) {
 
-        BasicPolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
+        final BasicPolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
                 .allowIfSubType(Object.class)
                 .build();
 
@@ -50,15 +50,14 @@ public class CacheConfig {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
 
-        RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
-                .disableCachingNullValues();
+        final RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)));
 
-        RedisCacheConfiguration categoriesConfig = defaultCacheConfig.entryTtl(Duration.ofDays(1L));
-        RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(5L));
-        RedisCacheConfiguration hotPostOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
-        RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
-        RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
+        final RedisCacheConfiguration categoriesConfig = defaultCacheConfig.entryTtl(Duration.ofDays(1L));
+        final RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(5L));
+        final RedisCacheConfiguration hotPostOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
+        final RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
+        final RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
@@ -72,9 +71,9 @@ public class CacheConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(
-            @Qualifier("cacheConnectionFactory") RedisConnectionFactory redisConnectionFactory) {
+            @Qualifier("cacheConnectionFactory") final RedisConnectionFactory redisConnectionFactory) {
 
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());

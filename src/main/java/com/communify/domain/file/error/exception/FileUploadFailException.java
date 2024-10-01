@@ -1,19 +1,22 @@
 package com.communify.domain.file.error.exception;
 
-import com.communify.domain.file.dto.FileInfo;
+import com.communify.domain.file.dto.UploadFile;
 import com.communify.global.error.exception.InternalServerException;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @Getter
 public class FileUploadFailException extends InternalServerException {
 
-    private final MultipartFile multipartFile;
-    private final FileInfo fileInfo;
+    private static final String MESSAGE = "파일 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.";
 
-    public FileUploadFailException(MultipartFile multipartFile, FileInfo fileInfo, Throwable cause) {
-        super("파일 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.", cause);
-        this.multipartFile = multipartFile;
-        this.fileInfo = fileInfo;
+    private final File directory;
+    private final UploadFile uploadFile;
+
+    public FileUploadFailException(final File directory, final UploadFile uploadFile, final Throwable cause) {
+        super(MESSAGE, cause);
+        this.directory = directory;
+        this.uploadFile = uploadFile;
     }
 }

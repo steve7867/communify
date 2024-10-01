@@ -1,7 +1,5 @@
 package com.communify.domain.post.application;
 
-import com.communify.domain.file.application.FileService;
-import com.communify.domain.file.dto.FileUploadRequest;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.dto.event.PostUploadEvent;
@@ -15,19 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostUploadService {
 
     private final PostRepository postRepository;
-    private final FileService fileService;
+    private final PostAttachmentService postAttachmentService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void uploadPost(PostUploadRequest request) {
+    public void uploadPost(final PostUploadRequest request) {
         postRepository.insertPost(request);
 
-        Long postId = request.getId();
-        fileService.uploadFile(new FileUploadRequest(postId, request.getFileList()));
+        postAttachmentService.savePostAttachments(request.getId(), request.getMultipartFileList());
 
-        Long memberId = request.getMemberId();
-        String memberName = request.getMemberName();
-        PostUploadEvent event = new PostUploadEvent(memberId, memberName);
-        eventPublisher.publishEvent(event);
+        eventPublisher.publishEvent(new PostUploadEvent(request));
     }
 }

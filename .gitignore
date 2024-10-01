@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 **/resources/sql/*.sql
 **/resources/**/*.json
+**/resources/*.properties
+**/resources/*.yml
 **/test/resources/http/
 **/test/resources/images/
 

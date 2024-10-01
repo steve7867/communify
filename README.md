@@ -1,43 +1,40 @@
 # 🌏 Communify
 
-- 다양한 주제에 대한 글을 공유하는 커뮤니티 사이트
+- 다양한 주제에 대한 글을 공유하는 커뮤니티 서비스
 - 대용량 트래픽을 가정하여 성능에 초점을 두고 개발 진행
 
 ## 🎯 Technical Issue
 
-- Redis 캐시를 활용한 읽기 성능 향상
-- Redis 캐시, 세션 저장소 분리
-- Write Behind 전략을 활용한 좋아요, 조회 수 집계 구현
-- Redis Transaction을 사용해 Redis에 다수 접근하는 로직을 atomic하게 구현
-- DB 이중화(MySQL Replication)를 통한 DB 부하 분산
-- DB 인덱스 설정을 통한 조회 성능 향상
-- Bulk Insert를 이용한 삽입 성능 향상
-- 무한 스크롤 방식의 페이징
-- FireBase를 이용한 푸시 알림
-- 비동기 방식을 적용해 푸시 알림 성능 향상
-- Spring AOP를 사용한 로그인 체크
-- Nginx의 Reversed-Proxy를 이용한 로드밸런싱
-- Jasypt를 이용한 설정 정보 암호화
-
-## 🤔 TroubleShooting & 기술적 고민
-
-- [🔗링크](https://github.com/steve7867/Communify/wiki/%F0%9F%A4%94-TroubleShooting-&-%EA%B8%B0%EC%88%A0%EC%A0%81-%EA%B3%A0%EB%AF%BC)
+- 캐싱(Redis)
+  - Look Aside 전략을 활용한 읽기 성능 향상
+  - Write Behind 전략으로 좋아요, 조회 수 집계를 구현해 DB 접근 횟수 경감
+  - 캐시, 세션 저장소 분리
+  - Keys 대신 Scan 명령을 사용한 키 조회
+  - Redis Transaction을 사용해 Redis에 다수 접근하는 로직을 atomic하게 구현
+  - Redis Pipelining을 사용해 RTT Latency와 Socket I/O 부하 경감
+- DB(MySQL)
+  - DB 복제(Replication)를 통한 DB 부하 분산
+    - LazyConnectionDataSourceProxy를 사용해 DB 커넥션 획득 시점 지연
+  - 인덱스를 통한 조회 성능 향상
+  - Bulk Insert를 이용한 삽입 성능 향상
+  - 무한 스크롤 방식의 페이징
+- 푸시 알림(FireBase)
+  - 비동기 방식을 적용해 푸시 알림 성능 향상
+- 기타
+  - 중복되는 로그인 체크 로직을 Spring AOP로 구현
+  - Nginx의 Reversed-Proxy를 이용한 로드밸런싱
 
 ## 🖼️ Application UI
 
-![Application UI](https://github.com/steve7867/Communify/assets/115217247/d07f70ec-d9d6-424b-a4c2-e642b4dcc2e5)
-
-## 🛠️ 사용한 기술 및 개발 환경
-
-![사용한 기술](https://github.com/steve7867/Communify/assets/115217247/71878398-22b2-4abe-a264-678502750af1)
+![Application UI](https://github.com/steve7867/Communify/assets/115217247/76e5efdc-4106-4fc5-b820-c687abab72bd)
 
 ## 📈 ERD
 
-![ERD](https://github.com/steve7867/Communify/assets/115217247/118ce712-0242-4959-9bc1-70b83b105481)
+![ERD](https://github.com/user-attachments/assets/0ba02fc1-194d-4959-bb21-b6ada24b2308)
 
 ## 🏛️ 프로젝트 구조도
 
-![프로젝트 구조](https://github.com/steve7867/Communify/assets/115217247/aeaccf2d-73eb-49d5-89da-47862b9eb6b3)
+![프로젝트 구조](https://github.com/user-attachments/assets/75f1179b-4a96-4738-b8b0-33b9f11dc5d8)
 
 ## ⚙️ 주요 기능
 
@@ -58,7 +55,7 @@
 - 게시글 상세 조회
 - 게시글 수정
 - 게시글 삭제
-- 게시글 좋아요 / 좋아요 취소
+- 게시글 좋아요
 
 ### 💬 댓글
 

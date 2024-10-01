@@ -3,7 +3,11 @@ package com.communify.domain.follow.applilcation;
 import com.communify.domain.follow.dao.FollowRepository;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.follow.dto.FollowRequest;
-import com.communify.domain.member.dto.outgoing.MemberInfo;
+import com.communify.domain.follow.dto.FolloweeSearchCondition;
+import com.communify.domain.follow.dto.FollowerSearchCondition;
+import com.communify.domain.follow.dto.UnfollowRequest;
+import com.communify.domain.follow.dto.outgoing.MemberInfoForFollowSearch;
+import com.communify.domain.member.dao.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -17,30 +21,42 @@ import java.util.List;
 public class FollowService {
 
     private final FollowRepository followRepository;
+    private final MemberRepository memberRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public void follow(FollowRequest request) {
-        Long memberId = request.getMemberId();
-        Long followId = request.getFollowId();
+    @Transactional
+    public void follow(final FollowRequest request) {
+        final Integer count = followRepository.insertFollow(request);
+        if (count == 0) {
+            return;
+        }
 
-        followRepository.insertFollow(memberId, followId);
+        memberRepository.incrementFollowerCount(request.getFolloweeId(), count);
+        memberRepository.incrementFolloweeCount(request.getFollowerId(), count);
 
         eventPublisher.publishEvent(new FollowEvent(request));
     }
 
-    public void unfollow(Long memberId, Long followId) {
-        followRepository.deleteFollow(memberId, followId);
+    @Transactional
+    public void unfollow(final UnfollowRequest request) {
+        final Integer count = followRepository.deleteFollow(request);
+        if (count == 0) {
+            return;
+        }
+
+        memberRepository.decrementFollowerCount(request.getFolloweeId(), count);
+        memberRepository.decrementFolloweeCount(request.getFollowerId(), count);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowers(Long memberId) {
-        List<MemberInfo> followerList = followRepository.findFollowers(memberId);
+    public List<MemberInfoForFollowSearch> getFollowers(final FollowerSearchCondition searchCond) {
+        final List<MemberInfoForFollowSearch> followerList = followRepository.findFollowers(searchCond);
         return Collections.unmodifiableList(followerList);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfo> getFollowings(Long memberId) {
-        List<MemberInfo> followingList = followRepository.findFollowings(memberId);
-        return Collections.unmodifiableList(followingList);
+    public List<MemberInfoForFollowSearch> getFollowees(final FolloweeSearchCondition searchCond) {
+        final List<MemberInfoForFollowSearch> followeeList = followRepository.findFollowees(searchCond);
+        return Collections.unmodifiableList(followeeList);
     }
 }

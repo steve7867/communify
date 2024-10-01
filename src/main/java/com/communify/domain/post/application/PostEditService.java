@@ -1,12 +1,9 @@
 package com.communify.domain.post.application;
 
-import com.communify.domain.file.application.FileService;
-import com.communify.domain.file.dto.FileUploadRequest;
 import com.communify.domain.post.dao.PostRepository;
 import com.communify.domain.post.dto.PostEditRequest;
 import com.communify.domain.post.error.exception.InvalidPostAccessException;
-import com.communify.global.application.CacheService;
-import com.communify.global.util.CacheKeyUtil;
+import com.communify.global.application.cache.PostViewCacheService;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,27 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostEditService {
 
     private final PostRepository postRepository;
-    private final FileService fileService;
-    private final CacheService cacheService;
+    private final PostAttachmentService postAttachmentService;
+    private final PostViewCacheService postViewCacheService;
 
-    public void incrementView(Long postId, Long memberId) {
-        String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
-        cacheService.addToSet(key, memberId);
+    public void incrementView(final Long postId) {
+        postViewCacheService.incrementView(postId);
     }
 
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#request.postId")
-    public void editPost(PostEditRequest request) {
-        boolean isEdited = postRepository.editPost(request);
+    public void editPost(final PostEditRequest request) {
+        final boolean isEdited = postRepository.editPost(request);
         if (!isEdited) {
-            Long postId = request.getPostId();
-            Long memberId = request.getMemberId();
-            throw new InvalidPostAccessException(postId, memberId);
+            throw new InvalidPostAccessException(request.getPostId(), request.getRequesterId());
         }
 
-        Long postId = request.getPostId();
-        fileService.deleteFiles(postId);
-
-        fileService.uploadFile(new FileUploadRequest(postId, request.getFileList()));
+        postAttachmentService.updateFiles(request.getPostId(), request.getMultipartFileList());
     }
 }

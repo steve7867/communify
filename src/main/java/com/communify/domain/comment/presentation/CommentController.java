@@ -1,15 +1,17 @@
 package com.communify.domain.comment.presentation;
 
+import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
 import com.communify.domain.auth.annotation.MemberName;
-import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.comment.application.CommentService;
-import com.communify.domain.comment.dto.incoming.CommentForm;
 import com.communify.domain.comment.dto.CommentDeleteRequest;
 import com.communify.domain.comment.dto.CommentEditRequest;
-import com.communify.domain.comment.dto.outgoing.CommentInfo;
 import com.communify.domain.comment.dto.CommentUploadRequest;
+import com.communify.domain.comment.dto.incoming.CommentForm;
+import com.communify.domain.comment.dto.outgoing.CommentInfo;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,33 +37,42 @@ public class CommentController {
     @PostMapping("/{postId}/comments")
     @ResponseStatus(OK)
     @LoginCheck
-    public void addComment(@PathVariable Long postId,
-                           @RequestBody @Valid CommentForm form,
-                           @MemberId Long memberId,
-                           @MemberName String memberName) {
+    public void addComment(@PathVariable @NotNull @Positive final Long postId,
+                           @RequestBody @Valid final CommentForm form,
+                           @MemberId final Long writerId,
+                           @MemberName final String writerName) {
 
-        String content = form.getContent();
-        CommentUploadRequest request = new CommentUploadRequest(content, postId, memberId, memberName);
+        final CommentUploadRequest request = CommentUploadRequest.builder()
+                .postId(postId)
+                .content(form.getContent())
+                .writerId(writerId)
+                .writerName(writerName)
+                .build();
+
         commentService.addComment(request);
     }
 
     @GetMapping("/{postId}/comments")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<CommentInfo> getComments(@PathVariable Long postId) {
+    public List<CommentInfo> getComments(@PathVariable @NotNull @Positive final Long postId) {
         return commentService.getComments(postId);
     }
 
     @PatchMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void editComment(@PathVariable Long postId,
-                            @PathVariable Long commentId,
-                            @RequestBody @Valid CommentForm form,
-                            @MemberId Long memberId) {
+    public void editComment(@PathVariable @NotNull @Positive final Long postId,
+                            @PathVariable @NotNull @Positive final Long commentId,
+                            @RequestBody @Valid final CommentForm form,
+                            @MemberId final Long requesterId) {
 
-        String content = form.getContent();
-        CommentEditRequest request = new CommentEditRequest(postId, commentId, content, memberId);
+        final CommentEditRequest request = CommentEditRequest.builder()
+                .postId(postId)
+                .commentId(commentId)
+                .content(form.getContent())
+                .requesterId(requesterId)
+                .build();
 
         commentService.editComment(request);
     }
@@ -69,11 +80,15 @@ public class CommentController {
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void deleteComment(@PathVariable Long postId,
-                              @PathVariable Long commentId,
-                              @MemberId Long memberId) {
+    public void deleteComment(@PathVariable @NotNull @Positive final Long postId,
+                              @PathVariable @NotNull @Positive final Long commentId,
+                              @MemberId final Long requesterId) {
 
-        CommentDeleteRequest request = new CommentDeleteRequest(postId, commentId, memberId);
+        final CommentDeleteRequest request = CommentDeleteRequest.builder()
+                .postId(postId)
+                .commentId(commentId)
+                .requesterId(requesterId)
+                .build();
 
         commentService.deleteComment(request);
     }
