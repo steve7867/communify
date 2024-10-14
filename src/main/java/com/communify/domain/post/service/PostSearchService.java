@@ -18,28 +18,38 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PostSearchService {
 
-    private static final Integer searchSize = 20;
+    private static final Integer SEARCH_SIZE = 50;
 
     private final PostRepository postRepository;
 
-    @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES, key = "#lastPostId", sync = true)
+    @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES,
+            key = "#lastPostId",
+            condition = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toDays() < 3",
+            sync = true)
     public List<PostOutline> getHotPostOutlines(final Long lastPostId) {
-        final List<PostOutline> hotPostOutlineList = postRepository.findHotPostOutlines(lastPostId, searchSize);
+        final List<PostOutline> hotPostOutlineList = postRepository.findHotPostOutlines(lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(hotPostOutlineList);
     }
 
-    @Cacheable(cacheNames = CacheNames.POST_OUTLINES, key = "#categoryId + '_' + #lastPostId", sync = true)
+    @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
+            key = "#categoryId + '_' + #lastPostId",
+            condition = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toHours() < 24",
+            sync = true)
     public List<PostOutline> getPostOutlinesByCategory(final Long categoryId, final Long lastPostId) {
-        final List<PostOutline> postOutlineList = postRepository.findPostOutlinesByCategory(categoryId, lastPostId, searchSize);
+        final List<PostOutline> postOutlineList = postRepository.findPostOutlinesByCategory(categoryId, lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(postOutlineList);
     }
 
     public List<PostOutline> getPostOutlinesByMember(final Long writerId, final Long lastPostId) {
-        final List<PostOutline> postOutlineList = postRepository.findPostOutlinesByMember(writerId, lastPostId, searchSize);
+        final List<PostOutline> postOutlineList = postRepository.findPostOutlinesByMember(writerId, lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(postOutlineList);
     }
 
-    @Cacheable(cacheNames = CacheNames.POST_DETAIL, key = "#postId", sync = true)
+    @Cacheable(cacheNames = CacheNames.POST_DETAIL,
+            key = "#postId",
+            condition = "#result.isPresent() " +
+                    "&& T(java.time.Duration).between(#result.get().createdDateTime, T(java.time.LocalDateTime).now()).toHours() < 24",
+            sync = true)
     public Optional<PostDetail> getPostDetail(final Long postId) {
         return postRepository.findPostDetail(postId);
     }

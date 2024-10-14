@@ -1,29 +1,27 @@
 package com.communify.domain.comment;
 
-import com.communify.domain.comment.dto.CommentInfo;
+import com.communify.domain.comment.dto.CommentListContainer;
 import com.communify.domain.comment.dto.CommentUploadEvent;
 import com.communify.domain.post.PostRepository;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
+    private static final Integer SEARCH_SIZE = 50;
+
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#postId")
     public void addComment(final Long postId,
                            final String content,
                            final Long writerId,
@@ -40,13 +38,14 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = CacheNames.COMMENTS, key = "#postId", sync = true)
-    public List<CommentInfo> getComments(final Long postId) {
-        final List<CommentInfo> commentInfoList = commentRepository.findAllCommentsByPostId(postId);
-        return Collections.unmodifiableList(commentInfoList);
+    @Cacheable(cacheNames = CacheNames.COMMENTS,
+            key = "#postId + '_' + #lastCommentId",
+            condition = "T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() < 24",
+            sync = true)
+    public CommentListContainer getComments(final Long postId, final Long lastCommentId) {
+        return commentRepository.findCommentsByPostId(postId, lastCommentId, SEARCH_SIZE);
     }
 
-    @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#postId")
     public void editComment(final Long postId,
                             final Long commentId,
                             final String content,
@@ -56,7 +55,6 @@ public class CommentService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = CacheNames.COMMENTS, key = "#postId")
     public void deleteComment(final Long postId,
                               final Long commentId,
                               final Long requesterId) {

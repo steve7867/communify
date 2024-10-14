@@ -53,17 +53,15 @@ public class CacheConfig {
         final RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)));
 
-        final RedisCacheConfiguration categoriesConfig = defaultCacheConfig.entryTtl(Duration.ofDays(1L));
-        final RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(5L));
-        final RedisCacheConfiguration allHotPostOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
-        final RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
+        final RedisCacheConfiguration hotPostOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(20L));
+        final RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
+        final RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(20L));
         final RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
-                .withCacheConfiguration(CacheNames.CATEGORIES, categoriesConfig)
+                .withCacheConfiguration(CacheNames.HOT_POST_OUTLINES, hotPostOutlinesConfig)
                 .withCacheConfiguration(CacheNames.POST_OUTLINES, postOutlinesConfig)
-                .withCacheConfiguration(CacheNames.HOT_POST_OUTLINES, allHotPostOutlinesConfig)
                 .withCacheConfiguration(CacheNames.POST_DETAIL, postDetailConfig)
                 .withCacheConfiguration(CacheNames.COMMENTS, commentsConfig)
                 .build();

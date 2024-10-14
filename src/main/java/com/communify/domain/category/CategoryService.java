@@ -1,8 +1,6 @@
 package com.communify.domain.category;
 
-import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +14,6 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = CacheNames.CATEGORIES, sync = true)
     public List<CategoryInfo> getAllCategories() {
         final List<CategoryInfo> categoryInfoList = categoryRepository.findAllCategoryList();
         return Collections.unmodifiableList(categoryInfoList);

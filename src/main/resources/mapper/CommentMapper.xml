@@ -3,13 +3,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.comment.CommentRepository">
-    <resultMap id="commentInfoResultMap" type="CommentInfo">
-        <result property="id" column="id"/>
-        <result property="content" column="content"/>
-        <result property="writerId" column="writer_id"/>
-        <result property="writerName" column="name"/>
+    <resultMap id="CommentListContainerResultMap" type="CommentListContainer">
         <result property="createdDateTime" column="created_timestamp"/>
-        <result property="modifiedDateTime" column="modified_timestamp"/>
+        <collection property="commentInfoList" ofType="CommentInfo">
+            <result property="id" column="id"/>
+            <result property="content" column="content"/>
+            <result property="writerId" column="writer_id"/>
+            <result property="writerName" column="name"/>
+            <result property="createdDateTime" column="created_timestamp"/>
+            <result property="modifiedDateTime" column="modified_timestamp"/>
+        </collection>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true">
@@ -17,16 +20,22 @@
             VALUE (#{request.content}, #{request.postId}, #{request.writerId})
     </insert>
 
-    <select id="findAllCommentsByPostId" resultMap="commentInfoResultMap">
-        SELECT c.id,
+    <select id="findCommentsByPostId" resultMap="CommentListContainerResultMap">
+        SELECT p.created_timestamp
+               c.id,
                c.content,
                c.writer_id,
                m.name,
                c.created_timestamp
         FROM comment c
+                 INNER JOIN post p ON c.post_id = p.id
                  LEFT OUTER JOIN member m ON c.writer_id = m.id
         WHERE post_id = #{postId}
-        ORDER BY c.created_timestamp;
+        <if test="lastCommentId != null">
+          AND c.id &lt; #{lastCommentId}
+        </if>
+        ORDER BY c.id DESC;
+        LIMIT #{searchSize}
     </select>
 
     <update id="editComment">
