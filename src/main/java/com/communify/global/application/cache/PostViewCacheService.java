@@ -48,12 +48,17 @@ public class PostViewCacheService {
             @Override
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
                 for (String cacheKey : keyList) {
-                    operations.multi();
+                    try {
+                        operations.multi();
 
-                    operations.opsForValue().get(cacheKey);
-                    operations.delete(cacheKey);
+                        operations.opsForValue().get(cacheKey);
+                        operations.delete(cacheKey);
 
-                    operations.exec();
+                        operations.exec();
+                    } catch (RuntimeException e) {
+                        operations.discard();
+                        throw e;
+                    }
                 }
 
                 return null;

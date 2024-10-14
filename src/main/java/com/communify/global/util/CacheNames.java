@@ -5,9 +5,9 @@ public final class CacheNames {
     public static final String CATEGORIES = "Categories";
 
     public static final String POST_OUTLINES = "PostOutlines";
-    public static final String HOT_POST_OUTLINES = "HotPostOutlines";
-
     public static final String POST_DETAIL = "PostDetail";
+
+    public static final String HOT_POST_OUTLINES = "HotPostOutlines";
 
     public static final String COMMENTS = "Comments";
     public static final String POST_VIEW = "PostView";

@@ -2,17 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.communify.domain.follow.dao.FollowRepository">
+<mapper namespace="com.communify.domain.follow.FollowRepository">
     <insert id="insertFollow">
         INSERT INTO follow(follower_id, followee_id)
-        VALUES (#{request.followerId}, #{request.followeeId})
+        VALUES (#{followerId}, #{followeeId})
     </insert>
 
     <delete id="deleteFollow">
         DELETE
         FROM follow
-        WHERE follower_id = #{request.followerId}
-          AND followee_id = #{request.followeeId}
+        WHERE follower_id = #{followerId} AND followee_id = #{followeeId}
     </delete>
 
     <select id="findFollowers">
@@ -21,13 +20,13 @@
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM follow f1
                  INNER JOIN member m ON f1.follower_id = m.id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{cond.searcherId}
-        WHERE f1.followee_id = #{cond.followeeId}
-        <if test="cond.lastFollowerId != null">
-            AND m.id > #{cond.lastFollowerId}
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{searcherId}
+        WHERE f1.followee_id = #{followeeId}
+        <if test="lastFollowerId != null">
+            AND m.id > #{lastFollowerId}
         </if>
         ORDER BY m.id
-        LIMIT #{cond.limit}
+        LIMIT 100
     </select>
 
     <select id="findFollowees">
@@ -36,12 +35,12 @@
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM follow f1
                  INNER JOIN member m ON f1.followee_id = m.id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{cond.searcherId}
+                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{searcherId}
         WHERE f1.follower_id = #{followerId}
-        <if test="cond.lastFollowingId != null">
-            AND m.id > #{cond.lastFolloweeId}
+        <if test="lastFollowingId != null">
+            AND m.id > #{lastFolloweeId}
         </if>
         ORDER BY m.id
-        LIMIT #{cond.limit}
+        LIMIT 100
     </select>
 </mapper>

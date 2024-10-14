@@ -1,6 +1,5 @@
 package com.communify.global.application.cache;
 
-import com.communify.domain.like.dto.LikeRequest;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +22,8 @@ public class PostLikeCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void cacheLike(final LikeRequest request) {
-        final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, request.getPostId());
-        final Long likerId = request.getLikerId();
+    public void cacheLike(final Long postId, final Long likerId) {
+        final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, postId);
 
         redisTemplate.opsForZSet().addIfAbsent(cacheKey, likerId, Double.valueOf(likerId));
     }
@@ -51,12 +49,17 @@ public class PostLikeCacheService {
             @Override
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
                 for (String cacheKey : keyList) {
-                    operations.multi();
+                    try {
+                        operations.multi();
 
-                    operations.opsForZSet().range(cacheKey, 0L, Long.MAX_VALUE);
-                    operations.delete(cacheKey);
+                        operations.opsForZSet().range(cacheKey, 0L, Long.MAX_VALUE);
+                        operations.delete(cacheKey);
 
-                    operations.exec();
+                        operations.exec();
+                    } catch (RuntimeException e) {
+                        operations.discard();
+                        throw e;
+                    }
                 }
 
                 return null;
