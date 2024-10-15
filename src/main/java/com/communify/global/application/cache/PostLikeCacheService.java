@@ -1,5 +1,6 @@
 package com.communify.global.application.cache;
 
+import com.communify.domain.like.dto.LikerInfo;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
@@ -22,25 +23,26 @@ public class PostLikeCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void cacheLike(final Long postId, final Long likerId) {
+    public void cacheLike(final Long postId, final Long likerId, final String likerName) {
         final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, postId);
 
-        redisTemplate.opsForZSet().addIfAbsent(cacheKey, likerId, Double.valueOf(likerId));
+        redisTemplate.opsForSet().add(cacheKey, new LikerInfo(likerId, likerName));
     }
 
-    public Map<Long, List<Long>> getPostLikeCacheAsMapAndClear() {
+    public Map<Long, List<LikerInfo>> getPostLikeCacheAndClear() {
         final ScanOptions scanOptions = ScanOptions.scanOptions()
                 .match(CacheNames.POST_LIKE + "*")
                 .count(300)
                 .build();
 
+        final List<String> keyList;
         try (final Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
-            final List<String> keyList = cursor.stream().toList();
-
-            final List<Object> result = executePipelined(keyList);
-
-            return generatePostLikeMap(keyList, result);
+            keyList = cursor.stream().toList();
         }
+
+        final List<Object> result = executePipelined(keyList);
+
+        return generatePostLikeMap(keyList, result);
     }
 
     private List<Object> executePipelined(final List<String> keyList) {
@@ -52,7 +54,7 @@ public class PostLikeCacheService {
                     try {
                         operations.multi();
 
-                        operations.opsForZSet().range(cacheKey, 0L, Long.MAX_VALUE);
+                        operations.opsForSet().members(cacheKey);
                         operations.delete(cacheKey);
 
                         operations.exec();
@@ -67,10 +69,10 @@ public class PostLikeCacheService {
         });
     }
 
-    private Map<Long, List<Long>> generatePostLikeMap(final List<String> keyList,
-                                                      final List<Object> result) {
+    private Map<Long, List<LikerInfo>> generatePostLikeMap(final List<String> keyList,
+                                                           final List<Object> result) {
 
-        final Map<Long, List<Long>> postLikeMap = new HashMap<>(keyList.size());
+        final Map<Long, List<LikerInfo>> postLikeMap = new HashMap<>(keyList.size());
 
         for (int i = 0; i < keyList.size(); i++) {
             final String cacheKey = keyList.get(i);
@@ -78,12 +80,11 @@ public class PostLikeCacheService {
 
             final List<Object> txResultList = (List<Object>) result.get(i);
 
-            final List<Long> likerIdList = ((Set<Integer>) txResultList.get(0))
+            final List<LikerInfo> likerInfoList = ((Set<LikerInfo>) txResultList.get(0))
                     .stream()
-                    .map(Integer::longValue)
                     .toList();
 
-            postLikeMap.put(postId, likerIdList);
+            postLikeMap.put(postId, likerInfoList);
         }
 
         return postLikeMap;

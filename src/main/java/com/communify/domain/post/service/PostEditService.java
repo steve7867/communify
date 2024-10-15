@@ -25,7 +25,6 @@ public class PostEditService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public void editPost(final Long postId,
                          final String title,
                          final String content,

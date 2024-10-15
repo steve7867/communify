@@ -1,7 +1,9 @@
 package com.communify.domain.like;
 
+import com.communify.domain.like.dto.LikerInfo;
 import com.communify.domain.like.service.LikeSaveService;
 import com.communify.global.application.cache.PostLikeCacheService;
+import com.communify.global.util.SchedulerNames;
 import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,22 +19,16 @@ public class PostLikeScheduler {
     private final PostLikeCacheService postLikeCacheService;
     private final LikeSaveService likeSaveService;
 
-    @Scheduled(cron = "*/5 * * * * *")
-    @SchedulerLock(name = "PostLikeScheduler_applyPostLikeCacheToDB", lockAtMostFor = "4s")
-    public void applyPostLikeCacheToDB() {
-        final Map<Long, List<Long>> postLikeMap = postLikeCacheService.getPostLikeCacheAsMapAndClear();
+    @Scheduled(cron = "*/10 * * * * *")
+    @SchedulerLock(name = SchedulerNames.POST_LIKE_SCHEDULER)
+    public void savePostLikeCacheToDB() {
+        final Map<Long, List<LikerInfo>> postLikeMap = postLikeCacheService.getPostLikeCacheAndClear();
 
         postLikeMap.keySet()
-                .stream()
-                .sorted()
                 .forEach(postId -> {
-                    final List<Long> likerIdList = postLikeMap.get(postId);
+                    final List<LikerInfo> likerInfoList = postLikeMap.get(postId);
 
-                    if (likerIdList.isEmpty()) {
-                        return;
-                    }
-
-                    likeSaveService.savePostLike(postId, likerIdList);
+                    likeSaveService.saveLike(postId, likerInfoList);
                 });
     }
 }

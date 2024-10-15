@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PostViewIncrementRequest {
+public class PostViewIncRequest {
 
     private final Long postId;
     private final Integer viewCount;

@@ -18,12 +18,20 @@
 
     <resultMap id="postDetailResultMap" type="PostDetail">
         <result property="content" column="content"/>
+        <result property="createdDateTime" column="created_timestamp"/>
         <collection property="fileInfoList" ofType="FileInfo">
             <id property="storedFilename" column="stored_filename"/>
             <result property="originalFilename" column="original_filename"/>
             <result property="extension" column="extension"/>
             <result property="sequence" column="sequence"/>
         </collection>
+    </resultMap>
+
+    <resultMap id="PostOutlineForHotSwitchMap" type="PostOutline">
+        <result property="id" column="id"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="isHot" column="is_hot"/>
     </resultMap>
 
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
@@ -33,14 +41,14 @@
 
     <select id="findHotPostOutlines" resultMap="postOutlineResultMap">
         SELECT p.id,
-        p.title,
-        p.writer_id,
-        m.name,
-        p.category_id,
-        p.view_count,
-        p.like_count,
-        p.comment_count,
-        p.created_timestamp,
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
         TRUE AS is_hot
         FROM hot_post h
         INNER JOIN post p ON h.post_id = p.id
@@ -98,6 +106,7 @@
 
     <select id="findPostDetail" resultMap="postDetailResultMap">
         SELECT p.content,
+               p.created_timestamp,
                f.stored_filename,
                f.original_filename,
                f.extension,
@@ -108,10 +117,23 @@
         ORDER BY f.sequence
     </select>
 
+    <select id="findWriterId">
+        SELECT writer_id
+        FROM post
+        WHERE id = #{postId}
+    </select>
+
+    <select id="findPostOutlineForHotSwitch" resultMap="PostOutlineForHotSwitchMap">
+        SELECT id, view_count, like_count, IF(h.post_id IS NOT NULL, TRUE, FALSE) AS is_hot
+        FROM post p
+            LEFT OUTER JOIN hot_post h ON p.id = h.post_id
+        WHERE id = #{postId}
+    </select>
+
     <update id="incViewCount">
         UPDATE post
         SET view_count = CASE
-        <foreach collection="list" item="request" separator="">
+        <foreach collection="list" item="request">
             WHEN id = #{request.postId} THEN view_count + #{request.viewCount}
         </foreach>
         ELSE view_count
@@ -162,4 +184,17 @@
                       WHERE id = #{postId}
                         AND writer_id = #{requesterId})
     </select>
+
+    <insert id="makePostAsHot">
+        INSERT INTO hot_post(post_id)
+        VALUE (#{postId})
+    </insert>
+
+    <insert id="makePostsAsHot">
+        INSERT INTO hot_post(post_id)
+        VALUES
+        <foreach collection="list" item="id" index=",">
+            (#{id})
+        </foreach>
+    </insert>
 </mapper>

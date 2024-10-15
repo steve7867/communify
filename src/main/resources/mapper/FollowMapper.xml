@@ -23,7 +23,7 @@
                  LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{searcherId}
         WHERE f1.followee_id = #{followeeId}
         <if test="lastFollowerId != null">
-            AND m.id > #{lastFollowerId}
+            AND m.id &gt; #{lastFollowerId}
         </if>
         ORDER BY m.id
         LIMIT 100
@@ -38,7 +38,7 @@
                  LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{searcherId}
         WHERE f1.follower_id = #{followerId}
         <if test="lastFollowingId != null">
-            AND m.id > #{lastFolloweeId}
+            AND m.id &gt; #{lastFolloweeId}
         </if>
         ORDER BY m.id
         LIMIT 100

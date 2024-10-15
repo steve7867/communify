@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class LikeEvent {
+public class LikerInfo {
 
-    private final Long postId;
     private final Long likerId;
     private final String likerName;
 }

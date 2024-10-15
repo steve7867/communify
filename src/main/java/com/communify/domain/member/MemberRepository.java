@@ -4,6 +4,7 @@ import com.communify.domain.member.dto.MemberInfoForLogin;
 import com.communify.domain.member.dto.MemberInfoForSearch;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -20,6 +21,10 @@ public interface MemberRepository {
     void deleteById(Long memberId);
 
     void setToken(String token, Long memberId);
+
+    Optional<String> findTokenById(Long memberId);
+
+    List<String> findTokensOfFollowers(Long memberId);
 
     void updatePassword(String newHashed, Long memberId);
 

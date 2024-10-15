@@ -44,6 +44,20 @@
         VALUES (#{memberId}, #{token})
     </insert>
 
+    <select id="findTokenById">
+        SELECT token
+        FROM token
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="findTokensOfFollowers">
+        SELECT t.token
+        FROM follow f
+                 INNER JOIN member m ON f.follower_id = m.id
+                 LEFT OUTER JOIN token t ON m.id = t.member_id
+        WHERE f.followee_id = #{writerId}
+    </select>
+
     <update id="updatePassword">
         UPDATE member
         SET hashed = #{newHashed}
