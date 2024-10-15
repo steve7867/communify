@@ -27,7 +27,7 @@ public class PostViewCacheService {
         redisTemplate.opsForValue().increment(key);
     }
 
-    public Map<Long, Integer> getPostViewCacheAsMapAndClear() {
+    public Map<Long, Integer> getPostViewCacheAndClear() {
         final ScanOptions scanOptions = ScanOptions.scanOptions()
                 .match(CacheNames.POST_VIEW + "*")
                 .count(300)
@@ -48,12 +48,17 @@ public class PostViewCacheService {
             @Override
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
                 for (String cacheKey : keyList) {
-                    operations.multi();
+                    try {
+                        operations.multi();
 
-                    operations.opsForValue().get(cacheKey);
-                    operations.delete(cacheKey);
+                        operations.opsForValue().get(cacheKey);
+                        operations.delete(cacheKey);
 
-                    operations.exec();
+                        operations.exec();
+                    } catch (RuntimeException e) {
+                        operations.discard();
+                        throw e;
+                    }
                 }
 
                 return null;

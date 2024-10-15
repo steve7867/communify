@@ -5,17 +5,17 @@ import lombok.Getter;
 @Getter
 public class PushInfoForComment extends PushInfo {
 
-    private final String commentContent;
-    private final String commentWriterName;
+    private final String content;
+    private final String writerName;
 
-    public PushInfoForComment(final String token, final String commentContent, final String commentWriterName) {
+    public PushInfoForComment(final String token, final String content, final String writerName) {
         super(token);
-        this.commentContent = commentContent;
-        this.commentWriterName = commentWriterName;
+        this.content = content;
+        this.writerName = writerName;
     }
 
     @Override
     protected MessageDto makeMessageDto() {
-        return MessageDto.forComment(token, commentWriterName, commentContent);
+        return MessageDto.forComment(token, writerName, content);
     }
 }

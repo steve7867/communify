@@ -6,23 +6,20 @@
 ## 🎯 Technical Issue
 
 - 캐싱(Redis)
-  - Look Aside 전략을 활용한 읽기 성능 향상
-  - Write Behind 전략으로 좋아요, 조회 수 집계를 구현해 DB 접근 횟수 경감
+  - Look Aside 전략을 통한 읽기 성능 향상
+  - 좋아요, 조회 수를 비동기적으로 DB에 반영
   - 캐시, 세션 저장소 분리
-  - Keys 대신 Scan 명령을 사용한 키 조회
+  - Keys 대신 Scan 명령 사용
   - Redis Transaction을 사용해 Redis에 다수 접근하는 로직을 atomic하게 구현
   - Redis Pipelining을 사용해 RTT Latency와 Socket I/O 부하 경감
 - DB(MySQL)
-  - DB 복제(Replication)를 통한 DB 부하 분산
-    - LazyConnectionDataSourceProxy를 사용해 DB 커넥션 획득 시점 지연
+  - DB Replication을 통한 DB 부하 분산
   - 인덱스를 통한 조회 성능 향상
   - Bulk Insert를 이용한 삽입 성능 향상
   - 무한 스크롤 방식의 페이징
-- 푸시 알림(FireBase)
-  - 비동기 방식을 적용해 푸시 알림 성능 향상
 - 기타
-  - 중복되는 로그인 체크 로직을 Spring AOP로 구현
-  - Nginx의 Reversed-Proxy를 이용한 로드밸런싱
+  - Spring AOP을 사용해 중복되는 로그인 체크 로직 구현
+  - Nginx Reversed-Proxy를 이용한 로드밸런싱
 
 ## 🖼️ Application UI
 

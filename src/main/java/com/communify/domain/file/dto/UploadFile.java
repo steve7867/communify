@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 public class UploadFile {
 
-    public static final String EXTENSION_DELIMITER = ".";
+    public static final String DELIMITER = ".";
 
     private final MultipartFile multipartFile;
     private final String storedFilename;
@@ -36,7 +36,7 @@ public class UploadFile {
     }
 
     public String getFullStoredFilename() {
-        return this.storedFilename + EXTENSION_DELIMITER + this.extension;
+        return this.storedFilename + DELIMITER + this.extension;
     }
 
     private String trimExtension(final String filename) {
@@ -50,6 +50,6 @@ public class UploadFile {
     }
 
     private int getIndexOfDot(final String filename) {
-        return filename.lastIndexOf(EXTENSION_DELIMITER);
+        return filename.lastIndexOf(DELIMITER);
     }
 }

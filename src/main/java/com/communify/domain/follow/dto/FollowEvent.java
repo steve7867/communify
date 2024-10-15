@@ -7,5 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FollowEvent {
 
-    private final FollowRequest followRequest;
+    private final Long followeeId;
+    private final String followerName;
 }

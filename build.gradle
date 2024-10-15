@@ -52,9 +52,6 @@ dependencies {
     implementation 'net.javacrumbs.shedlock:shedlock-spring:5.1.0'
     implementation 'net.javacrumbs.shedlock:shedlock-provider-redis-spring:5.1.0'
 
-    // Jasypt
-    implementation 'com.github.ulisesbocchio:jasypt-spring-boot:3.0.5'
-
     // Email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 

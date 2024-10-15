@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.communify.domain.post.dao.PostRepository">
+<mapper namespace="com.communify.domain.post.PostRepository">
     <resultMap id="postOutlineResultMap" type="PostOutline">
         <result property="id" column="id"/>
         <result property="title" column="title"/>
@@ -18,6 +18,7 @@
 
     <resultMap id="postDetailResultMap" type="PostDetail">
         <result property="content" column="content"/>
+        <result property="createdDateTime" column="created_timestamp"/>
         <collection property="fileInfoList" ofType="FileInfo">
             <id property="storedFilename" column="stored_filename"/>
             <result property="originalFilename" column="original_filename"/>
@@ -26,12 +27,40 @@
         </collection>
     </resultMap>
 
+    <resultMap id="PostOutlineForHotSwitchMap" type="PostOutline">
+        <result property="id" column="id"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="isHot" column="is_hot"/>
+    </resultMap>
+
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
         INSERT INTO post(title, content, writer_id, category_id)
         VALUES (#{request.title}, #{request.content}, #{request.writerId}, #{request.categoryId});
     </insert>
 
-    <select id="findPostOutlineByCategory" resultMap="postOutlineResultMap">
+    <select id="findHotPostOutlines" resultMap="postOutlineResultMap">
+        SELECT p.id,
+               p.title,
+               p.writer_id,
+               m.name,
+               p.category_id,
+               p.view_count,
+               p.like_count,
+               p.comment_count,
+               p.created_timestamp,
+        TRUE AS is_hot
+        FROM hot_post h
+        INNER JOIN post p ON h.post_id = p.id
+        LEFT OUTER JOIN member m on p.writer_id = m.id
+        <if test="lastPostId != null">
+            WHERE p.id &lt; #{lastPostId}
+        </if>
+        ORDER BY p.id DESC
+        LIMIT #{searchSize}
+    </select>
+
+    <select id="findPostOutlinesByCategory" resultMap="postOutlineResultMap">
         SELECT p.id,
                p.title,
                p.writer_id,
@@ -44,16 +73,16 @@
                false as is_hot
         FROM post p
             LEFT OUTER JOIN member m ON p.writer_id = m.id
-        WHERE p.category_id = #{cond.categoryId}
-        <if test="cond.lastPostId != null">
-            AND p.id &lt; #{cond.lastPostId}
+        WHERE p.category_id = #{categoryId}
+        <if test="lastPostId != null">
+            AND p.id &lt; #{lastPostId}
         </if>
         GROUP BY p.id
         ORDER BY p.id DESC
-        LIMIT #{cond.searchSize}
+        LIMIT #{searchSize}
     </select>
 
-    <select id="findPostOutlineByWriter" resultMap="postOutlineResultMap">
+    <select id="findPostOutlinesByMember" resultMap="postOutlineResultMap">
         SELECT p.id,
                p.title,
                p.writer_id,
@@ -66,57 +95,18 @@
                false as is_hot
         FROM post p
             INNER JOIN member m ON p.writer_id = m.id
-        WHERE m.id = #{cond.memberId}
-        <if test="cond.lastPostId != null">
-            AND p.id &lt; #{cond.lastPostId}
+        WHERE m.id = #{writerId}
+        <if test="lastPostId != null">
+            AND p.id &lt; #{lastPostId}
         </if>
         GROUP BY p.id
         ORDER BY p.id DESC
-        LIMIT #{cond.searchSize}
-    </select>
-
-    <select id="findAllHotPostOutlineList" resultMap="postOutlineResultMap">
-        SELECT p.id,
-               p.title,
-               p.writer_id,
-               m.name,
-               p.category_id,
-               p.view_count,
-               p.like_count,
-               p.comment_count,
-               p.created_timestamp,
-               TRUE AS is_hot
-        FROM hot_post h
-            INNER JOIN post p ON h.post_id = p.id
-        LEFT OUTER JOIN member m on p.writer_id = m.id
-        <if test="cond.lastPostId != null">
-            WHERE p.id &lt; #{cond.lastPostId}
-        </if>
-        ORDER BY p.id DESC
-        LIMIT #{cond.searchSize}
-    </select>
-
-    <select id="findHotPostOutlineByCategoryList" resultMap="postOutlineResultMap">
-        SELECT p.id,
-               p.title,
-               p.writer_id,
-               m.name,
-               p.category_id,
-               p.view_count,
-               p.like_count,
-               p.comment_count,
-               p.created_timestamp,
-               TRUE AS is_hot
-        FROM hot_post h
-                 INNER JOIN post p ON h.post_id = p.id
-                 LEFT OUTER JOIN member m on p.writer_id = m.id
-        WHERE p.category_id = #{cond.categoryId}
-        ORDER BY p.id DESC
-        LIMIT #{cond.searchSize};
+        LIMIT #{searchSize}
     </select>
 
     <select id="findPostDetail" resultMap="postDetailResultMap">
         SELECT p.content,
+               p.created_timestamp,
                f.stored_filename,
                f.original_filename,
                f.extension,
@@ -127,10 +117,23 @@
         ORDER BY f.sequence
     </select>
 
-    <update id="incrementViewCount">
+    <select id="findWriterId">
+        SELECT writer_id
+        FROM post
+        WHERE id = #{postId}
+    </select>
+
+    <select id="findPostOutlineForHotSwitch" resultMap="PostOutlineForHotSwitchMap">
+        SELECT id, view_count, like_count, IF(h.post_id IS NOT NULL, TRUE, FALSE) AS is_hot
+        FROM post p
+            LEFT OUTER JOIN hot_post h ON p.id = h.post_id
+        WHERE id = #{postId}
+    </select>
+
+    <update id="incViewCount">
         UPDATE post
         SET view_count = CASE
-        <foreach collection="list" item="request" separator="">
+        <foreach collection="list" item="request">
             WHEN id = #{request.postId} THEN view_count + #{request.viewCount}
         </foreach>
         ELSE view_count
@@ -141,19 +144,19 @@
         </foreach>
     </update>
 
-    <update id="incrementLikeCount">
+    <update id="incLikeCount">
         UPDATE post
         SET like_count = like_count + #{likeCount}
         WHERE id = #{postId}
     </update>
 
-    <update id="incrementCommentCount">
+    <update id="incCommentCount">
         UPDATE post
         SET comment_count = comment_count + #{count}
         WHERE id = #{postId}
     </update>
 
-    <update id="decrementCommentCount">
+    <update id="decCommentCount">
         UPDATE post
         SET comment_count = comment_count - #{count}
         WHERE id = #{postId}
@@ -161,24 +164,37 @@
 
     <update id="editPost">
         UPDATE post
-        SET title       = #{request.title},
-            content     = #{request.content},
-            category_id = #{request.newCategoryId}
-        WHERE id = #{request.postId}
-          AND writer_id = #{request.requesterId}
+        SET title = #{title},
+            content = #{content},
+            category_id = #{categoryId}
+        WHERE id = #{postId}
+          AND writer_id = #{requesterId}
     </update>
 
     <delete id="deletePost">
         DELETE
         FROM post
-        WHERE id = #{request.postId}
-          AND writer_id = #{request.requesterId}
+        WHERE id = #{postId}
+          AND writer_id = #{requesterId}
     </delete>
 
     <select id="isWrittenBy">
         SELECT EXISTS(SELECT *
                       FROM post
                       WHERE id = #{postId}
-                        AND writer_id = #{memberId})
+                        AND writer_id = #{requesterId})
     </select>
+
+    <insert id="makePostAsHot">
+        INSERT INTO hot_post(post_id)
+        VALUE (#{postId})
+    </insert>
+
+    <insert id="makePostsAsHot">
+        INSERT INTO hot_post(post_id)
+        VALUES
+        <foreach collection="list" item="id" index=",">
+            (#{id})
+        </foreach>
+    </insert>
 </mapper>
