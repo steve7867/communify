@@ -3,12 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.like.LikeRepository">
-    <insert id="insertLikeBulk">
-        INSERT IGNORE INTO likes(post_id, liker_id)
-        VALUES
-        <foreach collection="list" item="likerId" index="idx" separator=",">
-            (#{postId}, #{likerId})
-        </foreach>
+    <insert id="insertLike">
+        INSERT INTO likes(post_id, liker_id)
+        VALUE (#{postId}, #{liker_id})
     </insert>
 
     <select id="findLiking">

@@ -27,7 +27,7 @@ public class PostViewCacheService {
         redisTemplate.opsForValue().increment(key);
     }
 
-    public Map<Long, Integer> getPostViewCacheAsMapAndClear() {
+    public Map<Long, Integer> getPostViewCacheAndClear() {
         final ScanOptions scanOptions = ScanOptions.scanOptions()
                 .match(CacheNames.POST_VIEW + "*")
                 .count(300)

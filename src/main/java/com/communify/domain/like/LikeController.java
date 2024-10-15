@@ -2,6 +2,7 @@ package com.communify.domain.like;
 
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.like.service.LikeService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -26,9 +27,10 @@ public class LikeController {
     @ResponseStatus(OK)
     @LoginCheck
     public void like(@PathVariable @NotNull @Positive final Long postId,
-                     @MemberId final Long likerId) {
+                     @MemberId final Long likerId,
+                     @MemberName final String likerName) {
 
-        likeService.like(postId, likerId);
+        likeService.like(postId, likerId, likerName);
     }
 
     @GetMapping("/{postId}/isLiking")

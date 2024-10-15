@@ -57,6 +57,8 @@ public class CacheConfig {
         final RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
         final RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(20L));
         final RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
+        final RedisCacheConfiguration tokenConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(30L));
+        final RedisCacheConfiguration postWriterIdConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(20L));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
@@ -64,6 +66,8 @@ public class CacheConfig {
                 .withCacheConfiguration(CacheNames.POST_OUTLINES, postOutlinesConfig)
                 .withCacheConfiguration(CacheNames.POST_DETAIL, postDetailConfig)
                 .withCacheConfiguration(CacheNames.COMMENTS, commentsConfig)
+                .withCacheConfiguration(CacheNames.TOKEN, tokenConfig)
+                .withCacheConfiguration(CacheNames.POST_WRITER_ID, postWriterIdConfig)
                 .build();
     }
 
