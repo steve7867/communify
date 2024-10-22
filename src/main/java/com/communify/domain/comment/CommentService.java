@@ -40,8 +40,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheNames.COMMENTS,
             key = "#postId + '_' + #lastCommentId",
-            condition = "T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() < 24",
-            sync = true)
+            unless = "T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
     public CommentListContainer getComments(final Long postId, final Long lastCommentId) {
         return commentRepository.findCommentsByPostId(postId, lastCommentId, SEARCH_SIZE);
     }

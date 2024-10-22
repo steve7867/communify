@@ -24,8 +24,7 @@ public class PostSearchService {
 
     @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES,
             key = "#lastPostId",
-            condition = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toDays() < 3",
-            sync = true)
+            unless = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toDays() > 3")
     public List<PostOutline> getHotPostOutlines(final Long lastPostId) {
         final List<PostOutline> hotPostOutlineList = postRepository.findHotPostOutlines(lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(hotPostOutlineList);
@@ -33,8 +32,7 @@ public class PostSearchService {
 
     @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
             key = "#categoryId + '_' + #lastPostId",
-            condition = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toHours() < 24",
-            sync = true)
+            unless = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
     public List<PostOutline> getPostOutlinesByCategory(final Long categoryId, final Long lastPostId) {
         final List<PostOutline> postOutlineList = postRepository.findPostOutlinesByCategory(categoryId, lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(postOutlineList);
@@ -47,9 +45,8 @@ public class PostSearchService {
 
     @Cacheable(cacheNames = CacheNames.POST_DETAIL,
             key = "#postId",
-            condition = "#result.isPresent() " +
-                    "&& T(java.time.Duration).between(#result.get().createdDateTime, T(java.time.LocalDateTime).now()).toHours() < 24",
-            sync = true)
+            unless = "#result != null " +
+                    "&& T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
     public Optional<PostDetail> getPostDetail(final Long postId) {
         return postRepository.findPostDetail(postId);
     }

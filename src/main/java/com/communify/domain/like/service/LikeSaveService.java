@@ -7,14 +7,15 @@ import com.communify.domain.post.PostRepository;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.global.util.HotPostDeterminer;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -29,31 +30,31 @@ public class LikeSaveService {
     private final SqlSessionFactory sqlSessionFactory;
 
     @Async
+    @Transactional
     public void saveLike(final Long postId, final List<LikerInfo> likerInfoList) {
-        final List<BatchResult> batchResultList = saveInDB(postId, likerInfoList);
-        int[] updateCounts = batchResultList.get(0).getUpdateCounts();
+        final int[] updateCounts = saveInDB(postId, likerInfoList);
+
+        final int sum = Arrays.stream(updateCounts).sum();
+        postRepository.incLikeCount(postId, sum);
 
         final List<LikerInfo> validLikerInfoList = filterValidLikerInfo(likerInfoList, updateCounts);
+        promoteToHotIfEligible(postId);
 
         eventPublisher.publishEvent(new LikeEvent(postId, validLikerInfoList));
-
-        promoteToHotIfEligible(postId);
     }
 
-    private List<BatchResult> saveInDB(final Long postId, final List<LikerInfo> likerInfoList) {
-        final List<BatchResult> batchResultList;
+    private int[] saveInDB(Long postId, List<LikerInfo> likerInfoList) {
         try (final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
             final LikeRepository likeRepository = sqlSession.getMapper(LikeRepository.class);
 
             for (LikerInfo info : likerInfoList) {
-                final Long likerId = info.getLikerId();
-
-                likeRepository.insertLike(postId, likerId);
+                likeRepository.insertLike(postId, info.getLikerId());
             }
 
-            batchResultList = sqlSession.flushStatements();
+            return sqlSession.flushStatements()
+                    .get(0)
+                    .getUpdateCounts();
         }
-        return batchResultList;
     }
 
     private List<LikerInfo> filterValidLikerInfo(final List<LikerInfo> likerInfoList, final int[] updateCounts) {
@@ -70,11 +71,7 @@ public class LikeSaveService {
         }
 
         final PostOutline postOutline = postOutlineOpt.get();
-        if (postOutline.getIsHot()) {
-            return;
-        }
-
-        if (!HotPostDeterminer.isCandidateForHot(postOutline)) {
+        if (postOutline.getIsHot() || !HotPostDeterminer.isCandidateForHot(postOutline)) {
             return;
         }
 
