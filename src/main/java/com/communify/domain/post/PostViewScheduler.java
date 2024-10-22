@@ -35,6 +35,10 @@ public class PostViewScheduler {
                 })
                 .toList();
 
+        if (list.isEmpty()) {
+            return;
+        }
+
         postRepository.incViewCount(list);
 
         final List<Long> postIdList = map.keySet().stream().toList();
