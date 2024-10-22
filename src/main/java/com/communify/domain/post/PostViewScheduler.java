@@ -1,16 +1,15 @@
 package com.communify.domain.post;
 
-import com.communify.domain.post.dto.PostOutline;
-import com.communify.domain.post.dto.PostViewIncRequest;
 import com.communify.global.application.cache.PostViewCacheService;
-import com.communify.global.util.HotPostDeterminer;
 import com.communify.global.util.SchedulerNames;
 import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -18,38 +17,30 @@ import java.util.Map;
 public class PostViewScheduler {
 
     private final PostViewCacheService postViewCacheService;
-    private final PostRepository postRepository;
+    private final SqlSessionFactory sqlSessionFactory;
 
     @Scheduled(cron = "*/30 * * * * *")
     @SchedulerLock(name = SchedulerNames.POST_VIEW_SCHEDULER)
     public void savePostViewCacheToDB() {
         final Map<Long, Integer> map = postViewCacheService.getPostViewCacheAndClear();
 
-        final List<PostViewIncRequest> list = map.entrySet()
-                .stream()
-                .map(entry -> {
-                    final Long postId = entry.getKey();
-                    final Integer viewCount = entry.getValue();
-
-                    return new PostViewIncRequest(postId, viewCount);
-                })
-                .toList();
-
-        if (list.isEmpty()) {
+        if (map.isEmpty()) {
             return;
         }
 
-        postRepository.incViewCount(list);
+        try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+            PostRepository postRepository = sqlSession.getMapper(PostRepository.class);
 
-        final List<Long> postIdList = map.keySet().stream().toList();
+            map.keySet()
+                    .stream()
+                    .sorted()
+                    .forEach(postId -> {
+                        Integer viewCount = map.get(postId);
 
-        final List<PostOutline> postOutlineList = postRepository.findPostOutlineListForHotSwitch(postIdList);
-        final List<Long> hotPostCandidateIdList = postOutlineList.stream()
-                .filter(postOutline -> !postOutline.getIsHot())
-                .filter(HotPostDeterminer::isCandidateForHot)
-                .map(PostOutline::getId)
-                .toList();
+                        postRepository.incViewCount(postId, viewCount);
+                    });
 
-        postRepository.makePostsAsHot(hotPostCandidateIdList);
+            sqlSession.flushStatements();
+        }
     }
 }

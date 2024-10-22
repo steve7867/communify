@@ -3,7 +3,6 @@ package com.communify.domain.post;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.dto.PostUploadRequest;
-import com.communify.domain.post.dto.PostViewIncRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,9 +26,7 @@ public interface PostRepository {
 
     Optional<PostOutline> findPostOutlineForHotSwitch(Long postId);
 
-    List<PostOutline> findPostOutlineListForHotSwitch(List<Long> postIdList);
-
-    void incViewCount(List<PostViewIncRequest> list);
+    void incViewCount(Long postId, Integer viewCount);
 
     void incLikeCount(Long postId, Integer likeCount);
 
@@ -44,6 +41,4 @@ public interface PostRepository {
     boolean isWrittenBy(Long postId, Long requesterId);
 
     void makePostAsHot(Long postId);
-
-    void makePostsAsHot(List<Long> postIdList);
 }

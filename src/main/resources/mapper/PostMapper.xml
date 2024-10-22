@@ -130,16 +130,8 @@
 
     <update id="incViewCount">
         UPDATE post
-        SET view_count = CASE
-        <foreach collection="list" item="request">
-            WHEN id = #{request.postId} THEN view_count + #{request.viewCount}
-        </foreach>
-            ELSE view_count
-        END
-        WHERE id IN
-        <foreach collection="list" item="request" open="(" separator="," close=")">
-            #{request.postId}
-        </foreach>
+        SET view_count = view_count + #{viewCount}
+        WHERE id = #{postId}
     </update>
 
     <update id="incLikeCount">
@@ -186,13 +178,5 @@
     <insert id="makePostAsHot">
         INSERT INTO hot_post(post_id)
         VALUE (#{postId})
-    </insert>
-
-    <insert id="makePostsAsHot">
-        INSERT INTO hot_post(post_id)
-        VALUES
-        <foreach collection="list" item="id" index=",">
-            (#{id})
-        </foreach>
     </insert>
 </mapper>
