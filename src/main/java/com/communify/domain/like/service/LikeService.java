@@ -13,8 +13,8 @@ public class LikeService {
     private final PostLikeCacheService postLikeCacheService;
     private final LikeRepository likeRepository;
 
-    public void like(final Long postId, final Long likerId, final String likerName) {
-        postLikeCacheService.cacheLike(postId, likerId, likerName);
+    public void like(final Long postId, final Long likerId) {
+        postLikeCacheService.cacheLike(postId, likerId);
     }
 
     @Transactional(readOnly = true)

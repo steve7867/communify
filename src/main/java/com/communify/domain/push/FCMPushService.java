@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class FCMPushService implements PushService {
     }
 
     private Message buildMessage(final MessageDto dto) {
-        if (Objects.nonNull(dto.getBody())) {
+        if (dto.getBody() != null) {
             return Message.builder()
                     .putData("title", dto.getTitle())
                     .putData("created", LocalDateTime.now().toString())

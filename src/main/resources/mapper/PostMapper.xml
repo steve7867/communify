@@ -121,13 +121,6 @@
         WHERE id = #{postId}
     </select>
 
-    <select id="findPostOutlineForHotSwitch" resultMap="PostOutlineForHotSwitchMap">
-        SELECT id, view_count, like_count, IF(h.post_id IS NOT NULL, TRUE, FALSE) AS is_hot
-        FROM post p
-            LEFT OUTER JOIN hot_post h ON p.id = h.post_id
-        WHERE id = #{postId}
-    </select>
-
     <update id="incViewCount">
         UPDATE post
         SET view_count = view_count + #{viewCount}
@@ -175,8 +168,17 @@
                         AND writer_id = #{requesterId})
     </select>
 
-    <insert id="makePostAsHot">
+    <insert id="promoteToHot">
         INSERT INTO hot_post(post_id)
         VALUE (#{postId})
     </insert>
+
+    <select id="findHotPostChecker">
+        SELECT IF(h.post_id IS NOT NULL, TRUE, FALSE) AS is_hot,
+               view_count,
+               comment_count
+        FROM post p
+                 LEFT OUTER JOIN hot_post h ON p.id = h.post_id
+        WHERE id = #{postId}
+    </select>
 </mapper>

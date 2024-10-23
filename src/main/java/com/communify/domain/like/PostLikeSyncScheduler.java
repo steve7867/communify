@@ -1,6 +1,5 @@
 package com.communify.domain.like;
 
-import com.communify.domain.like.dto.LikerInfo;
 import com.communify.domain.like.service.LikeSaveService;
 import com.communify.global.application.cache.PostLikeCacheService;
 import com.communify.global.util.SchedulerNames;
@@ -14,21 +13,19 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class PostLikeScheduler {
+public class PostLikeSyncScheduler {
 
     private final PostLikeCacheService postLikeCacheService;
     private final LikeSaveService likeSaveService;
 
     @Scheduled(cron = "*/10 * * * * *")
-    @SchedulerLock(name = SchedulerNames.POST_LIKE_SCHEDULER)
-    public void savePostLikeCacheToDB() {
-        final Map<Long, List<LikerInfo>> postLikeMap = postLikeCacheService.getPostLikeCacheAndClear();
+    @SchedulerLock(name = SchedulerNames.POST_LIKE_SYNC)
+    public void syncCacheWithDB() {
+        final Map<Long, List<Long>> postLikeMap = postLikeCacheService.fetchAndRemoveLikeCache();
 
-        postLikeMap.keySet()
-                .forEach(postId -> {
-                    final List<LikerInfo> likerInfoList = postLikeMap.get(postId);
-
-                    likeSaveService.saveLike(postId, likerInfoList);
-                });
+        for (Long postId : postLikeMap.keySet()) {
+            List<Long> likerIdList = postLikeMap.get(postId);
+            likeSaveService.saveLike(postId, likerIdList);
+        }
     }
 }

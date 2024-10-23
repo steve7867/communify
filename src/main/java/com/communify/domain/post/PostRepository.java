@@ -1,5 +1,6 @@
 package com.communify.domain.post;
 
+import com.communify.domain.post.dto.HotPostChecker;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.dto.PostUploadRequest;
@@ -24,8 +25,6 @@ public interface PostRepository {
 
     Optional<Long> findWriterId(Long postId);
 
-    Optional<PostOutline> findPostOutlineForHotSwitch(Long postId);
-
     void incViewCount(Long postId, Integer viewCount);
 
     void incLikeCount(Long postId, Integer likeCount);
@@ -40,5 +39,7 @@ public interface PostRepository {
 
     boolean isWrittenBy(Long postId, Long requesterId);
 
-    void makePostAsHot(Long postId);
+    void promoteToHot(Long postId);
+
+    Optional<HotPostChecker> findHotPostChecker(Long postId);
 }

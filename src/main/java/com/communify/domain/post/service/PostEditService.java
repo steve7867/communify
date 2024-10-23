@@ -39,4 +39,8 @@ public class PostEditService {
 
         postAttachmentService.updateFiles(postId, multipartFileList);
     }
+
+    public void promoteToHot(Long postId) {
+        postRepository.promoteToHot(postId);
+    }
 }

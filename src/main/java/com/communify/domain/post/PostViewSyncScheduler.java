@@ -10,32 +10,33 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class PostViewScheduler {
+public class PostViewSyncScheduler {
 
     private final PostViewCacheService postViewCacheService;
     private final SqlSessionFactory sqlSessionFactory;
 
     @Scheduled(cron = "*/30 * * * * *")
-    @SchedulerLock(name = SchedulerNames.POST_VIEW_SCHEDULER)
-    public void savePostViewCacheToDB() {
-        final Map<Long, Integer> map = postViewCacheService.getPostViewCacheAndClear();
+    @SchedulerLock(name = SchedulerNames.POST_VIEW_SYNC)
+    public void syncCachedPostViewsWithDB() {
+        final Map<Long, Integer> postViewMap = postViewCacheService.fetchAndRemoveViewCache();
 
-        if (map.isEmpty()) {
+        if (postViewMap.isEmpty()) {
             return;
         }
 
         try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
             PostRepository postRepository = sqlSession.getMapper(PostRepository.class);
 
-            map.keySet()
+            postViewMap.keySet()
                     .stream()
                     .sorted()
                     .forEach(postId -> {
-                        Integer viewCount = map.get(postId);
+                        Integer viewCount = postViewMap.get(postId);
 
                         postRepository.incViewCount(postId, viewCount);
                     });

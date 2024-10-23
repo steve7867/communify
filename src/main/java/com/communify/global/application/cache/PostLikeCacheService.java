@@ -1,6 +1,5 @@
 package com.communify.global.application.cache;
 
-import com.communify.domain.like.dto.LikerInfo;
 import com.communify.global.util.CacheKeyUtil;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +22,15 @@ public class PostLikeCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void cacheLike(final Long postId, final Long likerId, final String likerName) {
-        final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, postId);
+    public void cacheLike(final Long postId, final Long likerId) {
+        final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE_BUFFER, postId);
 
-        redisTemplate.opsForSet().add(cacheKey, new LikerInfo(likerId, likerName));
+        redisTemplate.opsForSet().add(cacheKey, likerId);
     }
 
-    public Map<Long, List<LikerInfo>> getPostLikeCacheAndClear() {
+    public Map<Long, List<Long>> fetchAndRemoveLikeCache() {
         final ScanOptions scanOptions = ScanOptions.scanOptions()
-                .match(CacheNames.POST_LIKE + "*")
+                .match(CacheNames.POST_LIKE_BUFFER + "*")
                 .count(300)
                 .build();
 
@@ -49,17 +48,17 @@ public class PostLikeCacheService {
         return redisTemplate.executePipelined(new SessionCallback<>() {
 
             @Override
-            public List<Object> execute(RedisOperations operations) throws DataAccessException {
+            public List<Object> execute(RedisOperations ops) throws DataAccessException {
                 for (String cacheKey : keyList) {
                     try {
-                        operations.multi();
+                        ops.multi();
 
-                        operations.opsForSet().members(cacheKey);
-                        operations.delete(cacheKey);
+                        ops.opsForSet().members(cacheKey);
+                        ops.delete(cacheKey);
 
-                        operations.exec();
+                        ops.exec();
                     } catch (RuntimeException e) {
-                        operations.discard();
+                        ops.discard();
                         throw e;
                     }
                 }
@@ -69,22 +68,17 @@ public class PostLikeCacheService {
         });
     }
 
-    private Map<Long, List<LikerInfo>> generatePostLikeMap(final List<String> keyList,
-                                                           final List<Object> result) {
-
-        final Map<Long, List<LikerInfo>> postLikeMap = new HashMap<>(keyList.size());
+    private Map<Long, List<Long>> generatePostLikeMap(final List<String> keyList, final List<Object> result) {
+        final Map<Long, List<Long>> postLikeMap = new HashMap<>(keyList.size());
 
         for (int i = 0; i < keyList.size(); i++) {
             final String cacheKey = keyList.get(i);
             final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
 
             final List<Object> txResultList = (List<Object>) result.get(i);
+            final List<Long> likerIdList = ((Set<Long>) txResultList.get(0)).stream().toList();
 
-            final List<LikerInfo> likerInfoList = ((Set<LikerInfo>) txResultList.get(0))
-                    .stream()
-                    .toList();
-
-            postLikeMap.put(postId, likerInfoList);
+            postLikeMap.put(postId, likerIdList);
         }
 
         return postLikeMap;

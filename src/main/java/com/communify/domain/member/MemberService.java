@@ -84,4 +84,10 @@ public class MemberService {
         final List<String> tokenList = memberRepository.findTokensOfFollowers(memberId);
         return Collections.unmodifiableList(tokenList);
     }
+
+    @Transactional(readOnly = true)
+    public List<String> getMemberNames(List<Long> memberIdList) {
+        List<String> nameList = memberRepository.findMemberNames(memberIdList);
+        return Collections.unmodifiableList(nameList);
+    }
 }
