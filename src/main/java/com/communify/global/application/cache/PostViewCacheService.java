@@ -22,14 +22,14 @@ public class PostViewCacheService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void incrementView(final Long postId) {
-        final String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW, postId);
+        final String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW_BUFFER, postId);
 
         redisTemplate.opsForValue().increment(key);
     }
 
-    public Map<Long, Integer> getPostViewCacheAndClear() {
+    public Map<Long, Integer> fetchAndRemoveViewCache() {
         final ScanOptions scanOptions = ScanOptions.scanOptions()
-                .match(CacheNames.POST_VIEW + "*")
+                .match(CacheNames.POST_VIEW_BUFFER + "*")
                 .count(300)
                 .build();
 

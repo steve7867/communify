@@ -1,6 +1,7 @@
 package com.communify.domain.post.service;
 
 import com.communify.domain.post.PostRepository;
+import com.communify.domain.post.dto.HotPostChecker;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.global.util.CacheNames;
@@ -54,5 +55,9 @@ public class PostSearchService {
     @Cacheable(cacheNames = CacheNames.POST_WRITER_ID, key = "#postId", sync = true)
     public Optional<Long> getWriterId(final Long postId) {
         return postRepository.findWriterId(postId);
+    }
+
+    public Optional<HotPostChecker> getHotPostChecker(Long postId) {
+        return postRepository.findHotPostChecker(postId);
     }
 }

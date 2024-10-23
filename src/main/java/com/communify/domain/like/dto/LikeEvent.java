@@ -10,5 +10,5 @@ import java.util.List;
 public class LikeEvent {
 
     private final Long postId;
-    private final List<LikerInfo> likerInfoList;
+    private final List<Long> likerIdList;
 }
