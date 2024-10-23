@@ -16,7 +16,7 @@ public class UploadFile {
     private final String originalFilename;
     private final String extension;
 
-    public UploadFile(final MultipartFile multipartFile) {
+    public UploadFile(MultipartFile multipartFile) {
         this.multipartFile = multipartFile;
         this.storedFilename = UUID.randomUUID().toString();
         this.originalFilename = trimExtension(multipartFile.getOriginalFilename());
@@ -39,17 +39,17 @@ public class UploadFile {
         return this.storedFilename + DELIMITER + this.extension;
     }
 
-    private String trimExtension(final String filename) {
-        final int indexOfDot = getIndexOfDot(filename);
+    private String trimExtension(String filename) {
+        int indexOfDot = getIndexOfDot(filename);
         return filename.substring(0, indexOfDot);
     }
 
-    private String extractExtension(final String filename) {
-        final int indexOfDot = getIndexOfDot(filename);
+    private String extractExtension(String filename) {
+        int indexOfDot = getIndexOfDot(filename);
         return filename.substring(indexOfDot + 1);
     }
 
-    private int getIndexOfDot(final String filename) {
+    private int getIndexOfDot(String filename) {
         return filename.lastIndexOf(DELIMITER);
     }
 }

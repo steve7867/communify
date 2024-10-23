@@ -17,12 +17,12 @@ public class FCMPushService implements PushService {
     private final FirebaseMessaging messaging;
 
     @Override
-    public boolean push(final PushInfo info) {
+    public boolean push(PushInfo info) {
         if (!info.isPushable()) {
             return false;
         }
 
-        final Message message = buildMessage(info.getMessageDto());
+        Message message = buildMessage(info.getMessageDto());
 
         try {
             messaging.send(message);
@@ -33,7 +33,7 @@ public class FCMPushService implements PushService {
         return true;
     }
 
-    private Message buildMessage(final MessageDto dto) {
+    private Message buildMessage(MessageDto dto) {
         if (dto.getBody() != null) {
             return Message.builder()
                     .putData("title", dto.getTitle())

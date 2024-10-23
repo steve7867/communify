@@ -30,15 +30,15 @@ public class PostSearchController {
     @GetMapping("/posts/hot")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<PostOutline> getHotPostOutlines(@RequestParam(required = false) @Positive final Long lastPostId) {
+    public List<PostOutline> getHotPostOutlines(@RequestParam(required = false) @Positive Long lastPostId) {
         return postSearchService.getHotPostOutlines(lastPostId);
     }
 
     @GetMapping("/categories/{categoryId}/posts")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<PostOutline> getPostOutlinesByCategory(@PathVariable @Positive @NotNull final Long categoryId,
-                                                       @RequestParam(required = false) @Positive final Long lastPostId) {
+    public List<PostOutline> getPostOutlinesByCategory(@PathVariable @Positive @NotNull Long categoryId,
+                                                       @RequestParam(required = false) @Positive Long lastPostId) {
 
         return postSearchService.getPostOutlinesByCategory(categoryId, lastPostId);
     }
@@ -46,16 +46,16 @@ public class PostSearchController {
     @GetMapping("/members/{memberId}/posts")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<PostOutline> getPostOutlinesByMember(@PathVariable @Positive @NotNull final Long memberId,
-                                                     @RequestParam(required = false) @Positive final Long lastPostId) {
+    public List<PostOutline> getPostOutlinesByMember(@PathVariable @Positive @NotNull Long memberId,
+                                                     @RequestParam(required = false) @Positive Long lastPostId) {
 
         return postSearchService.getPostOutlinesByMember(memberId, lastPostId);
     }
 
     @GetMapping("/posts/{postId}")
     @LoginCheck
-    public ResponseEntity<PostDetail> getPostDetail(@PathVariable @NotNull @Positive final Long postId) {
-        final Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId);
+    public ResponseEntity<PostDetail> getPostDetail(@PathVariable @NotNull @Positive Long postId) {
+        Optional<PostDetail> postDetailOpt = postSearchService.getPostDetail(postId);
         if (postDetailOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

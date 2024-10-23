@@ -24,8 +24,8 @@ public class PostDeleteController {
     @DeleteMapping("/{postId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void delete(@PathVariable @NotNull @Positive final Long postId,
-                       @MemberId final Long requesterId) {
+    public void delete(@PathVariable @NotNull @Positive Long postId,
+                       @MemberId Long requesterId) {
 
         postDeleteService.deletePost(postId, requesterId);
     }

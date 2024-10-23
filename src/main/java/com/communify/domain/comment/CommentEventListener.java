@@ -23,24 +23,24 @@ public class CommentEventListener {
 
     @Async
     @EventListener
-    public void pushCommentUploadNotification(final CommentUploadEvent event) {
-        final Long postId = event.getPostId();
-        final String content = event.getContent();
-        final String commentWriterName = event.getWriterName();
+    public void pushCommentUploadNotification(CommentUploadEvent event) {
+        Long postId = event.getPostId();
+        String content = event.getContent();
+        String commentWriterName = event.getWriterName();
 
-        final Optional<Long> postWriterIdOpt = postSearchService.getWriterId(postId);
+        Optional<Long> postWriterIdOpt = postSearchService.getWriterId(postId);
         if (postWriterIdOpt.isEmpty()) {
             return;
         }
-        final Long postWriterId = postWriterIdOpt.get();
+        Long postWriterId = postWriterIdOpt.get();
 
-        final Optional<String> tokenOpt = memberService.getToken(postWriterId);
+        Optional<String> tokenOpt = memberService.getToken(postWriterId);
         if (tokenOpt.isEmpty()) {
             return;
         }
-        final String token = tokenOpt.get();
+        String token = tokenOpt.get();
 
-        final PushInfo pushInfo = new PushInfoForComment(token, content, commentWriterName);
+        PushInfo pushInfo = new PushInfoForComment(token, content, commentWriterName);
 
         pushService.push(pushInfo);
     }

@@ -23,9 +23,9 @@ public class LoginController {
     @PostMapping("/login")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void login(@RequestBody @Valid final LoginForm form) {
-        final String email = form.getEmail();
-        final String password = form.getPassword();
+    public void login(@RequestBody @Valid LoginForm form) {
+        String email = form.getEmail();
+        String password = form.getPassword();
 
         loginService.login(email, password);
     }

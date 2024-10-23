@@ -34,10 +34,10 @@ public class CommentController {
     @PostMapping("/{postId}/comments")
     @ResponseStatus(OK)
     @LoginCheck
-    public void addComment(@PathVariable @NotNull @Positive final Long postId,
-                           @RequestBody @Valid final CommentForm form,
-                           @MemberId final Long writerId,
-                           @MemberName final String writerName) {
+    public void addComment(@PathVariable @NotNull @Positive Long postId,
+                           @RequestBody @Valid CommentForm form,
+                           @MemberId Long writerId,
+                           @MemberName String writerName) {
 
         commentService.addComment(postId, form.getContent(), writerId, writerName);
     }
@@ -45,8 +45,8 @@ public class CommentController {
     @GetMapping("/{postId}/comments")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<CommentInfo> getComments(@PathVariable @NotNull @Positive final Long postId,
-                                         @RequestParam(required = false) @Positive final Long lastCommentId) {
+    public List<CommentInfo> getComments(@PathVariable @NotNull @Positive Long postId,
+                                         @RequestParam(required = false) @Positive Long lastCommentId) {
 
         return commentService.getComments(postId, lastCommentId)
                 .getCommentInfoList();
@@ -55,10 +55,10 @@ public class CommentController {
     @PatchMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void editComment(@PathVariable @NotNull @Positive final Long postId,
-                            @PathVariable @NotNull @Positive final Long commentId,
-                            @RequestBody @Valid final CommentForm form,
-                            @MemberId final Long requesterId) {
+    public void editComment(@PathVariable @NotNull @Positive Long postId,
+                            @PathVariable @NotNull @Positive Long commentId,
+                            @RequestBody @Valid CommentForm form,
+                            @MemberId Long requesterId) {
 
         commentService.editComment(postId, commentId, form.getContent(), requesterId);
     }
@@ -66,9 +66,9 @@ public class CommentController {
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public void deleteComment(@PathVariable @NotNull @Positive final Long postId,
-                              @PathVariable @NotNull @Positive final Long commentId,
-                              @MemberId final Long requesterId) {
+    public void deleteComment(@PathVariable @NotNull @Positive Long postId,
+                              @PathVariable @NotNull @Positive Long commentId,
+                              @MemberId Long requesterId) {
 
         commentService.deleteComment(postId, commentId, requesterId);
     }

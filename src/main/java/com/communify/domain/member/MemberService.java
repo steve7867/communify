@@ -25,8 +25,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final LoginService loginService;
 
-    public void signUp(final String email, final String password, final String name) {
-        final String hashed = PasswordEncryptor.encrypt(password);
+    public void signUp(String email, String password, String name) {
+        String hashed = PasswordEncryptor.encrypt(password);
 
         try {
             memberRepository.insert(email, hashed, name);
@@ -36,13 +36,13 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberInfoForSearch getMemberInfoForSearchById(final Long memberId, final Long searcherId) {
+    public MemberInfoForSearch getMemberInfoForSearchById(Long memberId, Long searcherId) {
         return memberRepository.findMemberInfoForSearch(memberId, searcherId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
-    public void withdraw(final String password, final Long memberId) {
-        final String hashed = memberRepository.findHashed(memberId)
+    public void withdraw(String password, Long memberId) {
+        String hashed = memberRepository.findHashed(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         if (!PasswordEncryptor.isMatch(password, hashed)) {
@@ -56,32 +56,32 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    public void updatePassword(final String currentPassword, final String newPassword, final Long memberId) {
-        final String hashed = memberRepository.findHashed(memberId)
+    public void updatePassword(String currentPassword, String newPassword, Long memberId) {
+        String hashed = memberRepository.findHashed(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         if (!PasswordEncryptor.isMatch(currentPassword, hashed)) {
             throw new InvalidPasswordException(currentPassword);
         }
 
-        final String newHashed = PasswordEncryptor.encrypt(newPassword);
+        String newHashed = PasswordEncryptor.encrypt(newPassword);
         memberRepository.updatePassword(newHashed, memberId);
     }
 
     @CacheEvict(cacheNames = CacheNames.TOKEN, key = "#memberId")
-    public void setToken(final String token, final Long memberId) {
+    public void setToken(String token, Long memberId) {
         memberRepository.setToken(token, memberId);
     }
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheNames.TOKEN, key = "#memberId", sync = true)
-    public Optional<String> getToken(final Long memberId) {
+    public Optional<String> getToken(Long memberId) {
         return memberRepository.findTokenById(memberId);
     }
 
     @Transactional(readOnly = true)
-    public List<String> getTokensOfFollowers(final Long memberId) {
-        final List<String> tokenList = memberRepository.findTokensOfFollowers(memberId);
+    public List<String> getTokensOfFollowers(Long memberId) {
+        List<String> tokenList = memberRepository.findTokensOfFollowers(memberId);
         return Collections.unmodifiableList(tokenList);
     }
 

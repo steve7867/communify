@@ -21,28 +21,28 @@ public class PostViewCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void incrementView(final Long postId) {
-        final String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW_BUFFER, postId);
+    public void incrementView(Long postId) {
+        String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_VIEW_BUFFER, postId);
 
         redisTemplate.opsForValue().increment(key);
     }
 
     public Map<Long, Integer> fetchAndRemoveViewCache() {
-        final ScanOptions scanOptions = ScanOptions.scanOptions()
+        ScanOptions scanOptions = ScanOptions.scanOptions()
                 .match(CacheNames.POST_VIEW_BUFFER + "*")
                 .count(300)
                 .build();
 
-        try (final Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
-            final List<String> keyList = cursor.stream().toList();
+        try (Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
+            List<String> keyList = cursor.stream().toList();
 
-            final List<Object> result = executePipelined(keyList);
+            List<Object> result = executePipelined(keyList);
 
             return generatePostViewMap(keyList, result);
         }
     }
 
-    private List<Object> executePipelined(final List<String> keyList) {
+    private List<Object> executePipelined(List<String> keyList) {
         return redisTemplate.executePipelined(new SessionCallback<>() {
 
             @Override
@@ -66,17 +66,16 @@ public class PostViewCacheService {
         });
     }
 
-    private Map<Long, Integer> generatePostViewMap(final List<String> keyList,
-                                                   final List<Object> result) {
+    private Map<Long, Integer> generatePostViewMap(List<String> keyList, List<Object> result) {
 
-        final Map<Long, Integer> postViewMap = new TreeMap<>();
+        Map<Long, Integer> postViewMap = new TreeMap<>();
 
         for (int i = 0; i < keyList.size(); i++) {
-            final String cacheKey = keyList.get(i);
-            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+            String cacheKey = keyList.get(i);
+            Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
 
-            final List<Object> txResultList = (List<Object>) result.get(i);
-            final Integer viewCount = (Integer) txResultList.get(0);
+            List<Object> txResultList = (List<Object>) result.get(i);
+            Integer viewCount = (Integer) txResultList.get(0);
 
             postViewMap.put(postId, viewCount);
         }

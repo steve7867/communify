@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,11 +20,11 @@ public class PostUploadEventListener {
 
     @Async
     @EventListener
-    public void pushPostUploadNotification(final PostUploadEvent event) {
-        final Long writerId = event.getWriterId();
-        final String writerName = event.getWriterName();
+    public void pushPostUploadNotification(PostUploadEvent event) {
+        Long writerId = event.getWriterId();
+        String writerName = event.getWriterName();
 
-        final List<String> tokenList = memberService.getTokensOfFollowers(writerId);
+        List<String> tokenList = memberService.getTokensOfFollowers(writerId);
 
         tokenList.forEach(token -> {
             pushService.push(new PushInfoForPostUpload(token, writerName));

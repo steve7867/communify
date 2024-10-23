@@ -16,8 +16,8 @@ public class FileEventListener {
 
     @Async
     @EventListener
-    public void deleteFiles(final FileUploadFailEvent event) {
-        final File directory = event.getDirectory();
+    public void deleteFiles(FileUploadFailEvent event) {
+        File directory = event.getDirectory();
         storageService.deleteFiles(directory);
     }
 }

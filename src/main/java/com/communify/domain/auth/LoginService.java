@@ -17,11 +17,11 @@ public class LoginService {
     private final MemberRepository memberRepository;
     private final SessionService sessionService;
 
-    public void login(final String email, final String password) {
-        final MemberInfoForLogin memberInfo = memberRepository.findMemberInfoForLoginByEmail(email)
+    public void login(String email, String password) {
+        MemberInfoForLogin memberInfo = memberRepository.findMemberInfoForLoginByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(email));
 
-        final String hashed = memberInfo.getHashed();
+        String hashed = memberInfo.getHashed();
         if (!PasswordEncryptor.isMatch(password, hashed)) {
             throw new InvalidPasswordException(password);
         }

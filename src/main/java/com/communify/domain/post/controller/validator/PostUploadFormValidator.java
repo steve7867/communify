@@ -12,20 +12,20 @@ import java.util.List;
 public class PostUploadFormValidator implements Validator {
 
     @Override
-    public boolean supports(final Class<?> clazz) {
+    public boolean supports(Class<?> clazz) {
         return PostUploadForm.class.isAssignableFrom(clazz);
     }
 
     @Override
-    public void validate(final Object target, final Errors errors) {
-        final PostUploadForm request = (PostUploadForm) target;
+    public void validate(Object target, Errors errors) {
+        PostUploadForm request = (PostUploadForm) target;
 
         verifyFileList(request.getFileList(), errors);
     }
 
-    private void verifyFileList(final List<MultipartFile> fileList, final Errors errors) {
+    private void verifyFileList(List<MultipartFile> fileList, Errors errors) {
         for (MultipartFile file : fileList) {
-            final String contentType = file.getContentType();
+            String contentType = file.getContentType();
             if (!isImageType(contentType)) {
                 errors.rejectValue("fileList", "ContentType", "이미지 파일만 허용됩니다.");
             }
@@ -37,7 +37,7 @@ public class PostUploadFormValidator implements Validator {
         }
     }
 
-    private boolean isImageType(final String contentType) {
+    private boolean isImageType(String contentType) {
         return contentType.startsWith("image/");
     }
 }

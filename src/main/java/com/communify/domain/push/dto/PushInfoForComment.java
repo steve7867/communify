@@ -8,7 +8,7 @@ public class PushInfoForComment extends PushInfo {
     private final String content;
     private final String writerName;
 
-    public PushInfoForComment(final String token, final String content, final String writerName) {
+    public PushInfoForComment(String token, String content, String writerName) {
         super(token);
         this.content = content;
         this.writerName = writerName;

@@ -5,12 +5,12 @@ public final class CacheKeyUtil {
     private CacheKeyUtil() {
     }
 
-    public static String makeCacheKey(final String cacheName, final Object keyId) {
+    public static String makeCacheKey(String cacheName, Object keyId) {
         return cacheName + "::" + keyId;
     }
 
-    public static String extractKeyId(final String cacheKey) {
-        final int i = cacheKey.lastIndexOf("::");
+    public static String extractKeyId(String cacheKey) {
+        int i = cacheKey.lastIndexOf("::");
         return cacheKey.substring(i + 2);
     }
 }

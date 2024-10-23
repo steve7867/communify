@@ -26,21 +26,21 @@ public class PostSearchService {
     @Cacheable(cacheNames = CacheNames.HOT_POST_OUTLINES,
             key = "#lastPostId",
             unless = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toDays() > 3")
-    public List<PostOutline> getHotPostOutlines(final Long lastPostId) {
-        final List<PostOutline> hotPostOutlineList = postRepository.findHotPostOutlines(lastPostId, SEARCH_SIZE);
+    public List<PostOutline> getHotPostOutlines(Long lastPostId) {
+        List<PostOutline> hotPostOutlineList = postRepository.findHotPostOutlines(lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(hotPostOutlineList);
     }
 
     @Cacheable(cacheNames = CacheNames.POST_OUTLINES,
             key = "#categoryId + '_' + #lastPostId",
             unless = "T(java.time.Duration).between(#result.get(0).createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
-    public List<PostOutline> getPostOutlinesByCategory(final Long categoryId, final Long lastPostId) {
-        final List<PostOutline> postOutlineList = postRepository.findPostOutlinesByCategory(categoryId, lastPostId, SEARCH_SIZE);
+    public List<PostOutline> getPostOutlinesByCategory(Long categoryId, Long lastPostId) {
+        List<PostOutline> postOutlineList = postRepository.findPostOutlinesByCategory(categoryId, lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(postOutlineList);
     }
 
-    public List<PostOutline> getPostOutlinesByMember(final Long writerId, final Long lastPostId) {
-        final List<PostOutline> postOutlineList = postRepository.findPostOutlinesByMember(writerId, lastPostId, SEARCH_SIZE);
+    public List<PostOutline> getPostOutlinesByMember(Long writerId, Long lastPostId) {
+        List<PostOutline> postOutlineList = postRepository.findPostOutlinesByMember(writerId, lastPostId, SEARCH_SIZE);
         return Collections.unmodifiableList(postOutlineList);
     }
 
@@ -48,12 +48,12 @@ public class PostSearchService {
             key = "#postId",
             unless = "#result != null " +
                     "&& T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
-    public Optional<PostDetail> getPostDetail(final Long postId) {
+    public Optional<PostDetail> getPostDetail(Long postId) {
         return postRepository.findPostDetail(postId);
     }
 
     @Cacheable(cacheNames = CacheNames.POST_WRITER_ID, key = "#postId", sync = true)
-    public Optional<Long> getWriterId(final Long postId) {
+    public Optional<Long> getWriterId(Long postId) {
         return postRepository.findWriterId(postId);
     }
 

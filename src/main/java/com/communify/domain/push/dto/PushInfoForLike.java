@@ -7,8 +7,8 @@ public class PushInfoForLike extends PushInfo {
 
     private final String likerName;
 
-    public PushInfoForLike(final String token,
-                           final String likerName) {
+    public PushInfoForLike(String token,
+                           String likerName) {
 
         super(token);
         this.likerName = likerName;

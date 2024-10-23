@@ -10,7 +10,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Map;
 
 @Component
@@ -23,7 +22,7 @@ public class PostViewSyncScheduler {
     @Scheduled(cron = "*/30 * * * * *")
     @SchedulerLock(name = SchedulerNames.POST_VIEW_SYNC)
     public void syncCachedPostViewsWithDB() {
-        final Map<Long, Integer> postViewMap = postViewCacheService.fetchAndRemoveViewCache();
+        Map<Long, Integer> postViewMap = postViewCacheService.fetchAndRemoveViewCache();
 
         if (postViewMap.isEmpty()) {
             return;

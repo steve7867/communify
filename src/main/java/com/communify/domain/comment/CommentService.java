@@ -22,12 +22,12 @@ public class CommentService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void addComment(final Long postId,
-                           final String content,
-                           final Long writerId,
-                           final String writerName) {
+    public void addComment(Long postId,
+                           String content,
+                           Long writerId,
+                           String writerName) {
 
-        final Integer addedCount = commentRepository.insert(postId, content, writerId);
+        Integer addedCount = commentRepository.insert(postId, content, writerId);
         if (addedCount == 0) {
             return;
         }
@@ -41,24 +41,24 @@ public class CommentService {
     @Cacheable(cacheNames = CacheNames.COMMENTS,
             key = "#postId + '_' + #lastCommentId",
             unless = "T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
-    public CommentListContainer getComments(final Long postId, final Long lastCommentId) {
+    public CommentListContainer getComments(Long postId, Long lastCommentId) {
         return commentRepository.findCommentsByPostId(postId, lastCommentId, SEARCH_SIZE);
     }
 
-    public void editComment(final Long postId,
-                            final Long commentId,
-                            final String content,
-                            final Long requesterId) {
+    public void editComment(Long postId,
+                            Long commentId,
+                            String content,
+                            Long requesterId) {
 
         commentRepository.editComment(postId, commentId, content, requesterId);
     }
 
     @Transactional
-    public void deleteComment(final Long postId,
-                              final Long commentId,
-                              final Long requesterId) {
+    public void deleteComment(Long postId,
+                              Long commentId,
+                              Long requesterId) {
 
-        final Integer deletedCount = commentRepository.deleteComment(postId, commentId, requesterId);
+        Integer deletedCount = commentRepository.deleteComment(postId, commentId, requesterId);
         if (deletedCount == 0) {
             return;
         }

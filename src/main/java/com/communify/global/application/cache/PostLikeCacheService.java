@@ -22,29 +22,29 @@ public class PostLikeCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void cacheLike(final Long postId, final Long likerId) {
-        final String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE_BUFFER, postId);
+    public void cacheLike(Long postId, Long likerId) {
+        String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE_BUFFER, postId);
 
         redisTemplate.opsForSet().add(cacheKey, likerId);
     }
 
     public Map<Long, List<Long>> fetchAndRemoveLikeCache() {
-        final ScanOptions scanOptions = ScanOptions.scanOptions()
+        ScanOptions scanOptions = ScanOptions.scanOptions()
                 .match(CacheNames.POST_LIKE_BUFFER + "*")
                 .count(300)
                 .build();
 
-        final List<String> keyList;
-        try (final Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
+        List<String> keyList;
+        try (Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
             keyList = cursor.stream().toList();
         }
 
-        final List<Object> result = executePipelined(keyList);
+        List<Object> result = executePipelined(keyList);
 
         return generatePostLikeMap(keyList, result);
     }
 
-    private List<Object> executePipelined(final List<String> keyList) {
+    private List<Object> executePipelined(List<String> keyList) {
         return redisTemplate.executePipelined(new SessionCallback<>() {
 
             @Override
@@ -68,15 +68,15 @@ public class PostLikeCacheService {
         });
     }
 
-    private Map<Long, List<Long>> generatePostLikeMap(final List<String> keyList, final List<Object> result) {
-        final Map<Long, List<Long>> postLikeMap = new HashMap<>(keyList.size());
+    private Map<Long, List<Long>> generatePostLikeMap(List<String> keyList, List<Object> result) {
+        Map<Long, List<Long>> postLikeMap = new HashMap<>(keyList.size());
 
         for (int i = 0; i < keyList.size(); i++) {
-            final String cacheKey = keyList.get(i);
-            final Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
+            String cacheKey = keyList.get(i);
+            Long postId = Long.valueOf(CacheKeyUtil.extractKeyId(cacheKey));
 
-            final List<Object> txResultList = (List<Object>) result.get(i);
-            final List<Long> likerIdList = ((Set<Long>) txResultList.get(0)).stream().toList();
+            List<Object> txResultList = (List<Object>) result.get(i);
+            List<Long> likerIdList = ((Set<Long>) txResultList.get(0)).stream().toList();
 
             postLikeMap.put(postId, likerIdList);
         }
