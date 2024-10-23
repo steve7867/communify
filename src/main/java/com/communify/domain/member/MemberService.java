@@ -3,6 +3,7 @@ package com.communify.domain.member;
 import com.communify.domain.auth.LoginService;
 import com.communify.domain.auth.exception.InvalidPasswordException;
 import com.communify.domain.member.dto.MemberInfoForSearch;
+import com.communify.domain.member.dto.MemberWithdrawEvent;
 import com.communify.domain.member.exception.EmailAlreadyUsedException;
 import com.communify.domain.member.exception.MemberNotFoundException;
 import com.communify.global.util.CacheNames;
@@ -10,7 +11,9 @@ import com.communify.global.util.PasswordEncryptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final LoginService loginService;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final ApplicationEventPublisher eventPublisher;
 
     public void signUp(String email, String password, String name) {
         String hashed = PasswordEncryptor.encrypt(password);
@@ -41,6 +46,7 @@ public class MemberService {
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
+    @Transactional(readOnly = true)
     public void withdraw(String password, Long memberId) {
         String hashed = memberRepository.findHashed(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
@@ -50,10 +56,9 @@ public class MemberService {
         }
 
         loginService.logout();
+        redisTemplate.opsForSet().add(CacheNames.DELETED_MEMBER, memberId);
 
-        memberRepository.decFollowerCountOfFollowees(memberId, 1);
-        memberRepository.decFolloweeCountOfFollowers(memberId, 1);
-        memberRepository.deleteById(memberId);
+        eventPublisher.publishEvent(new MemberWithdrawEvent(memberId));
     }
 
     public void updatePassword(String currentPassword, String newPassword, Long memberId) {
