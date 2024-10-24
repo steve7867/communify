@@ -40,8 +40,6 @@ public class CommentEventListener {
         }
         String token = tokenOpt.get();
 
-        PushInfo pushInfo = new PushInfoForComment(token, content, commentWriterName);
-
-        pushService.push(pushInfo);
+        pushService.push(new PushInfoForComment(token, content, commentWriterName));
     }
 }

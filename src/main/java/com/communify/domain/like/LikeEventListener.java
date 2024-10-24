@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -62,9 +63,10 @@ public class LikeEventListener {
 
         likerIdList.remove(writerId);
 
-        List<String> likerNameList = memberService.getMemberNames(likerIdList);
-        for (String name : likerNameList) {
-            pushService.push(new PushInfoForLike(token, name));
-        }
+        memberService.getMemberNames(likerIdList)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(likerName -> new PushInfoForLike(token, likerName))
+                .forEach(pushService::push);
     }
 }

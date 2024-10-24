@@ -31,7 +31,6 @@ public class FollowEventListener {
         }
         String token = tokenOpt.get();
 
-        PushInfo pushInfo = new PushInfoForFollow(token, followerName);
-        pushService.push(pushInfo);
+        pushService.push(new PushInfoForFollow(token, followerName));
     }
 }
