@@ -6,6 +6,7 @@ import com.communify.domain.member.dto.MemberInfoForSearch;
 import com.communify.domain.member.dto.MemberWithdrawEvent;
 import com.communify.domain.member.exception.EmailAlreadyUsedException;
 import com.communify.domain.member.exception.MemberNotFoundException;
+import com.communify.domain.member.exception.NameAlreadyUsedException;
 import com.communify.global.util.CacheNames;
 import com.communify.global.util.PasswordEncryptor;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,12 @@ public class MemberService {
         try {
             memberRepository.insert(email, hashed, name);
         } catch (DuplicateKeyException e) {
-            throw new EmailAlreadyUsedException(email, e);
+            String message = e.getMessage();
+            if (message.contains(String.format("Duplicate entry '%s' for key 'member.email'", email))) {
+                throw new EmailAlreadyUsedException(email, e);
+            } else {
+                throw new NameAlreadyUsedException(name, e);
+            }
         }
     }
 
