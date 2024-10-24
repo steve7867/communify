@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class InvalidAccessException extends BusinessException {
 
-    public InvalidAccessException(final HttpStatus status, final String message) {
+    public InvalidAccessException(HttpStatus status, String message) {
         super(status, message);
     }
 }

@@ -11,13 +11,13 @@ public class MemberNotFoundException extends EntityNotFoundException {
     private final String email;
     private final Long memberId;
 
-    public MemberNotFoundException(final String email) {
+    public MemberNotFoundException(String email) {
         super(String.format(EMAIL_NOT_EXISTING_MESSAGE_FORMAT, email));
         this.email = email;
         this.memberId = null;
     }
 
-    public MemberNotFoundException(final Long memberId) {
+    public MemberNotFoundException(Long memberId) {
         super(String.format(MEMBER_NOT_EXISTING_MESSAGE_FORMAT, memberId));
         this.memberId = memberId;
         this.email = null;

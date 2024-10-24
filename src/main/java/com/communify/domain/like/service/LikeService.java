@@ -13,12 +13,12 @@ public class LikeService {
     private final PostLikeCacheService postLikeCacheService;
     private final LikeRepository likeRepository;
 
-    public void like(final Long postId, final Long likerId) {
+    public void like(Long postId, Long likerId) {
         postLikeCacheService.cacheLike(postId, likerId);
     }
 
     @Transactional(readOnly = true)
-    public Boolean isLiking(final Long postId, final Long likerId) {
+    public Boolean isLiking(Long postId, Long likerId) {
         return likeRepository.findLiking(postId, likerId);
     }
 }

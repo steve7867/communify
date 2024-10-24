@@ -7,7 +7,7 @@ public class PushInfoForPostUpload extends PushInfo {
 
     private final String writerName;
 
-    public PushInfoForPostUpload(final String token, final String writerName) {
+    public PushInfoForPostUpload(String token, String writerName) {
         super(token);
         this.writerName = writerName;
     }

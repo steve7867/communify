@@ -22,7 +22,7 @@ public class SessionConfig {
     @Bean("sessionConnectionFactory")
     @Primary
     public RedisConnectionFactory redisConnectionFactory() {
-        final RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(host, port);
+        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(host, port);
         return new LettuceConnectionFactory(standaloneConfiguration);
     }
 }

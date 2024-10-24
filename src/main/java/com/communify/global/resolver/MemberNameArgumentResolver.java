@@ -20,16 +20,16 @@ public class MemberNameArgumentResolver implements HandlerMethodArgumentResolver
     private final SessionService sessionService;
 
     @Override
-    public boolean supportsParameter(final MethodParameter parameter) {
+    public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasMethodAnnotation(LoginCheck.class)
                 && parameter.hasParameterAnnotation(MemberName.class);
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter,
-                                  final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest,
-                                  final WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(MethodParameter parameter,
+                                  ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest,
+                                  WebDataBinderFactory binderFactory) {
 
         return sessionService.get(SessionKey.MEMBER_NAME)
                 .orElseThrow(NotLoggedInException::new);

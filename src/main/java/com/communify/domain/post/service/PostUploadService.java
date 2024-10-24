@@ -17,7 +17,7 @@ public class PostUploadService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void uploadPost(final PostUploadRequest request) {
+    public void uploadPost(PostUploadRequest request) {
         postRepository.insertPost(request);
 
         postAttachmentService.savePostAttachments(request.getId(), request.getMultipartFileList());

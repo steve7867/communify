@@ -19,15 +19,15 @@ public class LocalStorageService implements StorageService {
     private String localDirectoryName;
 
     @Override
-    public void storeFiles(final File subDirectory, final List<UploadFile> uploadFileList) {
-        final File directory = resolveDirectory(subDirectory);
+    public void storeFiles(File subDirectory, List<UploadFile> uploadFileList) {
+        File directory = resolveDirectory(subDirectory);
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
         uploadFileList.forEach(uploadFile -> {
-            final MultipartFile multipartFile = uploadFile.getMultipartFile();
-            final String fullStoredFilename = uploadFile.getFullStoredFilename();
+            MultipartFile multipartFile = uploadFile.getMultipartFile();
+            String fullStoredFilename = uploadFile.getFullStoredFilename();
 
             try {
                 multipartFile.transferTo(new File(directory, fullStoredFilename));
@@ -38,17 +38,17 @@ public class LocalStorageService implements StorageService {
     }
 
     @Override
-    public void deleteFiles(final File subDirectory) {
-        final File directory = resolveDirectory(subDirectory);
+    public void deleteFiles(File subDirectory) {
+        File directory = resolveDirectory(subDirectory);
 
         try {
             FileUtils.forceDelete(directory);
-        } catch (final IOException e) {
+        } catch (IOException e) {
             throw new FileDeleteFailException(directory, e);
         }
     }
 
-    private File resolveDirectory(final File subDirectory) {
+    private File resolveDirectory(File subDirectory) {
         return new File(localDirectoryName, subDirectory.getPath());
     }
 }

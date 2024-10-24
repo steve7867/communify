@@ -20,11 +20,11 @@ public class FirebaseConfig {
     private String keyPath;
 
     @Bean
-    public FirebaseMessaging firebaseMessaging(final ResourceLoader resourceLoader) throws IOException {
-        final Resource resource = resourceLoader.getResource(keyPath);
-        final InputStream serviceAccount = resource.getInputStream();
+    public FirebaseMessaging firebaseMessaging(ResourceLoader resourceLoader) throws IOException {
+        Resource resource = resourceLoader.getResource(keyPath);
+        InputStream serviceAccount = resource.getInputStream();
 
-        final FirebaseOptions firebaseOptions = FirebaseOptions.builder()
+        FirebaseOptions firebaseOptions = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
 

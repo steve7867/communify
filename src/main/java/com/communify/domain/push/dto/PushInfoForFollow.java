@@ -4,7 +4,7 @@ public class PushInfoForFollow extends PushInfo {
 
     private final String followerName;
 
-    public PushInfoForFollow(final String token, final String followerName) {
+    public PushInfoForFollow(String token, String followerName) {
         super(token);
         this.followerName = followerName;
     }

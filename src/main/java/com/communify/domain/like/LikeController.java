@@ -25,8 +25,8 @@ public class LikeController {
     @PostMapping("/{postId}/like")
     @ResponseStatus(OK)
     @LoginCheck
-    public void like(@PathVariable @NotNull @Positive final Long postId,
-                     @MemberId final Long likerId) {
+    public void like(@PathVariable @NotNull @Positive Long postId,
+                     @MemberId Long likerId) {
 
         likeService.like(postId, likerId);
     }
@@ -34,8 +34,8 @@ public class LikeController {
     @GetMapping("/{postId}/isLiking")
     @ResponseStatus(OK)
     @LoginCheck
-    public Boolean isLiking(@PathVariable @NotNull @Positive final Long postId,
-                            @MemberId final Long likerId) {
+    public Boolean isLiking(@PathVariable @NotNull @Positive Long postId,
+                            @MemberId Long likerId) {
 
         return likeService.isLiking(postId, likerId);
     }

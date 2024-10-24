@@ -17,21 +17,21 @@ public class MessageDto {
     private final String body;
     private final String token;
 
-    public static MessageDto forPostUpload(final String token, final String writerName) {
+    public static MessageDto forPostUpload(String token, String writerName) {
         return MessageDto.builder()
                 .title(String.format(POST_UPLOAD_MESSAGE_TITLE_FORMAT, writerName))
                 .token(token)
                 .build();
     }
 
-    public static MessageDto forPostLike(final String token, final String likerName) {
+    public static MessageDto forPostLike(String token, String likerName) {
         return MessageDto.builder()
                 .title(String.format(LIKE_MESSAGE_TITLE_FORMAT, likerName))
                 .token(token)
                 .build();
     }
 
-    public static MessageDto forComment(final String token, final String commentWriterName, final String commentContent) {
+    public static MessageDto forComment(String token, String commentWriterName, String commentContent) {
         return MessageDto.builder()
                 .title(String.format(COMMENT_MESSAGE_TITLE_FORMAT, commentWriterName))
                 .body(commentContent)
@@ -39,7 +39,7 @@ public class MessageDto {
                 .build();
     }
 
-    public static MessageDto forFollow(final String token, final String followerName) {
+    public static MessageDto forFollow(String token, String followerName) {
         return MessageDto.builder()
                 .title(String.format(FOLLOW_MESSAGE_TITLE_FORMAT, followerName))
                 .token(token)

@@ -22,20 +22,20 @@ public class LikeSaveService {
     private final PostRepository postRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public void saveLike(final Long postId, final List<Long> likerIdList) {
-        final int[] updateCounts = batchInsertLikes(postId, likerIdList);
+    public void saveLike(Long postId, List<Long> likerIdList) {
+        int[] updateCounts = batchInsertLikes(postId, likerIdList);
 
-        final Integer sum = Arrays.stream(updateCounts).sum();
+        Integer sum = Arrays.stream(updateCounts).sum();
         postRepository.incLikeCount(postId, sum);
 
-        final List<Long> validLikerIdList = filterValidLikerId(likerIdList, updateCounts);
+        List<Long> validLikerIdList = filterValidLikerId(likerIdList, updateCounts);
 
         eventPublisher.publishEvent(new LikeEvent(postId, validLikerIdList));
     }
 
     private int[] batchInsertLikes(Long postId, List<Long> likerIdList) {
-        try (final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
-            final LikeRepository likeRepository = sqlSession.getMapper(LikeRepository.class);
+        try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
+            LikeRepository likeRepository = sqlSession.getMapper(LikeRepository.class);
 
             for (Long likerId : likerIdList) {
                 likeRepository.insertLike(postId, likerId);
@@ -47,7 +47,7 @@ public class LikeSaveService {
         }
     }
 
-    private List<Long> filterValidLikerId(final List<Long> likerIdList, final int[] updateCounts) {
+    private List<Long> filterValidLikerId(List<Long> likerIdList, int[] updateCounts) {
         return IntStream.range(0, likerIdList.size())
                 .filter(i -> updateCounts[i] == 1)
                 .mapToObj(likerIdList::get)

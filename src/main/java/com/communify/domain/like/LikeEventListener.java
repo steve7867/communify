@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -44,27 +45,28 @@ public class LikeEventListener {
 
     @Async
     @EventListener
-    public void pushNotification(final LikeEvent event) {
-        final Long postId = event.getPostId();
-        final List<Long> likerIdList = event.getLikerIdList();
+    public void pushNotification(LikeEvent event) {
+        Long postId = event.getPostId();
+        List<Long> likerIdList = event.getLikerIdList();
 
-        final Optional<Long> writerIdOpt = postSearchService.getWriterId(postId);
+        Optional<Long> writerIdOpt = postSearchService.getWriterId(postId);
         if (writerIdOpt.isEmpty()) {
             return;
         }
-        final Long writerId = writerIdOpt.get();
+        Long writerId = writerIdOpt.get();
 
-        final Optional<String> tokenOpt = memberService.getToken(writerId);
+        Optional<String> tokenOpt = memberService.getToken(writerId);
         if (tokenOpt.isEmpty()) {
             return;
         }
-        final String token = tokenOpt.get();
+        String token = tokenOpt.get();
 
         likerIdList.remove(writerId);
 
-        final List<String> likerNameList = memberService.getMemberNames(likerIdList);
-        for (String name : likerNameList) {
-            pushService.push(new PushInfoForLike(token, name));
-        }
+        memberService.getMemberNames(likerIdList)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(likerName -> new PushInfoForLike(token, likerName))
+                .forEach(pushService::push);
     }
 }

@@ -21,7 +21,7 @@ public class PostLikeSyncScheduler {
     @Scheduled(cron = "*/10 * * * * *")
     @SchedulerLock(name = SchedulerNames.POST_LIKE_SYNC)
     public void syncCacheWithDB() {
-        final Map<Long, List<Long>> postLikeMap = postLikeCacheService.fetchAndRemoveLikeCache();
+        Map<Long, List<Long>> postLikeMap = postLikeCacheService.fetchAndRemoveLikeCache();
 
         for (Long postId : postLikeMap.keySet()) {
             List<Long> likerIdList = postLikeMap.get(postId);

@@ -34,11 +34,11 @@ public class S3StorageService implements StorageService {
     private String bucket;
 
     @Override
-    public void storeFiles(final File directory, final List<UploadFile> uploadFileList) {
-        final String prefix = resolveDirectoryPath(directory);
+    public void storeFiles(File directory, List<UploadFile> uploadFileList) {
+        String prefix = resolveDirectoryPath(directory);
 
         uploadFileList.forEach(uploadFile -> {
-            final PutObjectRequest por = PutObjectRequest.builder()
+            PutObjectRequest por = PutObjectRequest.builder()
                     .bucket(bucket)
                     .key(prefix + uploadFile.getFullStoredFilename())
                     .contentType(uploadFile.getContentType())
@@ -47,37 +47,37 @@ public class S3StorageService implements StorageService {
 
             try {
                 s3Client.putObject(por, RequestBody.fromBytes(uploadFile.getBytes()));
-            } catch (final AwsServiceException | SdkClientException | IOException e) {
+            } catch (AwsServiceException | SdkClientException | IOException e) {
                 throw new FileUploadFailException(new File(prefix), uploadFile, e);
             }
         });
     }
 
     @Override
-    public void deleteFiles(final File directory) {
-        final String prefix = resolveDirectoryPath(directory);
+    public void deleteFiles(File directory) {
+        String prefix = resolveDirectoryPath(directory);
 
         try {
-            final ListObjectsResponse lor = listObjects(prefix);
+            ListObjectsResponse lor = listObjects(prefix);
 
-            final List<ObjectIdentifier> objectIdentifierList = lor.contents()
+            List<ObjectIdentifier> objectIdentifierList = lor.contents()
                     .stream()
                     .map(object -> ObjectIdentifier.builder().key(object.key()).build())
                     .toList();
 
-            final DeleteObjectsRequest dor = DeleteObjectsRequest.builder()
+            DeleteObjectsRequest dor = DeleteObjectsRequest.builder()
                     .bucket(bucket)
                     .delete(Delete.builder().objects(objectIdentifierList).build())
                     .build();
 
             s3Client.deleteObjects(dor);
-        } catch (final AwsServiceException | SdkClientException e) {
+        } catch (AwsServiceException | SdkClientException e) {
             throw new FileDeleteFailException(new File(prefix), e);
         }
     }
 
-    private ListObjectsResponse listObjects(final String prefix) {
-        final ListObjectsRequest lor = ListObjectsRequest.builder()
+    private ListObjectsResponse listObjects(String prefix) {
+        ListObjectsRequest lor = ListObjectsRequest.builder()
                 .bucket(bucket)
                 .prefix(prefix)
                 .build();
@@ -85,11 +85,11 @@ public class S3StorageService implements StorageService {
         return s3Client.listObjects(lor);
     }
 
-    private String resolveDirectoryPath(final File subDirectory) {
-        final StringBuilder sb = new StringBuilder();
+    private String resolveDirectoryPath(File subDirectory) {
+        StringBuilder sb = new StringBuilder();
 
-        final String path = subDirectory.getPath();
-        final StringTokenizer st = new StringTokenizer(path, File.separator);
+        String path = subDirectory.getPath();
+        StringTokenizer st = new StringTokenizer(path, File.separator);
 
         while (st.hasMoreTokens()) {
             sb.append(st.nextToken()).append(SLASH);

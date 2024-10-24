@@ -12,7 +12,7 @@ public class FileDeleteFailException extends InternalServerException {
 
     private final File directory;
 
-    public FileDeleteFailException(final File directory, final Throwable cause) {
+    public FileDeleteFailException(File directory, Throwable cause) {
         super(MESSAGE_PREFIX + directory.getPath(), cause);
         this.directory = directory;
     }
