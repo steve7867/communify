@@ -8,6 +8,4 @@ import lombok.RequiredArgsConstructor;
 public class CommentUploadEvent {
 
     private final Long postId;
-    private final String content;
-    private final String writerName;
 }

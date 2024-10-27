@@ -29,11 +29,11 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
      * MethodArgumentNotValidException의 기본 메시지만으로는 클라이언트가 문제를 파악할 수 없으므로 커스터마이징 해준다.
      */
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,
-                                                                  final HttpHeaders headers,
-                                                                  final HttpStatusCode status,
-                                                                  final WebRequest request) {
-        final String message = ex.getBindingResult()
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatusCode status,
+                                                                  WebRequest request) {
+        String message = ex.getBindingResult()
                 .getAllErrors()
                 .get(0)
                 .getDefaultMessage();
@@ -45,7 +45,7 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
      * BusinessException과 그 하위 예외를 모두 처리.
      */
     @ExceptionHandler(BusinessException.class)
-    public ProblemDetail handleBusinessException(final BusinessException e) {
+    public ProblemDetail handleBusinessException(BusinessException e) {
         log.error(e.getMessage(), e);
 
         return ProblemDetail.forStatusAndDetail(e.getStatus(), e.getMessage());
@@ -55,7 +55,7 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
      * 데이터 무결성 제약을 깨는 데이터 삽입, 수정이 발생할 때 던져지는 DataIntegrityViolationException을 처리
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ProblemDetail handleDataIntegrityViolationException(final DataIntegrityViolationException e) {
+    public ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         log.error(e.getMessage(), e);
 
         return ProblemDetail.forStatusAndDetail(BAD_REQUEST, e.getMessage());

@@ -5,21 +5,15 @@
 
 ## 🎯 Technical Issue
 
-- 캐싱(Redis)
-  - Look Aside 전략을 통한 읽기 성능 향상
-  - 좋아요, 조회 수를 비동기적으로 DB에 반영
-  - 캐시, 세션 저장소 분리
-  - Keys 대신 Scan 명령 사용
-  - Redis Transaction을 사용해 Redis에 다수 접근하는 로직을 atomic하게 구현
-  - Redis Pipelining을 사용해 RTT Latency와 Socket I/O 부하 경감
-- DB(MySQL)
-  - DB Replication을 통한 DB 부하 분산
-  - 인덱스를 통한 조회 성능 향상
-  - Bulk Insert를 이용한 삽입 성능 향상
-  - 무한 스크롤 방식의 페이징
-- 기타
-  - Spring AOP을 사용해 중복되는 로그인 체크 로직 구현
-  - Nginx Reversed-Proxy를 이용한 로드밸런싱
+- Write Back 전략을 활용한 조회 수 집계
+  - MyBatis Batch Insert
+  - Redis Pipelining을 사용해 RTT Latency와 Socket I/O 지연 경감
+- Look Aside 전략을 활용한 대용량 읽기 요청 처리
+  - 최신 작성글, 인기 게시글 캐싱
+- Event 기반 비동기 처리
+- MySQL Replication을 통해 데이터베이스 부하 분산
+- Firbase Cloud Messaging을 사용한 알림 기능
+- AWS S3 + CloudFront를 사용한 파일 업로드, 조회
 
 ## 🤔 TroubleShooting & 기술적 고민
 
@@ -27,13 +21,13 @@
 
 ## 🏛️ 프로젝트 구조도
 
-![프로젝트 구조](https://github.com/user-attachments/assets/07a671b9-72a6-44d3-9d85-6f5b3aae7ea1)
+![프로젝트 구조](https://github.com/user-attachments/assets/c3e08a08-2f7e-4955-b4b3-a859ea37ed5b)
 
 ## 📈 ERD
 
-![ERD](https://github.com/user-attachments/assets/ba62a87e-6fc5-400e-bfb7-63b396611393)
+![ERD](https://github.com/user-attachments/assets/85b1e7fd-6ac5-469d-94f7-cd61ee3deb9b)
 
 ## 🖼️ Application UI
 
-![Application UI](https://github.com/user-attachments/assets/afa15447-4a70-4c39-84d4-73ee18af5dd7)
+![Application UI](https://github.com/user-attachments/assets/67935549-00a2-482f-8f2c-3a3aec75032c)
 

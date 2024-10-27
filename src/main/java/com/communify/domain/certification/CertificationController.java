@@ -23,8 +23,8 @@ public class CertificationController {
     @PostMapping("/issue-code")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void issueCode(@RequestBody @Valid final CodeIssueRequestForm form) {
-        final String email = form.getEmail();
+    public void issueCode(@RequestBody @Valid CodeIssueRequestForm form) {
+        String email = form.getEmail();
 
         certificationService.issueCode(email);
     }
@@ -32,8 +32,8 @@ public class CertificationController {
     @PostMapping("/certify-code")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void certifyCode(@RequestBody @Valid final CertificationRequestForm form) {
-        final String code = form.getCode();
+    public void certifyCode(@RequestBody @Valid CertificationRequestForm form) {
+        String code = form.getCode();
 
         certificationService.certifyCode(code);
     }

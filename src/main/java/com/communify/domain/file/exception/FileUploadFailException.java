@@ -14,7 +14,7 @@ public class FileUploadFailException extends InternalServerException {
     private final File directory;
     private final UploadFile uploadFile;
 
-    public FileUploadFailException(final File directory, final UploadFile uploadFile, final Throwable cause) {
+    public FileUploadFailException(File directory, UploadFile uploadFile, Throwable cause) {
         super(MESSAGE, cause);
         this.directory = directory;
         this.uploadFile = uploadFile;

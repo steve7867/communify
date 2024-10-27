@@ -39,4 +39,6 @@ public interface MemberRepository {
     void decFollowerCountOfFollowees(Long followerId, Integer count);
 
     void decFolloweeCountOfFollowers(Long followeeId, Integer count);
+
+    Optional<String> findTokenOfPostWriter(Long postId);
 }

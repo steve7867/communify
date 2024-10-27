@@ -16,7 +16,7 @@ public class LoginCheckAspect {
 
     @Before("@annotation(com.communify.domain.auth.annotation.NotLoginCheck)")
     public void checkNotLoggedIn() {
-        final boolean loggedIn = loginService.isLoggedIn();
+        boolean loggedIn = loginService.isLoggedIn();
         if (loggedIn) {
             throw new AlreadyLoggedInException();
         }
@@ -24,7 +24,7 @@ public class LoginCheckAspect {
 
     @Before("@annotation(com.communify.domain.auth.annotation.LoginCheck)")
     public void checkLoggedIn() {
-        final boolean loggedIn = loginService.isLoggedIn();
+        boolean loggedIn = loginService.isLoggedIn();
         if (!loggedIn) {
             throw new NotLoggedInException();
         }

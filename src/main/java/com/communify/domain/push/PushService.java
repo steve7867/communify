@@ -4,5 +4,5 @@ import com.communify.domain.push.dto.PushInfo;
 
 public interface PushService {
 
-    boolean push(PushInfo info);
+    void push(PushInfo info);
 }

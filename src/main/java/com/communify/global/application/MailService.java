@@ -13,8 +13,8 @@ public class MailService {
 
     private final JavaMailSender emailSender;
 
-    public void sendEmail(final String to, final String title, final String text) {
-        final SimpleMailMessage emailForm = createEmailForm(to, title, text);
+    public void sendEmail(String to, String title, String text) {
+        SimpleMailMessage emailForm = createEmailForm(to, title, text);
         try {
             emailSender.send(emailForm);
         } catch (MailException e) {
@@ -22,8 +22,8 @@ public class MailService {
         }
     }
 
-    private SimpleMailMessage createEmailForm(final String to, final String title, final String text) {
-        final SimpleMailMessage message = new SimpleMailMessage();
+    private SimpleMailMessage createEmailForm(String to, String title, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(title);
         message.setText(text);

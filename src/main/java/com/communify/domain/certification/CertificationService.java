@@ -23,8 +23,8 @@ public class CertificationService {
     @Value("${spring.mail.certification-code-expiration-millis}")
     private Long expirationTime;
 
-    public void issueCode(final String email) {
-        final String certificationCode = UUID.randomUUID().toString().substring(0, 8);
+    public void issueCode(String email) {
+        String certificationCode = UUID.randomUUID().toString().substring(0, 8);
 
         mailService.sendEmail(email, "Communify 인증 코드", "인증 코드: " + certificationCode);
 
@@ -32,11 +32,11 @@ public class CertificationService {
         sessionService.add(SessionKey.ISSUE_TIME, System.currentTimeMillis());
     }
 
-    public void certifyCode(final String code) {
-        final String issuedCode = (String) sessionService.get(SessionKey.ISSUED_CODE)
+    public void certifyCode(String code) {
+        String issuedCode = (String) sessionService.get(SessionKey.ISSUED_CODE)
                 .orElseThrow(CertificationCodeNotPublishedException::new);
 
-        final Long issuedTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
+        Long issuedTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
 
         if (isTimeOut(issuedTime)) {
             throw new CertificationTimeOutException();
@@ -51,7 +51,7 @@ public class CertificationService {
         sessionService.add(SessionKey.EMAIL_CERTIFIED, true);
     }
 
-    private boolean isTimeOut(final Long issuedTime) {
+    private boolean isTimeOut(Long issuedTime) {
         return System.currentTimeMillis() - issuedTime > expirationTime;
     }
 

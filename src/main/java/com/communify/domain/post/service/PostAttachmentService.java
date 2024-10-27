@@ -23,13 +23,13 @@ public class PostAttachmentService {
     private final StorageService storageService;
     private final ApplicationEventPublisher eventPublisher;
 
-    public void savePostAttachments(final Long postId, final List<MultipartFile> multipartFileList) {
+    public void savePostAttachments(Long postId, List<MultipartFile> multipartFileList) {
         if (multipartFileList == null || multipartFileList.isEmpty()) {
             return;
         }
 
-        final File directory = new File(directoryName, String.valueOf(postId));
-        final List<UploadFile> uploadFileList = multipartFileList
+        File directory = new File(directoryName, String.valueOf(postId));
+        List<UploadFile> uploadFileList = multipartFileList
                 .stream()
                 .map(UploadFile::new)
                 .toList();
@@ -44,13 +44,13 @@ public class PostAttachmentService {
         postAttachmentRepository.insertAllAttachments(postId, uploadFileList);
     }
 
-    public void updateFiles(final Long postId, final List<MultipartFile> multipartFileList) {
+    public void updateFiles(Long postId, List<MultipartFile> multipartFileList) {
         deleteFiles(postId);
         savePostAttachments(postId, multipartFileList);
     }
 
-    public void deleteFiles(final Long postId) {
-        final File directory = new File(directoryName, String.valueOf(postId));
+    public void deleteFiles(Long postId) {
+        File directory = new File(directoryName, String.valueOf(postId));
 
         storageService.deleteFiles(directory);
         postAttachmentRepository.deleteAllAttachments(postId);

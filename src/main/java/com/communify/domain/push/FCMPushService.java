@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -18,24 +17,22 @@ public class FCMPushService implements PushService {
     private final FirebaseMessaging messaging;
 
     @Override
-    public boolean push(final PushInfo info) {
+    public void push(PushInfo info) {
         if (!info.isPushable()) {
-            return false;
+            return;
         }
 
-        final Message message = buildMessage(info.getMessageDto());
+        Message message = buildMessage(info.getMessageDto());
 
         try {
             messaging.send(message);
         } catch (FirebaseMessagingException e) {
-            return false;
+            throw new RuntimeException(e);
         }
-
-        return true;
     }
 
-    private Message buildMessage(final MessageDto dto) {
-        if (Objects.nonNull(dto.getBody())) {
+    private Message buildMessage(MessageDto dto) {
+        if (dto.getBody() != null) {
             return Message.builder()
                     .putData("title", dto.getTitle())
                     .putData("created", LocalDateTime.now().toString())

@@ -20,11 +20,11 @@ public class FollowService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void follow(final Long followerId,
-                       final String followerName,
-                       final Long followeeId) {
+    public void follow(Long followerId,
+                       String followerName,
+                       Long followeeId) {
 
-        final Integer count = followRepository.insertFollow(followerId, followeeId);
+        Integer count = followRepository.insertFollow(followerId, followeeId);
         if (count == 0) {
             return;
         }
@@ -36,8 +36,8 @@ public class FollowService {
     }
 
     @Transactional
-    public void unfollow(final Long followerId, final Long followeeId) {
-        final Integer deletedCount = followRepository.deleteFollow(followerId, followeeId);
+    public void unfollow(Long followerId, Long followeeId) {
+        Integer deletedCount = followRepository.deleteFollow(followerId, followeeId);
         if (deletedCount == 0) {
             return;
         }
@@ -47,20 +47,20 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfoForFollowSearch> getFollowers(final Long followeeId,
-                                                        final Long lastFollowerId,
-                                                        final Long searcherId) {
+    public List<MemberInfoForFollowSearch> getFollowers(Long followeeId,
+                                                        Long lastFollowerId,
+                                                        Long searcherId) {
 
-        final List<MemberInfoForFollowSearch> followerList = followRepository.findFollowers(followeeId, lastFollowerId, searcherId);
+        List<MemberInfoForFollowSearch> followerList = followRepository.findFollowers(followeeId, lastFollowerId, searcherId);
         return Collections.unmodifiableList(followerList);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberInfoForFollowSearch> getFollowees(final Long followerId,
-                                                        final Long lastFolloweeId,
-                                                        final Long searcherId) {
+    public List<MemberInfoForFollowSearch> getFollowees(Long followerId,
+                                                        Long lastFolloweeId,
+                                                        Long searcherId) {
 
-        final List<MemberInfoForFollowSearch> followeeList = followRepository.findFollowees(followerId, lastFolloweeId, searcherId);
+        List<MemberInfoForFollowSearch> followeeList = followRepository.findFollowees(followerId, lastFolloweeId, searcherId);
         return Collections.unmodifiableList(followeeList);
     }
 }

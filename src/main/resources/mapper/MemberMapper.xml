@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.communify.domain.member.MemberRepository">
-    <insert id="insert" useGeneratedKeys="true" keyProperty="request.id">
+    <insert id="insert" useGeneratedKeys="true">
         INSERT INTO member(email, hashed, name)
         VALUES (#{email}, #{hashed}, #{name})
     </insert>
@@ -103,4 +103,12 @@
                      FROM follow
                      WHERE followee_id = #{followeeId})
     </update>
+
+    <select id="findTokenOfPostWriter">
+        SELECT t.token
+        FROM post p
+            LEFT OUTER JOIN member m ON p.writer_id = m.id
+            LEFT OUTER JOIN token t ON m.id = t.member_id
+        WHERE p.id = #{postId}
+    </select>
 </mapper>

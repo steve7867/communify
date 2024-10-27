@@ -15,7 +15,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryInfo> getAllCategories() {
-        final List<CategoryInfo> categoryInfoList = categoryRepository.findAllCategoryList();
+        List<CategoryInfo> categoryInfoList = categoryRepository.findAllCategoryList();
         return Collections.unmodifiableList(categoryInfoList);
     }
 }

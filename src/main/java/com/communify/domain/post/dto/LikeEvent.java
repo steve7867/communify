@@ -5,8 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PostViewIncRequest {
+public class LikeEvent {
 
     private final Long postId;
-    private final Integer viewCount;
 }

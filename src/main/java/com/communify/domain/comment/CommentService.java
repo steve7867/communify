@@ -18,48 +18,34 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void addComment(final Long postId,
-                           final String content,
-                           final Long writerId,
-                           final String writerName) {
-
-        final Integer addedCount = commentRepository.insert(postId, content, writerId);
+    public void addComment(Long postId, String content, Long writerId) {
+        Integer addedCount = commentRepository.insert(postId, content, writerId);
         if (addedCount == 0) {
             return;
         }
-
         postRepository.incCommentCount(postId, addedCount);
 
-        eventPublisher.publishEvent(new CommentUploadEvent(postId, content, writerName));
+        eventPublisher.publishEvent(new CommentUploadEvent(postId));
     }
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheNames.COMMENTS,
             key = "#postId + '_' + #lastCommentId",
-            condition = "T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() < 24",
-            sync = true)
-    public CommentListContainer getComments(final Long postId, final Long lastCommentId) {
+            unless = "T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
+    public CommentListContainer getComments(Long postId, Long lastCommentId) {
         return commentRepository.findCommentsByPostId(postId, lastCommentId, SEARCH_SIZE);
     }
 
-    public void editComment(final Long postId,
-                            final Long commentId,
-                            final String content,
-                            final Long requesterId) {
-
+    public void editComment(Long postId, Long commentId, String content, Long requesterId) {
         commentRepository.editComment(postId, commentId, content, requesterId);
     }
 
     @Transactional
-    public void deleteComment(final Long postId,
-                              final Long commentId,
-                              final Long requesterId) {
-
-        final Integer deletedCount = commentRepository.deleteComment(postId, commentId, requesterId);
+    public void deleteComment(Long postId, Long commentId, Long requesterId) {
+        Integer deletedCount = commentRepository.deleteComment(postId, commentId, requesterId);
         if (deletedCount == 0) {
             return;
         }

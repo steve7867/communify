@@ -11,7 +11,7 @@ public class InvalidPostAccessException extends InvalidAccessException {
     private final Long postId;
     private final Long memberId;
 
-    public InvalidPostAccessException(final Long postId, final Long memberId) {
+    public InvalidPostAccessException(Long postId, Long memberId) {
         super(HttpStatus.UNAUTHORIZED, MESSAGE);
         this.postId = postId;
         this.memberId = memberId;

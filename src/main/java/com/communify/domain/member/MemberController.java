@@ -38,23 +38,23 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(CREATED)
     @NotLoginCheck
-    public void signUp(@RequestBody @Valid final MemberSignUpForm form) {
-        final boolean isEmailCertified = certificationService.isCertified();
+    public void signUp(@RequestBody @Valid MemberSignUpForm form) {
+        boolean isEmailCertified = certificationService.isCertified();
         if (!isEmailCertified) {
             throw new EmailNotCertifiedException(form.getEmail());
         }
 
-        final String email = form.getEmail();
-        final String password = form.getPassword();
-        final String name = form.getName();
+        String email = form.getEmail();
+        String password = form.getPassword();
+        String name = form.getName();
 
         memberService.signUp(email, password, name);
     }
 
     @GetMapping("/{memberId}")
     @LoginCheck
-    public MemberInfoForSearch getMemberInfo(@PathVariable @NotNull @Positive final Long memberId,
-                                             @MemberId final Long searcherId) {
+    public MemberInfoForSearch getMemberInfo(@PathVariable @NotNull @Positive Long memberId,
+                                             @MemberId Long searcherId) {
 
         return memberService.getMemberInfoForSearchById(memberId, searcherId);
     }
@@ -62,21 +62,21 @@ public class MemberController {
     @DeleteMapping("/me")
     @ResponseStatus(OK)
     @LoginCheck
-    public void withdraw(@RequestBody @Valid final MemberWithdrawForm form,
-                         @MemberId final Long memberId) {
+    public void withdraw(@RequestBody @Valid MemberWithdrawForm form,
+                         @MemberId Long memberId) {
 
-        final String password = form.getPassword();
+        String password = form.getPassword();
         memberService.withdraw(password, memberId);
     }
 
     @PatchMapping("/me/password")
     @ResponseStatus(OK)
     @LoginCheck
-    public void updatePassword(@RequestBody @Valid final PasswordUpdateForm form,
-                               @MemberId final Long memberId) {
+    public void updatePassword(@RequestBody @Valid PasswordUpdateForm form,
+                               @MemberId Long memberId) {
 
-        final String currentPassword = form.getCurrentPassword();
-        final String newPassword = form.getNewPassword();
+        String currentPassword = form.getCurrentPassword();
+        String newPassword = form.getNewPassword();
 
         memberService.updatePassword(currentPassword, newPassword, memberId);
     }
@@ -84,8 +84,8 @@ public class MemberController {
     @PostMapping("/me/token")
     @ResponseStatus(OK)
     @LoginCheck
-    public void setToken(@RequestBody @NotBlank final String token,
-                         @MemberId final Long memberId) {
+    public void setToken(@RequestBody @NotBlank String token,
+                         @MemberId Long memberId) {
 
         memberService.setToken(token, memberId);
     }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,20 +37,29 @@ public class PostEditController {
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(OK)
     @LoginCheck
-    public void edit(@PathVariable @NotNull @Positive final Long postId,
-                     @ModelAttribute @Valid final PostEditForm form,
-                     @MemberId final Long requesterId) {
+    public void edit(@PathVariable @NotNull @Positive Long postId,
+                     @ModelAttribute @Valid PostEditForm form,
+                     @MemberId Long requesterId) {
 
-        final String title = form.getTitle();
-        final String content = form.getContent();
-        final List<MultipartFile> multipartFileList = Collections.unmodifiableList(form.getFileList());
-        final Long categoryId = form.getCategoryId();
+        String title = form.getTitle();
+        String content = form.getContent();
+        List<MultipartFile> multipartFileList = Collections.unmodifiableList(form.getFileList());
+        Long categoryId = form.getCategoryId();
 
         postEditService.editPost(postId, title, content, multipartFileList, categoryId, requesterId);
     }
 
     @InitBinder("postUploadForm")
-    public void addPostUploadFormValidator(final WebDataBinder dataBinder) {
+    public void addPostUploadFormValidator(WebDataBinder dataBinder) {
         dataBinder.addValidators(postUploadFormValidator);
+    }
+
+    @PostMapping("/{postId}/like")
+    @ResponseStatus(OK)
+    @LoginCheck
+    public void like(@PathVariable @NotNull @Positive Long postId,
+                     @MemberId Long likerId) {
+
+        postEditService.like(postId, likerId);
     }
 }

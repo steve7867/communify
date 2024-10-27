@@ -16,8 +16,9 @@ public class PostDeleteService {
     private final PostAttachmentService postAttachmentService;
 
     @Transactional
-    public void deletePost(final Long postId, final Long requesterId) {
-        final boolean canDelete = postRepository.isWrittenBy(postId, requesterId);
+    @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
+    public void deletePost(Long postId, Long requesterId) {
+        boolean canDelete = postRepository.isWrittenBy(postId, requesterId);
         if (!canDelete) {
             throw new InvalidPostAccessException(postId, requesterId);
         }
