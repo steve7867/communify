@@ -17,9 +17,9 @@ public class FCMPushService implements PushService {
     private final FirebaseMessaging messaging;
 
     @Override
-    public boolean push(PushInfo info) {
+    public void push(PushInfo info) {
         if (!info.isPushable()) {
-            return false;
+            return;
         }
 
         Message message = buildMessage(info.getMessageDto());
@@ -27,10 +27,8 @@ public class FCMPushService implements PushService {
         try {
             messaging.send(message);
         } catch (FirebaseMessagingException e) {
-            return false;
+            throw new RuntimeException(e);
         }
-
-        return true;
     }
 
     private Message buildMessage(MessageDto dto) {

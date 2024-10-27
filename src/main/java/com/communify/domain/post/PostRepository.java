@@ -23,8 +23,6 @@ public interface PostRepository {
 
     Optional<PostDetail> findPostDetail(Long postId);
 
-    Optional<Long> findWriterId(Long postId);
-
     void incViewCount(Long postId, Integer viewCount);
 
     void incLikeCount(Long postId, Integer likeCount);
