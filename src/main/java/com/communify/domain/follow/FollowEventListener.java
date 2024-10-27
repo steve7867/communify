@@ -3,7 +3,6 @@ package com.communify.domain.follow;
 import com.communify.domain.follow.dto.FollowEvent;
 import com.communify.domain.member.MemberService;
 import com.communify.domain.push.PushService;
-import com.communify.domain.push.dto.PushInfo;
 import com.communify.domain.push.dto.PushInfoForFollow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -21,7 +20,7 @@ public class FollowEventListener {
 
     @Async
     @EventListener
-    public void pushFollowNotification(FollowEvent event) {
+    public void pushNotification(FollowEvent event) {
         Long followeeId = event.getFolloweeId();
         String followerName = event.getFollowerName();
 

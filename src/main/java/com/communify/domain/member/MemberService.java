@@ -33,7 +33,6 @@ public class MemberService {
 
     public void signUp(String email, String password, String name) {
         String hashed = PasswordEncryptor.encrypt(password);
-
         try {
             memberRepository.insert(email, hashed, name);
         } catch (DuplicateKeyException e) {
@@ -97,8 +96,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getMemberNames(List<Long> memberIdList) {
-        List<String> nameList = memberRepository.findMemberNames(memberIdList);
-        return Collections.unmodifiableList(nameList);
+    public Optional<String> getTokenOfPostWriter(Long postId) {
+        return memberRepository.findTokenOfPostWriter(postId);
     }
 }

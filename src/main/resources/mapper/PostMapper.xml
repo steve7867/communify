@@ -115,12 +115,6 @@
         ORDER BY pa.sequence
     </select>
 
-    <select id="findWriterId">
-        SELECT writer_id
-        FROM post
-        WHERE id = #{postId}
-    </select>
-
     <update id="incViewCount">
         UPDATE post
         SET view_count = view_count + #{viewCount}

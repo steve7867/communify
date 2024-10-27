@@ -2,7 +2,6 @@ package com.communify.domain.comment;
 
 import com.communify.domain.auth.annotation.LoginCheck;
 import com.communify.domain.auth.annotation.MemberId;
-import com.communify.domain.auth.annotation.MemberName;
 import com.communify.domain.comment.dto.CommentForm;
 import com.communify.domain.comment.dto.CommentInfo;
 import jakarta.validation.Valid;
@@ -36,10 +35,9 @@ public class CommentController {
     @LoginCheck
     public void addComment(@PathVariable @NotNull @Positive Long postId,
                            @RequestBody @Valid CommentForm form,
-                           @MemberId Long writerId,
-                           @MemberName String writerName) {
+                           @MemberId Long writerId) {
 
-        commentService.addComment(postId, form.getContent(), writerId, writerName);
+        commentService.addComment(postId, form.getContent(), writerId);
     }
 
     @GetMapping("/{postId}/comments")

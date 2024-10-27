@@ -1,7 +1,6 @@
 package com.communify.domain.post.service;
 
 import com.communify.domain.post.PostRepository;
-import com.communify.domain.post.dto.HotPostChecker;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.global.util.CacheNames;
@@ -50,14 +49,5 @@ public class PostSearchService {
                     "&& T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
     public Optional<PostDetail> getPostDetail(Long postId) {
         return postRepository.findPostDetail(postId);
-    }
-
-    @Cacheable(cacheNames = CacheNames.POST_WRITER_ID, key = "#postId", sync = true)
-    public Optional<Long> getWriterId(Long postId) {
-        return postRepository.findWriterId(postId);
-    }
-
-    public Optional<HotPostChecker> getHotPostChecker(Long postId) {
-        return postRepository.findHotPostChecker(postId);
     }
 }

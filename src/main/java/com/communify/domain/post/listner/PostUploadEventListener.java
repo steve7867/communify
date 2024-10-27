@@ -1,4 +1,4 @@
-package com.communify.domain.post;
+package com.communify.domain.post.listner;
 
 import com.communify.domain.member.MemberService;
 import com.communify.domain.post.dto.PostUploadEvent;
@@ -20,7 +20,7 @@ public class PostUploadEventListener {
 
     @Async
     @EventListener
-    public void pushPostUploadNotification(PostUploadEvent event) {
+    public void pushNotification(PostUploadEvent event) {
         Long writerId = event.getWriterId();
         String writerName = event.getWriterName();
 

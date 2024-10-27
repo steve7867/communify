@@ -104,12 +104,11 @@
                      WHERE followee_id = #{followeeId})
     </update>
 
-    <select id="findMemberNames">
-        SELECT name
-        FROM member
-        WHERE id IN
-        <foreach collection="list" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+    <select id="findTokenOfPostWriter">
+        SELECT t.token
+        FROM post p
+            LEFT OUTER JOIN member m ON p.writer_id = m.id
+            LEFT OUTER JOIN token t ON m.id = t.member_id
+        WHERE p.id = #{postId}
     </select>
 </mapper>

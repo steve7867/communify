@@ -53,12 +53,11 @@ public class CacheConfig {
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)));
 
-        RedisCacheConfiguration hotPostOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(20L));
-        RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
-        RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(20L));
-        RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(10L));
-        RedisCacheConfiguration tokenConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(30L));
-        RedisCacheConfiguration postWriterIdConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(20L));
+        RedisCacheConfiguration hotPostOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1L));
+        RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(30L));
+        RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1L));
+        RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(30L));
+        RedisCacheConfiguration tokenConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1L));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
@@ -67,7 +66,6 @@ public class CacheConfig {
                 .withCacheConfiguration(CacheNames.POST_DETAIL, postDetailConfig)
                 .withCacheConfiguration(CacheNames.COMMENTS, commentsConfig)
                 .withCacheConfiguration(CacheNames.TOKEN, tokenConfig)
-                .withCacheConfiguration(CacheNames.POST_WRITER_ID, postWriterIdConfig)
                 .build();
     }
 
