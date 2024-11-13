@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.communify.domain.post.PostAttachmentRepository">
+<mapper namespace="com.communify.domain.post.repository.PostAttachmentMapper">
     <insert id="insertAllAttachments" keyProperty="storedFilename">
         INSERT INTO post_attachment(stored_filename, original_filename, extension, post_id, sequence) VALUES
-        <foreach collection="uploadFileList" item="uploadFile" index="idx" separator=",">
+        <foreach collection="list" item="uploadFile" index="idx" separator=",">
             (#{uploadFile.storedFilename}, #{uploadFile.originalFilename}, #{uploadFile.extension}, #{postId}, #{idx})
         </foreach>
     </insert>

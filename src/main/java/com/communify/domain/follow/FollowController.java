@@ -1,9 +1,9 @@
 package com.communify.domain.follow;
 
 import com.communify.domain.auth.annotation.LoginCheck;
-import com.communify.domain.auth.annotation.MemberId;
-import com.communify.domain.auth.annotation.MemberName;
-import com.communify.domain.follow.dto.MemberInfoForFollowSearch;
+import com.communify.domain.auth.annotation.UserId;
+import com.communify.domain.auth.annotation.UserName;
+import com.communify.domain.follow.dto.UserInfoForFollowSearch;
 import com.communify.domain.follow.exception.SelfFollowException;
 import com.communify.domain.follow.exception.SelfUnfollowException;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +24,7 @@ import java.util.Objects;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class FollowController {
 
@@ -34,8 +34,8 @@ public class FollowController {
     @ResponseStatus(OK)
     @LoginCheck
     public void follow(@PathVariable @NotNull @Positive Long followeeId,
-                       @MemberId Long followerId,
-                       @MemberName String followerName) {
+                       @UserId Long followerId,
+                       @UserName String followerName) {
 
         if (Objects.equals(followerId, followeeId)) {
             throw new SelfFollowException();
@@ -48,7 +48,7 @@ public class FollowController {
     @ResponseStatus(OK)
     @LoginCheck
     public void unfollow(@PathVariable @NotNull @Positive Long followeeId,
-                         @MemberId Long followerId) {
+                         @UserId Long followerId) {
 
         if (Objects.equals(followerId, followeeId)) {
             throw new SelfUnfollowException();
@@ -60,9 +60,9 @@ public class FollowController {
     @GetMapping("/{followeeId}/followers")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfoForFollowSearch> getFollowers(@PathVariable @NotNull @Positive Long followeeId,
-                                                        @RequestParam(required = false) @Positive Long lastFollowerId,
-                                                        @MemberId Long searcherId) {
+    public List<UserInfoForFollowSearch> getFollowers(@PathVariable @NotNull @Positive Long followeeId,
+                                                      @RequestParam(required = false) @Positive Long lastFollowerId,
+                                                      @UserId Long searcherId) {
 
         return followService.getFollowers(followeeId, lastFollowerId, searcherId);
     }
@@ -70,9 +70,9 @@ public class FollowController {
     @GetMapping("/{followerId}/followees")
     @ResponseStatus(OK)
     @LoginCheck
-    public List<MemberInfoForFollowSearch> getFollowees(@PathVariable @NotNull @Positive Long followerId,
-                                                        @RequestParam(required = false) @Positive Long lastFolloweeId,
-                                                        @MemberId Long searcherId) {
+    public List<UserInfoForFollowSearch> getFollowees(@PathVariable @NotNull @Positive Long followerId,
+                                                      @RequestParam(required = false) @Positive Long lastFolloweeId,
+                                                      @UserId Long searcherId) {
 
         return followService.getFollowees(followerId, lastFolloweeId, searcherId);
     }

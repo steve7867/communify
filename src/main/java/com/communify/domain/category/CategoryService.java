@@ -1,10 +1,9 @@
 package com.communify.domain.category;
 
+import com.communify.domain.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -13,9 +12,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    @Transactional(readOnly = true)
     public List<CategoryInfo> getAllCategories() {
-        List<CategoryInfo> categoryInfoList = categoryRepository.findAllCategoryList();
-        return Collections.unmodifiableList(categoryInfoList);
+        return categoryRepository.findAllCategoryList();
     }
 }

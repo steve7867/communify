@@ -4,7 +4,7 @@ import com.communify.domain.file.StorageService;
 import com.communify.domain.file.dto.FileUploadFailEvent;
 import com.communify.domain.file.dto.UploadFile;
 import com.communify.domain.file.exception.FileUploadFailException;
-import com.communify.domain.post.PostAttachmentRepository;
+import com.communify.domain.post.repository.PostAttachmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

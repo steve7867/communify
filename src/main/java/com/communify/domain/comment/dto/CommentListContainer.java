@@ -10,6 +10,6 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 public class CommentListContainer {
 
-    private final LocalDateTime createdDateTime;
+    private final LocalDateTime postCreatedDateTime;
     private final List<CommentInfo> commentInfoList;
 }

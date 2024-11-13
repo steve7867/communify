@@ -1,6 +1,6 @@
 package com.communify.global.application;
 
-import com.communify.global.error.exception.MailTransmissionFailureException;
+import com.communify.global.error.exception.MailSendFailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,15 +14,15 @@ public class MailService {
     private final JavaMailSender emailSender;
 
     public void sendEmail(String to, String title, String text) {
-        SimpleMailMessage emailForm = createEmailForm(to, title, text);
+        SimpleMailMessage message = createMessage(to, title, text);
         try {
-            emailSender.send(emailForm);
+            emailSender.send(message);
         } catch (MailException e) {
-            throw new MailTransmissionFailureException(e);
+            throw new MailSendFailException(e);
         }
     }
 
-    private SimpleMailMessage createEmailForm(String to, String title, String text) {
+    private SimpleMailMessage createMessage(String to, String title, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(title);

@@ -17,7 +17,7 @@ public class LikeEvictScheduler {
 
     private final CacheService cacheService;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     @SchedulerLock(name = "LikeEvict")
     public void evictLike() {
         Map<Long, LocalDateTime> map = cacheService.fetchPostCreatedAt();

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.communify.domain.follow.FollowRepository">
+<mapper namespace="com.communify.domain.follow.repository.FollowMapper">
     <insert id="insertFollow">
         INSERT INTO follow(follower_id, followee_id)
         VALUES (#{followerId}, #{followeeId})
@@ -15,32 +15,32 @@
     </delete>
 
     <select id="findFollowers">
-        SELECT m.id,
-               m.name,
+        SELECT u.id,
+               u.name,
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM follow f1
-                 INNER JOIN member m ON f1.follower_id = m.id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{searcherId}
+                 INNER JOIN user u ON f1.follower_id = u.id
+                 LEFT OUTER JOIN follow f2 ON u.id = f2.followee_id AND f2.follower_id = #{searcherId}
         WHERE f1.followee_id = #{followeeId}
         <if test="lastFollowerId != null">
-            AND m.id &gt; #{lastFollowerId}
+            AND u.id &gt; #{lastFollowerId}
         </if>
-        ORDER BY m.id
+        ORDER BY u.id
         LIMIT 100
     </select>
 
     <select id="findFollowees">
-        SELECT m.id,
-               m.name,
+        SELECT u.id,
+               u.name,
                IF(f2.follower_id IS NOT NULL, TRUE, FALSE) AS is_following
         FROM follow f1
-                 INNER JOIN member m ON f1.followee_id = m.id
-                 LEFT OUTER JOIN follow f2 ON m.id = f2.followee_id AND f2.follower_id = #{searcherId}
+                 INNER JOIN user u ON f1.followee_id = u.id
+                 LEFT OUTER JOIN follow f2 ON u.id = f2.followee_id AND f2.follower_id = #{searcherId}
         WHERE f1.follower_id = #{followerId}
         <if test="lastFollowingId != null">
-            AND m.id &gt; #{lastFolloweeId}
+            AND u.id &gt; #{lastFolloweeId}
         </if>
-        ORDER BY m.id
+        ORDER BY u.id
         LIMIT 100
     </select>
 </mapper>

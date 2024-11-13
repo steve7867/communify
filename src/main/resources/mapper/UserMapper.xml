@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.communify.domain.user.repository.UserMapper">
+    <insert id="insert" useGeneratedKeys="true">
+        INSERT INTO user(email, hashed, name)
+        VALUES (#{email}, #{hashed}, #{name})
+    </insert>
+
+    <select id="findUserInfoForLoginByEmail">
+        SELECT id, hashed, name
+        FROM user
+        WHERE email = #{email}
+    </select>
+
+    <select id="findUserInfoForSearch">
+        SELECT id,
+               email,
+               name,
+               follower_count,
+               followee_count,
+               IF(f.follower_id IS NOT NULL, TRUE, FALSE) AS is_following,
+               created_timestamp
+        FROM user u
+            LEFT OUTER JOIN follow f ON u.id = f.followee_id AND f.follower_id = #{searcherId}
+        WHERE id = #{userId}
+    </select>
+
+    <select id="findHashed">
+        SELECT hashed
+        FROM user
+        WHERE id = #{userId}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM user
+        WHERE id = #{userId}
+    </delete>
+
+    <insert id="setToken">
+        INSERT INTO token(user_id, token)
+        VALUES (#{userId}, #{token})
+    </insert>
+
+    <select id="findTokenById">
+        SELECT token
+        FROM token
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findTokensOfFollowers">
+        SELECT t.token
+        FROM follow f
+                 INNER JOIN user u ON f.follower_id = u.id
+                 LEFT OUTER JOIN token t ON u.id = t.user_id
+        WHERE f.followee_id = #{writerId}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE user
+        SET hashed = #{newHashed}
+        WHERE id = #{userId}
+    </update>
+
+    <update id="incFollowerCount">
+        UPDATE user
+        SET follower_count = follower_count + #{count}
+        WHERE id = #{followeeId}
+    </update>
+
+    <update id="incFolloweeCount">
+        UPDATE user
+        SET followee_count = followee_count + #{count}
+        WHERE id = #{followerId}
+    </update>
+
+    <update id="decFollowerCount">
+        UPDATE user
+        SET follower_count = follower_count - #{count}
+        WHERE id = #{followeeId}
+    </update>
+
+    <update id="decFolloweeCount">
+        UPDATE user
+        SET followee_count = followee_count - #{count}
+        WHERE id = #{followerId}
+    </update>
+
+    <update id="decFollowerCountOfFollowees">
+        UPDATE user
+        SET follower_count = follower_count - #{count}
+        WHERE id IN (SELECT followee_id
+                     FROM follow
+                     WHERE follower_id = #{followerId})
+    </update>
+
+    <update id="decFolloweeCountOfFollowers">
+        UPDATE user
+        SET followee_count = followee_count - #{count}
+        WHERE id IN (SELECT follower_id
+                     FROM follow
+                     WHERE followee_id = #{followeeId})
+    </update>
+
+    <select id="findTokenOfPostWriter">
+        SELECT t.token
+        FROM post p
+            LEFT OUTER JOIN user u ON p.writer_id = u.id
+            LEFT OUTER JOIN token t ON u.id = t.user_id
+        WHERE p.id = #{postId}
+    </select>
+</mapper>

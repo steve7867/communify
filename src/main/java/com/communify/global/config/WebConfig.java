@@ -1,7 +1,7 @@
 package com.communify.global.config;
 
-import com.communify.global.resolver.MemberIdArgumentResolver;
-import com.communify.global.resolver.MemberNameArgumentResolver;
+import com.communify.global.resolver.UserIdArgumentResolver;
+import com.communify.global.resolver.UserNameArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,12 +13,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final MemberIdArgumentResolver memberIdArgumentResolver;
-    private final MemberNameArgumentResolver memberNameArgumentResolver;
+    private final UserIdArgumentResolver userIdArgumentResolver;
+    private final UserNameArgumentResolver userNameArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolverList) {
-        resolverList.add(memberIdArgumentResolver);
-        resolverList.add(memberNameArgumentResolver);
+        resolverList.add(userIdArgumentResolver);
+        resolverList.add(userNameArgumentResolver);
     }
 }
