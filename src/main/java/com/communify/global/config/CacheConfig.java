@@ -4,15 +4,18 @@ import com.communify.global.util.CacheNames;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,21 +24,55 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.List;
 
 @Configuration
 @EnableCaching
 public class CacheConfig {
 
-    @Value("${spring.redis.cache.host}")
-    private String host;
+    @Profile("prod")
+    @Configuration
+    @NoArgsConstructor
+    private static class ConnectionConfigProd {
 
-    @Value("${spring.redis.cache.port}")
-    private Integer port;
+        @Value("${spring.redis.cache.master.name}")
+        private String masterName;
 
-    @Bean("cacheConnectionFactory")
-    public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        return new LettuceConnectionFactory(standaloneConfiguration);
+        @Value("${spring.redis.cache.sentinel.node}")
+        private List<String> sentinelList;
+
+        @Bean("cacheConnectionFactory")
+        public RedisConnectionFactory connectionFactory() {
+            RedisSentinelConfiguration config = new RedisSentinelConfiguration();
+            config.master(masterName);
+            sentinelList.forEach(sentinelNode -> {
+                String[] parts = sentinelNode.split(":");
+                String host = parts[0];
+                Integer port = Integer.valueOf(parts[1]);
+
+                config.sentinel(host, port);
+            });
+
+            return new LettuceConnectionFactory(config);
+        }
+    }
+
+    @Profile("dev")
+    @Configuration
+    @NoArgsConstructor
+    private static class ConnectionConfigDev {
+
+        @Value("${spring.redis.cache.host}")
+        private String host;
+
+        @Value("${spring.redis.cache.port}")
+        private Integer port;
+
+        @Bean("cacheConnectionFactory")
+        public RedisConnectionFactory connectionFactoryDev() {
+            RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(host, port);
+            return new LettuceConnectionFactory(standaloneConfiguration);
+        }
     }
 
     @Bean
@@ -57,7 +94,6 @@ public class CacheConfig {
         RedisCacheConfiguration postOutlinesConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(30L));
         RedisCacheConfiguration postDetailConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1L));
         RedisCacheConfiguration commentsConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(30L));
-        RedisCacheConfiguration tokenConfig = defaultCacheConfig.entryTtl(Duration.ofMinutes(1L));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)
@@ -65,7 +101,6 @@ public class CacheConfig {
                 .withCacheConfiguration(CacheNames.POST_OUTLINES, postOutlinesConfig)
                 .withCacheConfiguration(CacheNames.POST_DETAIL, postDetailConfig)
                 .withCacheConfiguration(CacheNames.COMMENTS, commentsConfig)
-                .withCacheConfiguration(CacheNames.TOKEN, tokenConfig)
                 .build();
     }
 

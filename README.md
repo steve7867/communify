@@ -5,11 +5,13 @@
 
 ## 🎯 Technical Issue
 
-- Write Back 전략을 활용한 조회 수 집계
-  - MyBatis Batch Insert
-  - Redis Pipelining을 사용해 RTT Latency와 Socket I/O 지연 경감
-- Look Aside 전략을 활용한 대용량 읽기 요청 처리
-  - 최신 작성글, 인기 게시글 캐싱
+- Redis 캐싱 적용
+  - Look Aside 전략을 활용한 대규모 조회 요청 처리
+    - 최신 작성글, 인기 게시글 캐싱
+  - Write Back 전략을 활용한 조회 수 집계
+    - MyBatis Batch Insert
+    - Redis Pipelining을 사용해 RTT Latency와 Socket I/O 지연 경감
+  - Redis Sentinel 구성
 - Event 기반 비동기 처리
 - MySQL Replication을 통해 데이터베이스 부하 분산
 - Firbase Cloud Messaging을 사용한 알림 기능
@@ -21,11 +23,11 @@
 
 ## 🏛️ 프로젝트 구조도
 
-![프로젝트 구조](https://github.com/user-attachments/assets/c3e08a08-2f7e-4955-b4b3-a859ea37ed5b)
+![프로젝트 구조](https://github.com/user-attachments/assets/255dc9d8-859a-4d06-bcbd-c1e052bde9f9)
 
 ## 📈 ERD
 
-![ERD](https://github.com/user-attachments/assets/85b1e7fd-6ac5-469d-94f7-cd61ee3deb9b)
+![ERD](https://github.com/user-attachments/assets/61dee558-f1cf-4691-8302-e24bb75a96f9)
 
 ## 🖼️ Application UI
 
