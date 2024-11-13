@@ -1,14 +1,30 @@
 package com.communify.global.application;
 
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
-public interface SessionService {
+@Service
+@RequiredArgsConstructor
+public class SessionService {
 
-    void add(String key, Object value);
+    private final HttpSession httpSession;
 
-    Optional<Object> get(String key);
+    public void add(String key, Object value) {
+        httpSession.setAttribute(key, value);
+    }
 
-    void remove(String key);
+    public Optional<Object> get(String key) {
+        return Optional.ofNullable(httpSession.getAttribute(key));
+    }
 
-    void invalidate();
+    public void remove(String key) {
+        httpSession.removeAttribute(key);
+    }
+
+    public void invalidate() {
+        httpSession.invalidate();
+    }
 }

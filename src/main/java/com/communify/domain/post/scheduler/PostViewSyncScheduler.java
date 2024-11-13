@@ -1,6 +1,6 @@
 package com.communify.domain.post.scheduler;
 
-import com.communify.domain.post.PostRepository;
+import com.communify.domain.post.repository.PostRepository;
 import com.communify.global.application.CacheService;
 import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -19,7 +19,7 @@ public class PostViewSyncScheduler {
     private final CacheService cacheService;
     private final SqlSessionFactory sqlSessionFactory;
 
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     @SchedulerLock(name = "PostViewSync")
     public void syncCachedPostViewWithDB() {
         Map<Long, Integer> postViewMap = cacheService.fetchAndRemoveViewCache();

@@ -1,9 +1,9 @@
 package com.communify.domain.post.controller;
 
 import com.communify.domain.auth.annotation.LoginCheck;
-import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.auth.annotation.UserId;
 import com.communify.domain.post.controller.validator.PostUploadFormValidator;
-import com.communify.domain.post.dto.PostEditForm;
+import com.communify.domain.post.dto.PostUploadForm;
 import com.communify.domain.post.service.PostEditService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -38,8 +38,8 @@ public class PostEditController {
     @ResponseStatus(OK)
     @LoginCheck
     public void edit(@PathVariable @NotNull @Positive Long postId,
-                     @ModelAttribute @Valid PostEditForm form,
-                     @MemberId Long requesterId) {
+                     @ModelAttribute @Valid PostUploadForm form,
+                     @UserId Long requesterId) {
 
         String title = form.getTitle();
         String content = form.getContent();
@@ -58,7 +58,7 @@ public class PostEditController {
     @ResponseStatus(OK)
     @LoginCheck
     public void like(@PathVariable @NotNull @Positive Long postId,
-                     @MemberId Long likerId) {
+                     @UserId Long likerId) {
 
         postEditService.like(postId, likerId);
     }

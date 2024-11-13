@@ -6,8 +6,7 @@ import com.communify.domain.file.exception.FileUploadFailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.awscore.exception.AwsServiceException;
-import software.amazon.awssdk.core.exception.SdkClientException;
+import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
@@ -47,7 +46,7 @@ public class S3StorageService implements StorageService {
 
             try {
                 s3Client.putObject(por, RequestBody.fromBytes(uploadFile.getBytes()));
-            } catch (AwsServiceException | SdkClientException | IOException e) {
+            } catch (SdkException | IOException e) {
                 throw new FileUploadFailException(new File(prefix), uploadFile, e);
             }
         });
@@ -71,7 +70,7 @@ public class S3StorageService implements StorageService {
                     .build();
 
             s3Client.deleteObjects(dor);
-        } catch (AwsServiceException | SdkClientException e) {
+        } catch (SdkException e) {
             throw new FileDeleteFailException(new File(prefix), e);
         }
     }

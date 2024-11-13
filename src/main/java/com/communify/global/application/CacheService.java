@@ -115,4 +115,16 @@ public class CacheService {
 
         redisTemplate.delete(keyList);
     }
+
+    public void addDeletedUser(Long userId) {
+        redisTemplate.opsForSet().add(CacheNames.DELETED_USER, userId);
+    }
+
+    public boolean isDeletedUser(Long userId) {
+        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(CacheNames.DELETED_USER, userId));
+    }
+
+    public void removeFromDeletedUser(Long userId) {
+        redisTemplate.opsForSet().remove(CacheNames.DELETED_USER, userId);
+    }
 }

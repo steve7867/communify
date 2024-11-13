@@ -1,8 +1,8 @@
 package com.communify.domain.post.service;
 
-import com.communify.domain.post.PostRepository;
+import com.communify.domain.post.dto.PostUploadDto;
 import com.communify.domain.post.dto.PostUploadEvent;
-import com.communify.domain.post.dto.PostUploadRequest;
+import com.communify.domain.post.repository.PostRepository;
 import com.communify.global.application.CacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,10 +19,10 @@ public class PostUploadService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void uploadPost(PostUploadRequest request) {
-        postRepository.insertPost(request);
-        postAttachmentService.savePostAttachments(request.getId(), request.getMultipartFileList());
-        cacheService.setPostCreatedAt(request.getId());
-        eventPublisher.publishEvent(new PostUploadEvent(request.getWriterId(), request.getWriterName()));
+    public void uploadPost(PostUploadDto dto) {
+        postRepository.insertPost(dto);
+        postAttachmentService.savePostAttachments(dto.getId(), dto.getMultipartFileList());
+        cacheService.setPostCreatedAt(dto.getId());
+        eventPublisher.publishEvent(new PostUploadEvent(dto.getWriterId(), dto.getWriterName()));
     }
 }

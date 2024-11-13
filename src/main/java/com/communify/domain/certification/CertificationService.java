@@ -1,8 +1,8 @@
 package com.communify.domain.certification;
 
-import com.communify.domain.certification.exception.CertificationCodeNotEqualException;
-import com.communify.domain.certification.exception.CertificationCodeNotPublishedException;
-import com.communify.domain.certification.exception.CertificationTimeOutException;
+import com.communify.domain.certification.exception.CodeNotIssuedException;
+import com.communify.domain.certification.exception.CodeTimedOutException;
+import com.communify.domain.certification.exception.InvalidCodeException;
 import com.communify.global.application.MailService;
 import com.communify.global.application.SessionService;
 import com.communify.global.util.SessionKey;
@@ -34,16 +34,16 @@ public class CertificationService {
 
     public void certifyCode(String code) {
         String issuedCode = (String) sessionService.get(SessionKey.ISSUED_CODE)
-                .orElseThrow(CertificationCodeNotPublishedException::new);
+                .orElseThrow(CodeNotIssuedException::new);
 
         Long issuedTime = (Long) sessionService.get(SessionKey.ISSUE_TIME).get();
 
         if (isTimeOut(issuedTime)) {
-            throw new CertificationTimeOutException();
+            throw new CodeTimedOutException();
         }
 
         if (!Objects.equals(code, issuedCode)) {
-            throw new CertificationCodeNotEqualException();
+            throw new InvalidCodeException();
         }
 
         sessionService.remove(SessionKey.ISSUED_CODE);

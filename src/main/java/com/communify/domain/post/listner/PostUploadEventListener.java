@@ -1,9 +1,9 @@
 package com.communify.domain.post.listner;
 
-import com.communify.domain.member.MemberService;
 import com.communify.domain.post.dto.PostUploadEvent;
 import com.communify.domain.push.PushService;
 import com.communify.domain.push.dto.PushInfoForPostUpload;
+import com.communify.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -15,7 +15,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostUploadEventListener {
 
-    private final MemberService memberService;
+    private final UserRepository userRepository;
     private final PushService pushService;
 
     @Async
@@ -24,7 +24,7 @@ public class PostUploadEventListener {
         Long writerId = event.getWriterId();
         String writerName = event.getWriterName();
 
-        memberService.getTokensOfFollowers(writerId)
+        userRepository.findTokensOfFollowers(writerId)
                 .stream()
                 .filter(Objects::nonNull)
                 .map(token -> new PushInfoForPostUpload(token, writerName))

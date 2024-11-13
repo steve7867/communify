@@ -11,7 +11,7 @@ public final class PasswordEncryptor {
         return BCrypt.hashpw(plain, BCrypt.gensalt());
     }
 
-    public static boolean isMatch(String plain, String hashed) {
+    public static boolean match(String plain, String hashed) {
         return BCrypt.checkpw(plain, hashed);
     }
 }
