@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.communify.domain.post.PostRepository">
+<mapper namespace="com.communify.domain.post.repository.PostMapper">
     <resultMap id="postOutlineResultMap" type="PostOutline">
         <result property="id" column="id"/>
         <result property="title" column="title"/>
@@ -27,23 +27,16 @@
         </collection>
     </resultMap>
 
-    <resultMap id="PostOutlineForHotSwitchMap" type="PostOutline">
-        <result property="id" column="id"/>
-        <result property="viewCount" column="view_count"/>
-        <result property="likeCount" column="like_count"/>
-        <result property="isHot" column="is_hot"/>
-    </resultMap>
-
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
         INSERT INTO post(title, content, writer_id, category_id)
-        VALUES (#{request.title}, #{request.content}, #{request.writerId}, #{request.categoryId});
+        VALUES (#{dto.title}, #{dto.content}, #{dto.writerId}, #{dto.categoryId});
     </insert>
 
     <select id="findHotPostOutlines" resultMap="postOutlineResultMap">
         SELECT p.id,
                p.title,
                p.writer_id,
-               m.name,
+               u.name,
                p.category_id,
                p.view_count,
                p.like_count,
@@ -52,7 +45,7 @@
                TRUE AS is_hot
         FROM hot_post h
         INNER JOIN post p ON h.post_id = p.id
-        LEFT OUTER JOIN member m on p.writer_id = m.id
+        LEFT OUTER JOIN user u on p.writer_id = u.id
         <if test="lastPostId != null">
             WHERE p.id &lt; #{lastPostId}
         </if>
@@ -64,7 +57,7 @@
         SELECT p.id,
                p.title,
                p.writer_id,
-               m.name,
+               u.name,
                p.category_id,
                p.view_count,
                p.like_count,
@@ -72,7 +65,7 @@
                p.created_timestamp,
                FALSE AS is_hot
         FROM post p
-            LEFT OUTER JOIN member m ON p.writer_id = m.id
+            LEFT OUTER JOIN user u ON p.writer_id = u.id
         WHERE p.category_id = #{categoryId}
         <if test="lastPostId != null">
             AND p.id &lt; #{lastPostId}
@@ -81,11 +74,11 @@
         LIMIT #{searchSize}
     </select>
 
-    <select id="findPostOutlinesByMember" resultMap="postOutlineResultMap">
+    <select id="findPostOutlinesByUser" resultMap="postOutlineResultMap">
         SELECT p.id,
                p.title,
                p.writer_id,
-               m.name,
+               u.name,
                p.category_id,
                p.view_count,
                p.like_count,
@@ -93,8 +86,8 @@
                p.created_timestamp,
                FALSE AS is_hot
         FROM post p
-            INNER JOIN member m ON p.writer_id = m.id
-        WHERE m.id = #{writerId}
+            INNER JOIN user u ON p.writer_id = u.id
+        WHERE u.id = #{writerId}
         <if test="lastPostId != null">
             AND p.id &lt; #{lastPostId}
         </if>
@@ -117,13 +110,13 @@
 
     <update id="incViewCount">
         UPDATE post
-        SET view_count = view_count + #{viewCount}
+        SET view_count = view_count + #{count}
         WHERE id = #{postId}
     </update>
 
     <update id="incLikeCount">
         UPDATE post
-        SET like_count = like_count + #{likeCount}
+        SET like_count = like_count + #{count}
         WHERE id = #{postId}
     </update>
 
@@ -154,13 +147,6 @@
         WHERE id = #{postId}
           AND writer_id = #{requesterId}
     </delete>
-
-    <select id="isWrittenBy">
-        SELECT EXISTS(SELECT *
-                      FROM post
-                      WHERE id = #{postId}
-                        AND writer_id = #{requesterId})
-    </select>
 
     <insert id="promoteToHot">
         INSERT INTO hot_post(post_id)

@@ -1,11 +1,11 @@
 package com.communify.domain.post.controller;
 
 import com.communify.domain.auth.annotation.LoginCheck;
-import com.communify.domain.auth.annotation.MemberId;
-import com.communify.domain.auth.annotation.MemberName;
+import com.communify.domain.auth.annotation.UserId;
+import com.communify.domain.auth.annotation.UserName;
 import com.communify.domain.post.controller.validator.PostUploadFormValidator;
+import com.communify.domain.post.dto.PostUploadDto;
 import com.communify.domain.post.dto.PostUploadForm;
-import com.communify.domain.post.dto.PostUploadRequest;
 import com.communify.domain.post.service.PostUploadService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +34,10 @@ public class PostUploadController {
     @ResponseStatus(CREATED)
     @LoginCheck
     public void upload(@ModelAttribute @Valid PostUploadForm form,
-                       @MemberId Long writerId,
-                       @MemberName String writerName) {
+                       @UserId Long writerId,
+                       @UserName String writerName) {
 
-        PostUploadRequest request = PostUploadRequest.builder()
+        PostUploadDto dto = PostUploadDto.builder()
                 .title(form.getTitle())
                 .content(form.getContent())
                 .multipartFileList(Collections.unmodifiableList(form.getFileList()))
@@ -46,7 +46,7 @@ public class PostUploadController {
                 .writerName(writerName)
                 .build();
 
-        postUploadService.uploadPost(request);
+        postUploadService.uploadPost(dto);
     }
 
     /*

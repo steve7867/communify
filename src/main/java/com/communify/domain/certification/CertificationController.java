@@ -1,8 +1,8 @@
 package com.communify.domain.certification;
 
 import com.communify.domain.auth.annotation.NotLoginCheck;
-import com.communify.domain.certification.dto.CertificationRequestForm;
-import com.communify.domain.certification.dto.CodeIssueRequestForm;
+import com.communify.domain.certification.dto.CertificationRequest;
+import com.communify.domain.certification.dto.CodeIssueRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/members/certification")
+@RequestMapping("/users/certification")
 @RequiredArgsConstructor
 public class CertificationController {
 
@@ -23,8 +23,8 @@ public class CertificationController {
     @PostMapping("/issue-code")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void issueCode(@RequestBody @Valid CodeIssueRequestForm form) {
-        String email = form.getEmail();
+    public void issueCode(@RequestBody @Valid CodeIssueRequest request) {
+        String email = request.getEmail();
 
         certificationService.issueCode(email);
     }
@@ -32,8 +32,8 @@ public class CertificationController {
     @PostMapping("/certify-code")
     @ResponseStatus(OK)
     @NotLoginCheck
-    public void certifyCode(@RequestBody @Valid CertificationRequestForm form) {
-        String code = form.getCode();
+    public void certifyCode(@RequestBody @Valid CertificationRequest request) {
+        String code = request.getCode();
 
         certificationService.certifyCode(code);
     }

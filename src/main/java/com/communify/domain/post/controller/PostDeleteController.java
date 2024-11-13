@@ -1,7 +1,7 @@
 package com.communify.domain.post.controller;
 
 import com.communify.domain.auth.annotation.LoginCheck;
-import com.communify.domain.auth.annotation.MemberId;
+import com.communify.domain.auth.annotation.UserId;
 import com.communify.domain.post.service.PostDeleteService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -25,7 +25,7 @@ public class PostDeleteController {
     @ResponseStatus(OK)
     @LoginCheck
     public void delete(@PathVariable @NotNull @Positive Long postId,
-                       @MemberId Long requesterId) {
+                       @UserId Long requesterId) {
 
         postDeleteService.deletePost(postId, requesterId);
     }

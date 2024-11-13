@@ -18,9 +18,9 @@ public class PostUploadFormValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        PostUploadForm request = (PostUploadForm) target;
+        PostUploadForm form = (PostUploadForm) target;
 
-        verifyFileList(request.getFileList(), errors);
+        verifyFileList(form.getFileList(), errors);
     }
 
     private void verifyFileList(List<MultipartFile> fileList, Errors errors) {

@@ -4,6 +4,7 @@ import com.communify.global.error.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /*
  * ResponseEntityExceptionHandler는 Http Request 처리 과정에서
@@ -46,8 +45,6 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public ProblemDetail handleBusinessException(BusinessException e) {
-        log.error(e.getMessage(), e);
-
         return ProblemDetail.forStatusAndDetail(e.getStatus(), e.getMessage());
     }
 
@@ -56,8 +53,13 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUnexpectedException(Exception e) {
         log.error(e.getMessage(), e);
 
-        return ProblemDetail.forStatusAndDetail(BAD_REQUEST, e.getMessage());
+        return ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

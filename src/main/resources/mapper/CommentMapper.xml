@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.communify.domain.comment.CommentRepository">
+<mapper namespace="com.communify.domain.comment.repository.CommentMapper">
     <resultMap id="CommentListContainerResultMap" type="CommentListContainer">
-        <result property="createdDateTime" column="post_created_timestamp"/>
+        <result property="postCreatedDateTime" column="post_created_timestamp"/>
         <collection property="commentInfoList" ofType="CommentInfo">
             <result property="id" column="id"/>
             <result property="content" column="content"/>
@@ -25,11 +25,11 @@
                c.id,
                c.content,
                c.writer_id,
-               m.name,
+               u.name,
                c.created_timestamp AS comment_created_timestamp
         FROM comment c
                  INNER JOIN post p ON c.post_id = p.id
-                 LEFT OUTER JOIN member m ON c.writer_id = m.id
+                 LEFT OUTER JOIN user u ON c.writer_id = u.id
         WHERE post_id = #{postId}
         <if test="lastCommentId != null">
           AND c.id &lt; #{lastCommentId}

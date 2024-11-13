@@ -1,7 +1,6 @@
 package com.communify.domain.post.service;
 
-import com.communify.domain.post.PostRepository;
-import com.communify.domain.post.exception.InvalidPostAccessException;
+import com.communify.domain.post.repository.PostRepository;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,13 +17,7 @@ public class PostDeleteService {
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public void deletePost(Long postId, Long requesterId) {
-        boolean canDelete = postRepository.isWrittenBy(postId, requesterId);
-        if (!canDelete) {
-            throw new InvalidPostAccessException(postId, requesterId);
-        }
-
         postAttachmentService.deleteFiles(postId);
-
         postRepository.deletePost(postId, requesterId);
     }
 }

@@ -1,9 +1,8 @@
 package com.communify.domain.post.service;
 
-import com.communify.domain.post.PostRepository;
 import com.communify.domain.post.dto.LikeEvent;
 import com.communify.domain.post.exception.AlreadyLikedException;
-import com.communify.domain.post.exception.InvalidPostAccessException;
+import com.communify.domain.post.repository.PostRepository;
 import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheNames;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +23,6 @@ public class PostEditService {
     private final PostAttachmentService postAttachmentService;
     private final ApplicationEventPublisher eventPublisher;
 
-    public void incrementView(Long postId) {
-        cacheService.incView(postId);
-    }
-
     @Transactional
     @CacheEvict(cacheNames = CacheNames.POST_DETAIL, key = "#postId")
     public void editPost(Long postId,
@@ -37,11 +32,7 @@ public class PostEditService {
                          Long categoryId,
                          Long requesterId) {
 
-        boolean isEdited = postRepository.editPost(postId, title, content, categoryId, requesterId);
-        if (!isEdited) {
-            throw new InvalidPostAccessException(postId, requesterId);
-        }
-
+        postRepository.editPost(postId, title, content, categoryId, requesterId);
         postAttachmentService.updateFiles(postId, multipartFileList);
     }
 
