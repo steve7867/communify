@@ -37,8 +37,8 @@ public class PostEditService {
     }
 
     public void like(Long postId, Long likerId) {
-        Boolean alreadyCached = cacheService.cacheLike(postId, likerId);
-        if (alreadyCached) {
+        Boolean alreadyLiked = cacheService.cacheLike(postId, likerId);
+        if (alreadyLiked) {
             throw new AlreadyLikedException();
         }
         postRepository.incLikeCount(postId, 1);

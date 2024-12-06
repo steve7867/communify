@@ -12,8 +12,6 @@ import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,10 +22,13 @@ public class CacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public Boolean cacheLike(Long postId, Long likerId) {
-        String cacheKey = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, postId);
-        Long addedCount = redisTemplate.opsForSet().add(cacheKey, likerId);
-        return addedCount == 0L;
+    public Boolean cacheLike(Long postId, Long userId) {
+        Long result = redisTemplate.opsForHyperLogLog().add(CacheNames.POST_LIKE, postId, userId);
+        return result == 0L;
+    }
+
+    public void deleteLikeHyperLogLog() {
+        redisTemplate.delete(CacheNames.POST_LIKE);
     }
 
     public void incView(Long postId) {
