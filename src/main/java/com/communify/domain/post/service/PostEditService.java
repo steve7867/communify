@@ -1,7 +1,7 @@
 package com.communify.domain.post.service;
 
 import com.communify.domain.post.dto.LikeEvent;
-import com.communify.domain.post.exception.AlreadyLikedException;
+import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.repository.PostRepository;
 import com.communify.global.application.CacheService;
 import com.communify.global.util.CacheNames;
@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,11 +38,21 @@ public class PostEditService {
         postAttachmentService.updateFiles(postId, multipartFileList);
     }
 
-    public void like(Long postId, Long likerId) {
-        Boolean alreadyLiked = cacheService.cacheLike(postId, likerId);
-        if (alreadyLiked) {
-            throw new AlreadyLikedException();
+    @Transactional
+    public void like(Long postId, Long userId) {
+        List<Long> results = cacheService.cacheLike(postId, userId);
+        if (results.get(0) == 0L) {
+            return;
         }
+
+        Long likeCount = results.get(1);
+        if (likeCount == 100L) {
+            PostDetail postDetail = postRepository.findPostDetail(postId);
+            if (Duration.between(postDetail.getCreatedDateTime(), LocalDateTime.now()).toHours() < 24) {
+                postRepository.promoteToHot(postId);
+            }
+        }
+
         postRepository.incLikeCount(postId, 1);
 
         eventPublisher.publishEvent(new LikeEvent(postId));

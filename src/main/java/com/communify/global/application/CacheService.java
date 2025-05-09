@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,9 +34,28 @@ public class CacheService {
         return (PostDetail) redisTemplate.opsForValue().get(key);
     }
 
-    public Boolean cacheLike(Long postId, Long userId) {
-        Long result = redisTemplate.opsForHyperLogLog().add(CacheNames.POST_LIKE, postId, userId);
-        return result == 0L;
+    public List<Long> cacheLike(Long postId, Long userId) {
+        String key = CacheKeyUtil.makeCacheKey(CacheNames.POST_LIKE, postId);
+
+        List<Object> temp = redisTemplate.execute(new SessionCallback<>() {
+
+            @Override
+            public List<Object> execute(RedisOperations ops) throws DataAccessException {
+                ops.multi();
+
+                ops.opsForHyperLogLog().add(key, userId);
+                ops.opsForHyperLogLog().size(key);
+
+                return ops.exec();
+            }
+        });
+
+        List<Long> results = new ArrayList<>();
+        for (Object o : temp) {
+            results.add((Long) o);
+        }
+
+        return results;
     }
 
     public void deleteLikeHyperLogLog() {

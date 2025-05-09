@@ -155,13 +155,4 @@
         INSERT INTO hot_post(post_id)
         VALUE (#{postId})
     </insert>
-
-    <select id="findHotPostChecker">
-        SELECT IF(h.post_id IS NOT NULL, TRUE, FALSE) AS is_hot,
-               view_count,
-               comment_count
-        FROM post p
-                 LEFT OUTER JOIN hot_post h ON p.id = h.post_id
-        WHERE id = #{postId}
-    </select>
 </mapper>
