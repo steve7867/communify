@@ -27,7 +27,7 @@
         </collection>
     </resultMap>
 
-    <insert id="insertPost" useGeneratedKeys="true" keyProperty="request.id">
+    <insert id="insertPost" useGeneratedKeys="true" keyProperty="dto.id">
         INSERT INTO post(title, content, writer_id, category_id)
         VALUES (#{dto.title}, #{dto.content}, #{dto.writerId}, #{dto.categoryId});
     </insert>
