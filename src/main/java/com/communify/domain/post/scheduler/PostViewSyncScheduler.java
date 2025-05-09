@@ -22,7 +22,7 @@ public class PostViewSyncScheduler {
     @Scheduled(cron = "0 */1 * * * *")
     @SchedulerLock(name = "PostViewSync")
     public void syncCachedPostViewWithDB() {
-        Map<Long, Integer> postViewMap = cacheService.fetchAndRemoveViewCache();
+        Map<Long, Integer> postViewMap = cacheService.fetchAndRemoveView();
 
         if (postViewMap.isEmpty()) {
             return;

@@ -16,5 +16,9 @@ public class PostDetail {
 
     @JsonIgnore
     private final LocalDateTime createdDateTime;
+
+    @JsonIgnore
+    private final Boolean isHot;
+
     private final List<FileInfo> fileInfoList;
 }

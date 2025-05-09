@@ -9,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -38,13 +41,21 @@ public class PostSearchService {
         return postRepository.findPostOutlinesByMember(writerId, lastPostId, SEARCH_SIZE);
     }
 
-    @Cacheable(cacheNames = CacheNames.POST_DETAIL,
-            key = "#postId",
-            unless = "#result != null " +
-                    "&& T(java.time.Duration).between(#result.createdDateTime, T(java.time.LocalDateTime).now()).toHours() > 24")
-    public PostDetail getPostDetail(Long postId) {
-        PostDetail postDetail = postRepository.findPostDetail(postId);
-        cacheService.incView(postId);
+    public PostDetail getPostDetail(Long postId, Long userId) {
+        cacheService.incView(postId, userId);
+
+        PostDetail postDetail = cacheService.getPostDetail(postId);
+        if (Objects.nonNull(postDetail)) {
+            return postDetail;
+        }
+
+        postDetail = postRepository.findPostDetail(postId);
+
+        Boolean isHot = postDetail.getIsHot();
+        if (isHot && Duration.between(postDetail.getCreatedDateTime(), LocalDateTime.now()).toHours() < 24) {
+            cacheService.cachePostDetail(postId, postDetail);
+        }
+
         return postDetail;
     }
 }
