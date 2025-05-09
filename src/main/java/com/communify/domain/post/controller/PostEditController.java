@@ -58,8 +58,8 @@ public class PostEditController {
     @ResponseStatus(OK)
     @LoginCheck
     public void like(@PathVariable @NotNull @Positive Long postId,
-                     @UserId Long likerId) {
+                     @UserId Long userId) {
 
-        postEditService.like(postId, likerId);
+        postEditService.like(postId, userId);
     }
 }

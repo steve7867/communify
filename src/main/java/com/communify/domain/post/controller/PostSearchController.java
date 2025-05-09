@@ -1,6 +1,7 @@
 package com.communify.domain.post.controller;
 
 import com.communify.domain.auth.annotation.LoginCheck;
+import com.communify.domain.auth.annotation.UserId;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.service.PostSearchService;
@@ -51,7 +52,7 @@ public class PostSearchController {
     @GetMapping("/posts/{postId}")
     @ResponseStatus(OK)
     @LoginCheck
-    public PostDetail getPostDetail(@PathVariable @NotNull @Positive Long postId) {
-        return postSearchService.getPostDetail(postId);
+    public PostDetail getPostDetail(@PathVariable @NotNull @Positive Long postId, @UserId Long userId) {
+        return postSearchService.getPostDetail(postId, userId);
     }
 }
