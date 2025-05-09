@@ -1,6 +1,5 @@
 package com.communify.domain.post.repository;
 
-import com.communify.domain.post.dto.HotPostChecker;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.dto.PostUploadDto;
@@ -36,6 +35,4 @@ interface PostMapper {
     boolean deletePost(Long postId, Long requesterId);
 
     void promoteToHot(Long postId);
-
-    Optional<HotPostChecker> findHotPostChecker(Long postId);
 }

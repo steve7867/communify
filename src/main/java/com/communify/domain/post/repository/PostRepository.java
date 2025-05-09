@@ -1,6 +1,5 @@
 package com.communify.domain.post.repository;
 
-import com.communify.domain.post.dto.HotPostChecker;
 import com.communify.domain.post.dto.PostDetail;
 import com.communify.domain.post.dto.PostOutline;
 import com.communify.domain.post.dto.PostUploadDto;
@@ -79,11 +78,5 @@ public class PostRepository {
 
     public void promoteToHot(Long postId) {
         postMapper.promoteToHot(postId);
-    }
-
-    @Transactional(readOnly = true)
-    public HotPostChecker findHotPostChecker(Long postId) {
-        return postMapper.findHotPostChecker(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId));
     }
 }
